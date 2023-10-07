@@ -1,5 +1,6 @@
 # Ignore compiled object files, libraries, and executables
 *.o
+*.d
 *.lo
 *.la
 *.a
