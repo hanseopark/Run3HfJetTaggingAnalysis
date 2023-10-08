@@ -17,7 +17,6 @@ class JetAnalysis {
 
   private:
     std::vector<HistogramData> histList;
-    int asdfasdf;
     int canvasNum=0;
 
 };
