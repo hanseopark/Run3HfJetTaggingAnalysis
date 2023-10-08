@@ -3,18 +3,18 @@
 
 #include <TH1D.h>
 #include <TString.h>
-#include "DataPoint.h"
-#include "CanvasHandler.h"
+#include "JetAnalysis.h"
 
-class HfJetTaggingAnalysis {
+class HfJetTaggingAnalysis : public JetAnalysis{
   public:
-    HfJetTaggingAnalysis(const TString rootFile, const TString taskName, bool doMC) {
+    //HfJetTaggingAnalysis(const TString rootFile, const TString taskName, bool doMC) {
+    HfJetTaggingAnalysis(const TString &rootFile, const TString &taskName, bool doMC) : JetAnalysis(rootFile, taskName, doMC){
       if (doMC) LoadSim(rootFile.Data(), taskName.Data());
       else LoadData(rootFile.Data(), taskName.Data());
       InitHistogram();
       NormalizedHistogram();
     }
-    HfJetTaggingAnalysis(const TString rootFile, const TString taskName, bool doMC, const TString cutSelection) {
+    HfJetTaggingAnalysis(const TString &rootFile, const TString &taskName, bool doMC, const TString &cutSelection) : JetAnalysis(rootFile, taskName, doMC, cutSelection){
       if (doMC) LoadSim(rootFile.Data(), taskName.Data());
       else LoadData(rootFile.Data(), taskName.Data());
     }
@@ -27,16 +27,14 @@ class HfJetTaggingAnalysis {
     void SaveHistogram(TString file);
 
     // Draw
-    void HistColorStyle(TH1D* h1, int mc, int ms, double mS, int lc, int ls);
     void DrawCombined(int num, const std::vector<HistogramData>& histList, double legendxmin, double ymin, double xmax, double ymax);
-    void DrawJetTrackPt();
-    void DrawJetTrackEta();
-    void DrawJetTrackPhi();
+    void DrawTaggedJetTrackPt();
+    void DrawTaggedJetTrackEta();
+    void DrawTaggedJetTrackPhi();
 
   private:
-    std::vector<HistogramData> histList;
     CanvasHandler* canvasHandler;
-    int ic=0;
+    int canvasNum=0;
 
     // histogram
     // common
@@ -1161,58 +1159,47 @@ void HfJetTaggingAnalysis::DrawCombined(int num, const std::vector<HistogramData
   leg->Draw();
 }
 
-void HfJetTaggingAnalysis::HistColorStyle(TH1D* h1, int markercolor = 1, int markerstyle = 20,
-    double markersize = 1, int linecolor = 1,
-    int linestyle = 1)
-{
-  h1->SetMarkerStyle(markerstyle);
-  h1->SetMarkerColor(markercolor);
-  h1->SetMarkerSize(markersize);
-  h1->SetLineStyle(linestyle);
-  h1->SetLineColor(linecolor);
-}
-
-void HfJetTaggingAnalysis::DrawJetTrackPt(){
+void HfJetTaggingAnalysis::DrawTaggedJetTrackPt(){
   std::vector<HistogramData> NormHistList;
   //NormHistList.push_back({hsimincjetNormalizedTrackPt, HfJetTagging::INCJET});
   NormHistList.push_back({hsimlfjetNormalizedTrackPt, HfJetTagging::LFJET});
   NormHistList.push_back({hsimcjetNormalizedTrackPt, HfJetTagging::CJET});
   NormHistList.push_back({hsimbjetNormalizedTrackPt, HfJetTagging::BJET});
 
-  canvasHandler = new CanvasHandler(ic++);
-  canvasHandler->DrawRefHistogram(ic, -0.02, 100.0, -1.0e-7, 0.15, "track p_{T}", "Probability distribution");
+  canvasHandler = new CanvasHandler(canvasNum++);
+  canvasHandler->DrawRefHistogram(canvasNum, -0.02, 100.0, -1.0e-7, 0.15, "track p_{T}", "Probability distribution");
   this->DrawCombined(3, NormHistList, 0.7, 0.7, 0.9, 0.9);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/trackmomentum.pdf\")", ic - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/trackmomentum.pdf\")", canvasNum - 1));
 
 }
 
-void HfJetTaggingAnalysis::DrawJetTrackEta(){
+void HfJetTaggingAnalysis::DrawTaggedJetTrackEta(){
   std::vector<HistogramData> NormHistList;
   //NormHistList.push_back({hsimincjetNormalizedTrackEta, HfJetTagging::INCJET});
   NormHistList.push_back({hsimlfjetNormalizedTrackEta, HfJetTagging::LFJET});
   NormHistList.push_back({hsimcjetNormalizedTrackEta, HfJetTagging::CJET});
   NormHistList.push_back({hsimbjetNormalizedTrackEta, HfJetTagging::BJET});
 
-  canvasHandler = new CanvasHandler(ic++);
+  canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(ic, -1.f, 1.f, -1.0e-7, 0.1, "track #eta", "Probability distribution");
+  canvasHandler->DrawRefHistogram(canvasNum, -1.f, 1.f, -1.0e-7, 0.1, "track #eta", "Probability distribution");
   this->DrawCombined(3, NormHistList, 0.7, 0.7, 0.9, 0.9);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/tracketa.pdf\")", ic - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/tracketa.pdf\")", canvasNum - 1));
 
 }
 
-void HfJetTaggingAnalysis::DrawJetTrackPhi(){
+void HfJetTaggingAnalysis::DrawTaggedJetTrackPhi(){
   std::vector<HistogramData> NormHistList;
   //NormHistList.push_back({hsimincjetNormalizedTrackPhi, HfJetTagging::INCJET});
   NormHistList.push_back({hsimlfjetNormalizedTrackPhi, HfJetTagging::LFJET});
   NormHistList.push_back({hsimcjetNormalizedTrackPhi, HfJetTagging::CJET});
   NormHistList.push_back({hsimbjetNormalizedTrackPhi, HfJetTagging::BJET});
 
-  canvasHandler = new CanvasHandler(ic++);
+  canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(ic, 0.02, 2*TMath::Pi(), -1.0e-7, 0.1, "track #phi", "Probability distribution");
+  canvasHandler->DrawRefHistogram(canvasNum, 0.02, 2*TMath::Pi(), -1.0e-7, 0.1, "track #phi", "Probability distribution");
   this->DrawCombined(3, NormHistList, 0.7, 0.7, 0.9, 0.9);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/trackphi.pdf\")", ic - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/trackphi.pdf\")", canvasNum - 1));
 
 }
 
