@@ -13,8 +13,6 @@ class HfJetHadronAnalysis : public JetAnalysis {
     ~HfJetHadronAnalysis();
     void InitHistogram();
   private:
-    CanvasHandler* canvasHandler;
-    int canvasNum=0;
 
 };
 

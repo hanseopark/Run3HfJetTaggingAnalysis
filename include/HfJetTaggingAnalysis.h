@@ -11,6 +11,7 @@ class HfJetTaggingAnalysis : public JetAnalysis{
     HfJetTaggingAnalysis(const TString &rootFile, const TString &taskName, bool doMC) : JetAnalysis(rootFile, taskName, doMC){
       if (doMC) LoadSim(rootFile.Data(), taskName.Data());
       else LoadData(rootFile.Data(), taskName.Data());
+      //InitHistogramIncJet();
       InitHistogram();
       NormalizedHistogram();
     }
@@ -58,11 +59,6 @@ class HfJetTaggingAnalysis : public JetAnalysis{
     void DrawTaggedJetProbability();
     void DrawTaggedJetProbabilityLog();
 
-
-  private:
-    CanvasHandler* canvasHandler;
-    int canvasNum=0;
-
     // histogram
     // common
     TH1D* hsimPdgCode;
@@ -81,10 +77,6 @@ class HfJetTaggingAnalysis : public JetAnalysis{
     TH1D* hsimbjetTrackEta;
 
     // related Impact parameter
-
-    TH1D* hsimincjetImpXYSignificance;
-    TH1D* hsimincjetSignImpXYSignificance;
-    TH1D* hsimincjetPtSignImpXYSignificance;
 
     TH1D* hsimlfjetImpXY;
     TH1D* hsimlfjetImpXYSignificance;
@@ -117,11 +109,6 @@ class HfJetTaggingAnalysis : public JetAnalysis{
     TH1D* hsimbjetSignImpXYZSignificance;
 
     // related Track Counting
-
-    TH1D* hsimincjetPtSignImpXYSignificanceN1;
-    TH1D* hsimincjetPtSignImpXYSignificanceN2;
-    TH1D* hsimincjetPtSignImpXYSignificanceN3;
-
     TH1D* hsimlfjetImpXYN1;
     TH1D* hsimlfjetImpXYN2;
     TH1D* hsimlfjetImpXYN3;
@@ -201,11 +188,6 @@ class HfJetTaggingAnalysis : public JetAnalysis{
     TH1D* hsimbjetSignImpXYSignificanceClass3;
 
     // related Jet Probability
-    TH1D* hsimincjetJP;
-    TH1D* hsimincjetJPLog;
-    TH2D* hsimincjetPtJP;
-    TH2D* hsimincjetPtJPLog;
-
     TH1D* hsimlfjetJP;
     TH1D* hsimlfjetJPLog;
     TH2D* hsimlfjetPtJP;
@@ -236,11 +218,6 @@ class HfJetTaggingAnalysis : public JetAnalysis{
     TH1D* hsimbjetNormalizedTrackEta;
 
     // related Impact parameter
-
-    TH1D* hsimincjetNormalizedImpXYSignificance;
-    TH1D* hsimincjetNormalizedSignImpXYSignificance;
-    TH1D* hsimincjetNormalizedPtSignImpXYSignificance;
-
     TH1D* hsimlfjetNormalizedImpXY;
     TH1D* hsimlfjetNormalizedImpXYSignificance;
     TH1D* hsimlfjetNormalizedSignImpXY;
@@ -272,11 +249,6 @@ class HfJetTaggingAnalysis : public JetAnalysis{
     TH1D* hsimbjetNormalizedSignImpXYZSignificance;
 
     // related Track Counting
-
-    TH1D* hsimincjetNormalizedPtSignImpXYSignificanceN1;
-    TH1D* hsimincjetNormalizedPtSignImpXYSignificanceN2;
-    TH1D* hsimincjetNormalizedPtSignImpXYSignificanceN3;
-
     TH1D* hsimlfjetNormalizedImpXYN1;
     TH1D* hsimlfjetNormalizedImpXYN2;
     TH1D* hsimlfjetNormalizedImpXYN3;
@@ -356,11 +328,6 @@ class HfJetTaggingAnalysis : public JetAnalysis{
     TH1D* hsimbjetNormalizedSignImpXYSignificanceClass3;
 
     // related jetNormalized Probability
-    TH1D* hsimincjetNormalizedJP;
-    TH1D* hsimincjetNormalizedJPLog;
-    TH2D* hsimincjetNormalizedPtJP;
-    TH2D* hsimincjetNormalizedPtJPLog;
-
     TH1D* hsimlfjetNormalizedJP;
     TH1D* hsimlfjetNormalizedJPLog;
     TH2D* hsimlfjetNormalizedPtJP;
@@ -373,6 +340,8 @@ class HfJetTaggingAnalysis : public JetAnalysis{
     TH1D* hsimbjetNormalizedJPLog;
     TH2D* hsimbjetNormalizedPtJP;
     TH2D* hsimbjetNormalizedPtJPLog;
+
+  private:
 
 };
 
@@ -392,10 +361,6 @@ HfJetTaggingAnalysis::~HfJetTaggingAnalysis() {
   if (hsimbjetTrackEta) delete hsimbjetTrackEta;
 
   // related to Impact parameter
-  if (hsimincjetImpXYSignificance) delete hsimincjetImpXYSignificance;
-  if (hsimincjetSignImpXYSignificance) delete hsimincjetSignImpXYSignificance;
-  if (hsimincjetPtSignImpXYSignificance) delete hsimincjetPtSignImpXYSignificance;
-
   if (hsimlfjetImpXY) delete hsimlfjetImpXY;
   if (hsimlfjetImpXYSignificance) delete hsimlfjetImpXYSignificance;
   if (hsimlfjetSignImpXY) delete hsimlfjetSignImpXY;
@@ -428,9 +393,6 @@ HfJetTaggingAnalysis::~HfJetTaggingAnalysis() {
 
   // related to Track Counting
 
-  if (hsimincjetPtSignImpXYSignificanceN1) delete hsimincjetPtSignImpXYSignificanceN1;
-  if (hsimincjetPtSignImpXYSignificanceN2) delete hsimincjetPtSignImpXYSignificanceN2;
-  if (hsimincjetPtSignImpXYSignificanceN3) delete hsimincjetPtSignImpXYSignificanceN3;
   if (hsimlfjetImpXYN1) delete hsimlfjetImpXYN1;
   if (hsimlfjetImpXYN2) delete hsimlfjetImpXYN2;
   if (hsimlfjetImpXYN3) delete hsimlfjetImpXYN3;
@@ -501,10 +463,6 @@ HfJetTaggingAnalysis::~HfJetTaggingAnalysis() {
   if (hsimbjetSignImpXYSignificanceClass3) delete hsimbjetSignImpXYSignificanceClass3;
 
   // related to Jet probability
-  if (hsimincjetJP) delete hsimincjetJP;
-  if (hsimincjetJPLog) delete hsimincjetJPLog;
-  if (hsimincjetPtJP) delete hsimincjetPtJP;
-  if (hsimincjetPtJPLog) delete hsimincjetPtJPLog;
   if (hsimlfjetJP) delete hsimlfjetJP;
   if (hsimlfjetJPLog) delete hsimlfjetJPLog;
   if (hsimlfjetPtJP) delete hsimlfjetPtJP;
@@ -532,10 +490,6 @@ HfJetTaggingAnalysis::~HfJetTaggingAnalysis() {
   if (hsimbjetNormalizedTrackPhi) delete hsimbjetNormalizedTrackPhi;
   if (hsimbjetNormalizedTrackEta) delete hsimbjetNormalizedTrackEta;
 
-  if (hsimincjetNormalizedImpXYSignificance) delete hsimincjetNormalizedImpXYSignificance;
-  if (hsimincjetNormalizedSignImpXYSignificance) delete hsimincjetNormalizedSignImpXYSignificance;
-  if (hsimincjetNormalizedPtSignImpXYSignificance) delete hsimincjetNormalizedPtSignImpXYSignificance;
-
   if (hsimlfjetNormalizedImpXY) delete hsimlfjetNormalizedImpXY;
   if (hsimlfjetNormalizedImpXYSignificance) delete hsimlfjetNormalizedImpXYSignificance;
   if (hsimlfjetNormalizedSignImpXY) delete hsimlfjetNormalizedSignImpXY;
@@ -562,11 +516,6 @@ HfJetTaggingAnalysis::~HfJetTaggingAnalysis() {
 
   if (hsimbjetNormalizedImpXYZ) delete hsimbjetNormalizedImpXYZ;
   if (hsimbjetNormalizedImpXYZSignificance) delete hsimbjetNormalizedImpXYZSignificance;
-
-  if (hsimincjetNormalizedPtSignImpXYSignificanceN1) delete hsimincjetNormalizedPtSignImpXYSignificanceN1;
-  if (hsimincjetNormalizedPtSignImpXYSignificanceN2) delete hsimincjetNormalizedPtSignImpXYSignificanceN2;
-  if (hsimincjetNormalizedPtSignImpXYSignificanceN3) delete hsimincjetNormalizedPtSignImpXYSignificanceN3;
-
   if (hsimlfjetNormalizedImpXYN1) delete hsimlfjetNormalizedImpXYN1;
   if (hsimlfjetNormalizedImpXYN2) delete hsimlfjetNormalizedImpXYN2;
   if (hsimlfjetNormalizedImpXYN3) delete hsimlfjetNormalizedImpXYN3;
@@ -623,12 +572,6 @@ HfJetTaggingAnalysis::~HfJetTaggingAnalysis() {
   if (hsimbjetNormalizedSignImpXYSignificanceClass1) delete hsimbjetNormalizedSignImpXYSignificanceClass1;
   if (hsimbjetNormalizedSignImpXYSignificanceClass2) delete hsimbjetNormalizedSignImpXYSignificanceClass2;
   if (hsimbjetNormalizedSignImpXYSignificanceClass3) delete hsimbjetNormalizedSignImpXYSignificanceClass3;
-
-  if (hsimincjetNormalizedJP) delete hsimincjetNormalizedJP;
-  if (hsimincjetNormalizedJPLog) delete hsimincjetNormalizedJPLog;
-  if (hsimincjetNormalizedPtJP) delete hsimincjetNormalizedPtJP;
-  if (hsimincjetNormalizedPtJPLog) delete hsimincjetNormalizedPtJPLog;
-
   if (hsimlfjetNormalizedJP) delete hsimlfjetNormalizedJP;
   if (hsimlfjetNormalizedJPLog) delete hsimlfjetNormalizedJPLog;
   if (hsimlfjetNormalizedPtJP) delete hsimlfjetNormalizedPtJP;
@@ -662,10 +605,6 @@ void HfJetTaggingAnalysis::InitHistogram() {
   hsimbjetNormalizedTrackEta = (TH1D*)hsimbjetTrackEta->Clone("hsimbjetNormalizedTrackEta");
 
   // related Impact parameter
-  //  hsimincjetNormalizedImpXYSignificance = (TH1D*)hsimincjetImpXYSignificance->Clone("hsimincjetNormalizedImpXYSignificance");
-  //  hsimincjetNormalizedSignImpXYSignificance = (TH1D*)hsimincjetSignImpXYSignificance->Clone("hsimincjetNormalizedSignImpXYSignificance");
-  //  hsimincjetNormalizedPtSignImpXYSignificance = (TH1D*)hsimincjetPtSignImpXYSignificance->Clone("hsimincjetNormalizedPtSignImpXYSignificance");
-
   hsimlfjetNormalizedImpXY = (TH1D*)hsimlfjetImpXY->Clone("hsimlfjetNormalizedImpXY");
   hsimlfjetNormalizedImpXYSignificance = (TH1D*)hsimlfjetImpXYSignificance->Clone("hsimlfjetNormalizedImpXYSignificance");
   hsimlfjetNormalizedSignImpXY = (TH1D*)hsimlfjetSignImpXY->Clone("hsimlfjetNormalizedSignImpXY");
@@ -697,10 +636,6 @@ void HfJetTaggingAnalysis::InitHistogram() {
   hsimbjetNormalizedSignImpXYZSignificance = (TH1D*)hsimbjetSignImpXYZSignificance->Clone("hsimbjetNormalizedSignImpXYZSignificance");
 
   // related Track Counting
-  //  hsimincjetNormalizedPtSignImpXYSignificanceN1 = (TH1D*)hsimincjetPtSignImpXYSignificanceN1->Clone("hsimincjetNormalizedPtSignImpXYSignificanceN1");
-  //  hsimincjetNormalizedPtSignImpXYSignificanceN2 = (TH1D*)hsimincjetPtSignImpXYSignificanceN2->Clone("hsimincjetNormalizedPtSignImpXYSignificanceN2");
-  //  hsimincjetNormalizedPtSignImpXYSignificanceN3 = (TH1D*)hsimincjetPtSignImpXYSignificanceN3->Clone("hsimincjetNormalizedPtSignImpXYSignificanceN3");
-
   hsimlfjetNormalizedImpXYN1 = (TH1D*)hsimlfjetImpXYN1->Clone("hsimlfjetNormalizedImpXYN1");
   hsimlfjetNormalizedImpXYN2 = (TH1D*)hsimlfjetImpXYN2->Clone("hsimlfjetNormalizedImpXYN2");
   hsimlfjetNormalizedImpXYN3 = (TH1D*)hsimlfjetImpXYN3->Clone("hsimlfjetNormalizedImpXYN3");
@@ -771,11 +706,6 @@ void HfJetTaggingAnalysis::InitHistogram() {
   hsimbjetNormalizedSignImpXYSignificanceClass3 = (TH1D*)hsimbjetSignImpXYSignificanceClass3->Clone("hsimbjetNormalizedSignImpXYSignificanceClass3");
 
   // related jetNormalized Probability
-  hsimincjetNormalizedJP = (TH1D*)hsimincjetJP->Clone("hsimincjetNormalizedJP");
-  hsimincjetNormalizedJPLog = (TH1D*)hsimincjetJPLog->Clone("hsimincjetNormalizedJPLog");
-  hsimincjetNormalizedPtJP = (TH2D*)hsimincjetPtJP->Clone("hsimincjetNormalizedPtJP");
-  hsimincjetNormalizedPtJPLog = (TH2D*)hsimincjetPtJPLog->Clone("hsimincjetNormalizedPtJPLog");
-
   hsimlfjetNormalizedJP = (TH1D*)hsimlfjetJP->Clone("hsimlfjetNormalizedJP");
   hsimlfjetNormalizedJPLog = (TH1D*)hsimlfjetJPLog->Clone("hsimlfjetNormalizedJPLog");
   hsimlfjetNormalizedPtJP = (TH2D*)hsimlfjetPtJP->Clone("hsimlfjetNormalizedPtJP");
@@ -807,11 +737,6 @@ void HfJetTaggingAnalysis::NormalizedHistogram() {
   hsimbjetNormalizedTrackPhi->Scale(1. / hsimbjetNormalizedTrackPhi->GetEntries());
   hsimbjetNormalizedTrackEta->Scale(1. / hsimbjetNormalizedTrackEta->GetEntries());
 
-  // Scaling histograms for NormalizedImpXYSignificance, NormalizedSignImpXYSignificance, and NormalizedPtSignImpXYSignificance
-  //hsimincjetNormalizedImpXYSignificance->Scale(1. / hsimincjetNormalizedImpXYSignificance->GetEntries());
-  //hsimincjetNormalizedSignImpXYSignificance->Scale(1. / hsimincjetNormalizedSignImpXYSignificance->GetEntries());
-  //hsimincjetNormalizedPtSignImpXYSignificance->Scale(1. / hsimincjetNormalizedPtSignImpXYSignificance->GetEntries());
-
   hsimlfjetNormalizedImpXYSignificance->Scale(1. / hsimlfjetNormalizedImpXYSignificance->GetEntries());
   hsimlfjetNormalizedSignImpXYSignificance->Scale(1. / hsimlfjetNormalizedSignImpXYSignificance->GetEntries());
   //hsimlfjetNormalizedPtSignImpXYSignificance->Scale(1. / hsimlfjetNormalizedPtSignImpXYSignificance->GetEntries());
@@ -823,11 +748,6 @@ void HfJetTaggingAnalysis::NormalizedHistogram() {
   hsimbjetNormalizedImpXYSignificance->Scale(1. / hsimbjetNormalizedImpXYSignificance->GetEntries());
   hsimbjetNormalizedSignImpXYSignificance->Scale(1. / hsimbjetNormalizedSignImpXYSignificance->GetEntries());
   //hsimbjetNormalizedPtSignImpXYSignificance->Scale(1. / hsimbjetNormalizedPtSignImpXYSignificance->GetEntries());
-
-  // Scaling histograms for NormalizedPtSignImpXYSignificanceN1, NormalizedPtSignImpXYSignificanceN2, and NormalizedPtSignImpXYSignificanceN3
-  //hsimincjetNormalizedPtSignImpXYSignificanceN1->Scale(1. / hsimincjetNormalizedPtSignImpXYSignificanceN1->GetEntries());
-  //hsimincjetNormalizedPtSignImpXYSignificanceN2->Scale(1. / hsimincjetNormalizedPtSignImpXYSignificanceN2->GetEntries());
-  //hsimincjetNormalizedPtSignImpXYSignificanceN3->Scale(1. / hsimincjetNormalizedPtSignImpXYSignificanceN3->GetEntries());
 
   hsimlfjetNormalizedImpXYN1->Scale(1. / hsimlfjetNormalizedImpXYN1->GetEntries());
   hsimlfjetNormalizedImpXYN2->Scale(1. / hsimlfjetNormalizedImpXYN2->GetEntries());
@@ -897,10 +817,6 @@ void HfJetTaggingAnalysis::NormalizedHistogram() {
   hsimbjetNormalizedSignImpXYSignificanceClass1->Scale(1. / hsimbjetNormalizedSignImpXYSignificanceClass1->GetEntries());
   hsimbjetNormalizedSignImpXYSignificanceClass2->Scale(1. / hsimbjetNormalizedSignImpXYSignificanceClass2->GetEntries());
   hsimbjetNormalizedSignImpXYSignificanceClass3->Scale(1. / hsimbjetNormalizedSignImpXYSignificanceClass3->GetEntries());
-
-  // Scaling histograms for NormalizedJP and NormalizedJPLog
-  hsimincjetNormalizedJP->Scale(1. / hsimincjetNormalizedJP->GetEntries());
-  hsimincjetNormalizedJPLog->Scale(1. / hsimincjetNormalizedJPLog->GetEntries());
 
   hsimlfjetNormalizedJP->Scale(1. / hsimlfjetNormalizedJP->GetEntries());
   hsimlfjetNormalizedJPLog->Scale(1. / hsimlfjetNormalizedJPLog->GetEntries());
@@ -1052,11 +968,6 @@ int HfJetTaggingAnalysis::LoadSim(TString rootFile, TString taskName) {
   hsimlfjetTrackEta = (TH1D*)fin->Get(Form("%s/h_lfjet_track_eta", taskName.Data()));
 
   // inclusive
-
-  hsimincjetImpXYSignificance = (TH1D*)fin->Get(Form("%s/h_inc_jet_impact_parameter_xy_significance", taskName.Data()));
-  hsimincjetSignImpXYSignificance = (TH1D*)fin->Get(Form("%s/h_inc_jet_sign_impact_parameter_xy_significance", taskName.Data()));
-  hsimincjetPtSignImpXYSignificance = (TH1D*)fin->Get(Form("%s/h_inc_jet_pt_sign_impact_parameter_xy_significance", taskName.Data()));
-
   // impact parameter
   // bjet
   hsimbjetImpXY = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xy", taskName.Data()));
@@ -1170,10 +1081,6 @@ int HfJetTaggingAnalysis::LoadSim(TString rootFile, TString taskName) {
   hsimbjetSignImpXYSignificanceClass2 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_significance_class2", taskName.Data()));
   hsimbjetSignImpXYSignificanceClass3 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_significance_class3", taskName.Data()));
 
-  hsimincjetJP = (TH1D*)fin->Get(Form("%s/h_inc_jet_JP", taskName.Data()));
-  hsimincjetJPLog = (TH1D*)fin->Get(Form("%s/h_inc_jet_JP_Log", taskName.Data()));
-  hsimincjetPtJP = (TH2D*)fin->Get(Form("%s/h_inc_jet_pt_JP", taskName.Data()));
-  hsimincjetPtJPLog = (TH2D*)fin->Get(Form("%s/h_inc_jet_pt_JP_Log", taskName.Data()));
   hsimbjetJP = (TH1D*)fin->Get(Form("%s/h_bjet_JP", taskName.Data()));
   hsimbjetJPLog = (TH1D*)fin->Get(Form("%s/h_bjet_JP_Log", taskName.Data()));
   hsimbjetPtJP = (TH2D*)fin->Get(Form("%s/h_bjet_pt_JP", taskName.Data()));
@@ -1232,7 +1139,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetTrackPt(){
 
 void HfJetTaggingAnalysis::DrawTaggedJetTrackEta(){
   std::vector<HistogramData> NormHistList;
-  //NormHistList.push_back({hsimincjetNormalizedTrackEta, HfJetTagging::INCJET});
+  NormHistList.push_back({hsimincjetNormalizedTrackEta, HfJetTagging::INCJET});
   NormHistList.push_back({hsimlfjetNormalizedTrackEta, HfJetTagging::LFJET});
   NormHistList.push_back({hsimcjetNormalizedTrackEta, HfJetTagging::CJET});
   NormHistList.push_back({hsimbjetNormalizedTrackEta, HfJetTagging::BJET});
@@ -1240,14 +1147,14 @@ void HfJetTaggingAnalysis::DrawTaggedJetTrackEta(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKETA[0], HfJetTagging::REFHIST::TRACKETA[1], HfJetTagging::REFHIST::TRACKETA[2], HfJetTagging::REFHIST::TRACKETA[3], "track #eta", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/tracketa.pdf\")", canvasNum - 1));
 
 }
 
 void HfJetTaggingAnalysis::DrawTaggedJetTrackPhi(){
   std::vector<HistogramData> NormHistList;
-  //NormHistList.push_back({hsimincjetNormalizedTrackPhi, HfJetTagging::INCJET});
+  NormHistList.push_back({hsimincjetNormalizedTrackPhi, HfJetTagging::INCJET});
   NormHistList.push_back({hsimlfjetNormalizedTrackPhi, HfJetTagging::LFJET});
   NormHistList.push_back({hsimcjetNormalizedTrackPhi, HfJetTagging::CJET});
   NormHistList.push_back({hsimbjetNormalizedTrackPhi, HfJetTagging::BJET});
@@ -1255,14 +1162,14 @@ void HfJetTaggingAnalysis::DrawTaggedJetTrackPhi(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPHI[0], HfJetTagging::REFHIST::TRACKPHI[1], HfJetTagging::REFHIST::TRACKPHI[2], HfJetTagging::REFHIST::TRACKPHI[3], "track #phi", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/trackphi.pdf\")", canvasNum - 1));
 
 }
 
 void HfJetTaggingAnalysis::DrawTaggedJetImpXY(){
   std::vector<HistogramData> NormHistList;
-  //NormHistList.push_back({hsimincjetNormalizedImpXY, HfJetTagging::INCJET});
+  NormHistList.push_back({hsimincjetNormalizedImpXY, HfJetTagging::INCJET});
   NormHistList.push_back({hsimlfjetNormalizedImpXY, HfJetTagging::LFJET});
   NormHistList.push_back({hsimcjetNormalizedImpXY, HfJetTagging::CJET});
   NormHistList.push_back({hsimbjetNormalizedImpXY, HfJetTagging::BJET});
@@ -1270,14 +1177,14 @@ void HfJetTaggingAnalysis::DrawTaggedJetImpXY(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "IP_{XY} [cm]", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXY.pdf\")", canvasNum - 1));
 
 }
 
 void HfJetTaggingAnalysis::DrawTaggedJetSignImpXY(){
   std::vector<HistogramData> NormHistList;
-  //NormHistList.push_back({hsimincjetNormalizedSignImpXY, HfJetTagging::INCJET});
+  NormHistList.push_back({hsimincjetNormalizedSignImpXY, HfJetTagging::INCJET});
   NormHistList.push_back({hsimlfjetNormalizedSignImpXY, HfJetTagging::LFJET});
   NormHistList.push_back({hsimcjetNormalizedSignImpXY, HfJetTagging::CJET});
   NormHistList.push_back({hsimbjetNormalizedSignImpXY, HfJetTagging::BJET});
@@ -1285,13 +1192,13 @@ void HfJetTaggingAnalysis::DrawTaggedJetSignImpXY(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "Signed IP_{XY} [cm]", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXY.pdf\")", canvasNum - 1));
 
 }
 void HfJetTaggingAnalysis::DrawTaggedJetImpXYSignificance(){
   std::vector<HistogramData> NormHistList;
-  //NormHistList.push_back({hsimincjetNormalizedImpXYSignificance, HfJetTagging::INCJET});
+  NormHistList.push_back({hsimincjetNormalizedImpXYSignificance, HfJetTagging::INCJET});
   NormHistList.push_back({hsimlfjetNormalizedImpXYSignificance, HfJetTagging::LFJET});
   NormHistList.push_back({hsimcjetNormalizedImpXYSignificance, HfJetTagging::CJET});
   NormHistList.push_back({hsimbjetNormalizedImpXYSignificance, HfJetTagging::BJET});
@@ -1299,13 +1206,13 @@ void HfJetTaggingAnalysis::DrawTaggedJetImpXYSignificance(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "IPs_{XY}", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYSignificance.pdf\")", canvasNum - 1));
 
 }
 void HfJetTaggingAnalysis::DrawTaggedJetSignImpXYSignificance(){
   std::vector<HistogramData> NormHistList;
-  //NormHistList.push_back({hsimincjetNormalizedSignImpXYSignificance, HfJetTagging::INCJET});
+  NormHistList.push_back({hsimincjetNormalizedSignImpXYSignificance, HfJetTagging::INCJET});
   NormHistList.push_back({hsimlfjetNormalizedSignImpXYSignificance, HfJetTagging::LFJET});
   NormHistList.push_back({hsimcjetNormalizedSignImpXYSignificance, HfJetTagging::CJET});
   NormHistList.push_back({hsimbjetNormalizedSignImpXYSignificance, HfJetTagging::BJET});
@@ -1313,7 +1220,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetSignImpXYSignificance(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYSignificance.pdf\")", canvasNum - 1));
 
 }
@@ -1327,7 +1234,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetImpXYZ(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYZ[0], HfJetTagging::REFHIST::IPXYZ[1], HfJetTagging::REFHIST::IPXYZ[2], HfJetTagging::REFHIST::IPXYZ[3], "IP_{XYZ} [cm]", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYZ.pdf\")", canvasNum - 1));
 
 }
@@ -1356,7 +1263,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetImpXYZSignificance(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYZSIG[0], HfJetTagging::REFHIST::IPXYZSIG[1], HfJetTagging::REFHIST::IPXYZSIG[2], HfJetTagging::REFHIST::IPXYZSIG[3], "IPs_{XYZ}", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYZSignificance.pdf\")", canvasNum - 1));
 
 }
@@ -1370,7 +1277,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetSignImpXYZSignificance(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYZSIG[0], HfJetTagging::REFHIST::IPXYZSIG[1], HfJetTagging::REFHIST::IPXYZSIG[2], HfJetTagging::REFHIST::IPXYZSIG[3], "Signed IPs_{XYZ}", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYZSignificance.pdf\")", canvasNum - 1));
 
 }
@@ -1384,7 +1291,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetImpXYN1(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "IP_{XY}^{N_{1}} [cm]", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYN1.pdf\")", canvasNum - 1));
 
 }
@@ -1398,7 +1305,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetImpXYN2(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "IP_{XY}^{N_{2}} [cm]", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYN2.pdf\")", canvasNum - 1));
 
 }
@@ -1412,7 +1319,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetImpXYN3(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "IP_{XY}^{N_{3}} [cm]", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYN3.pdf\")", canvasNum - 1));
 
 }
@@ -1426,7 +1333,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetSignImpXYN1(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "Signed IP_{XY}^{N_{1}} [cm]", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYN1.pdf\")", canvasNum - 1));
 
 }
@@ -1440,7 +1347,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetSignImpXYN2(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "Signed IP_{XY}^{N_{2}} [cm]", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYN2.pdf\")", canvasNum - 1));
 
 }
@@ -1454,7 +1361,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetSignImpXYN3(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "Signed IP_{XY}^{N_{3}} [cm]", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYN3.pdf\")", canvasNum - 1));
 }
 
@@ -1468,7 +1375,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetImpXYSignificanceN1(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "IPs_{XY}^{N_{1}}", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYSignificanceN1.pdf\")", canvasNum - 1));
 
 }
@@ -1482,7 +1389,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetImpXYSignificanceN2(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "IPs_{XY}^{N_{2}}", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYSignificanceN2.pdf\")", canvasNum - 1));
 
 }
@@ -1496,7 +1403,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetImpXYSignificanceN3(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "IPs_{XY}^{N_{3}}", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYSignificanceN3.pdf\")", canvasNum - 1));
 }
 void HfJetTaggingAnalysis::DrawTaggedJetSignImpXYSignificanceN1(){
@@ -1509,7 +1416,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetSignImpXYSignificanceN1(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}^{N_{1}}", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYSignificanceN1.pdf\")", canvasNum - 1));
 
 }
@@ -1523,7 +1430,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetSignImpXYSignificanceN2(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}^{N_{2}}", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYSignificanceN2.pdf\")", canvasNum - 1));
 
 }
@@ -1537,7 +1444,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetSignImpXYSignificanceN3(){
   canvasHandler = new CanvasHandler(canvasNum++);
   gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}^{N_{3}}", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYSignificanceN3.pdf\")", canvasNum - 1));
 }
 
@@ -1550,7 +1457,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetProbability(){
 
   canvasHandler = new CanvasHandler(canvasNum++);
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::JP[0], HfJetTagging::REFHIST::JP[1], HfJetTagging::REFHIST::JP[2], HfJetTagging::REFHIST::JP[3], "JP", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/JetProbability.pdf\")", canvasNum - 1));
 }
 void HfJetTaggingAnalysis::DrawTaggedJetProbabilityLog(){
@@ -1562,7 +1469,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetProbabilityLog(){
 
   canvasHandler = new CanvasHandler(canvasNum++);
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::LOGJP[0], HfJetTagging::REFHIST::LOGJP[1], HfJetTagging::REFHIST::LOGJP[2], HfJetTagging::REFHIST::LOGJP[3], "-Log(JP)", "Probability distribution");
-  this->DrawCombined(3, NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/JetProbabilityLog.pdf\")", canvasNum - 1));
 }
 
