@@ -42,7 +42,7 @@ namespace HfJetTagging{
     const double TRACKPHI[4]={-0.02,2*TMath::Pi(),-1.0e-7,0.1};
     const double IPXY[4]={-0.1,0.1,1.0e-6,0.1};
     const double IPXYZ[4]={-0.4,0.4,1.0e-5,0.1};
-    const double IPXYSIG[4]={-20,20,1.0e-6,0.1};
+    const double IPXYSIG[4]={-10,10,1.0e-6,0.1};
     const double IPXYZSIG[4]={-40,40,1.0e-5,0.1};
     const double JP[4]={-0.01,1.0,1.0e-5,0.1};
     const double LOGJP[4]={-0.01,10,1.0e-5,0.1};

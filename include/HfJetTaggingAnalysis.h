@@ -8,22 +8,21 @@
 class HfJetTaggingAnalysis : public JetAnalysis{
   public:
     //HfJetTaggingAnalysis(const TString rootFile, const TString taskName, bool doMC) {
-    HfJetTaggingAnalysis(const TString &rootFile, const TString &taskName, bool doMC) : JetAnalysis(rootFile, taskName, doMC){
-      if (doMC) LoadSim(rootFile.Data(), taskName.Data());
+    HfJetTaggingAnalysis(const TString &rootFile, const TString &taskName, bool doMC, bool doJP) : JetAnalysis(rootFile, taskName, doMC, doJP){
+      if (doMC) LoadSim(rootFile.Data(), taskName.Data(), doJP);
       else LoadData(rootFile.Data(), taskName.Data());
-      //InitHistogramIncJet();
-      InitHistogram();
-      NormalizedHistogram();
+      InitHistogram(doJP);
+      NormalizedHistogram(doJP);
     }
-    HfJetTaggingAnalysis(const TString &rootFile, const TString &taskName, bool doMC, const TString &cutSelection) : JetAnalysis(rootFile, taskName, doMC, cutSelection){
-      if (doMC) LoadSim(rootFile.Data(), taskName.Data());
+    HfJetTaggingAnalysis(const TString &rootFile, const TString &taskName, bool doMC, bool doJP, const TString &cutSelection) : JetAnalysis(rootFile, taskName, doMC, doJP, cutSelection){
+      if (doMC) LoadSim(rootFile.Data(), taskName.Data(), doJP);
       else LoadData(rootFile.Data(), taskName.Data());
     }
     ~HfJetTaggingAnalysis();
 
-    void InitHistogram();
-    void NormalizedHistogram();
-    int LoadSim(TString file, TString task);
+    void InitHistogram(bool doJP);
+    void NormalizedHistogram(bool doJP);
+    int LoadSim(TString file, TString task, bool doJP);
     int LoadData(TString file, TString task);
     void SaveHistogram(TString file);
 
@@ -589,7 +588,7 @@ HfJetTaggingAnalysis::~HfJetTaggingAnalysis() {
 
 }
 
-void HfJetTaggingAnalysis::InitHistogram() {
+void HfJetTaggingAnalysis::InitHistogram(bool doJP) {
 
   // Normalized
   hsimlfjetNormalizedTrackPt = (TH1D*) hsimlfjetTrackPt->Clone("hsimlfjetNormalizedTrackPt");
@@ -692,38 +691,39 @@ void HfJetTaggingAnalysis::InitHistogram() {
   //  hsimbjetNormalizedPtSignImpXYSignificanceN2 = (TH1D*)hsimbjetPtSignImpXYSignificanceN2->Clone("hsimbjetNormalizedPtSignImpXYSignificanceN2");
   //  hsimbjetNormalizedPtSignImpXYSignificanceN3 = (TH1D*)hsimbjetPtSignImpXYSignificanceN3->Clone("hsimbjetNormalizedPtSignImpXYSignificanceN3");
   //
-  // related Resolution function
-  hsimlfjetNormalizedSignImpXYSignificanceClass1 = (TH1D*)hsimlfjetSignImpXYSignificanceClass1->Clone("hsimlfjetNormalizedSignImpXYSignificanceClass1");
-  hsimlfjetNormalizedSignImpXYSignificanceClass2 = (TH1D*)hsimlfjetSignImpXYSignificanceClass2->Clone("hsimlfjetNormalizedSignImpXYSignificanceClass2");
-  hsimlfjetNormalizedSignImpXYSignificanceClass3 = (TH1D*)hsimlfjetSignImpXYSignificanceClass3->Clone("hsimlfjetNormalizedSignImpXYSignificanceClass3");
-
-  hsimcjetNormalizedSignImpXYSignificanceClass1 = (TH1D*)hsimcjetSignImpXYSignificanceClass1->Clone("hsimcjetNormalizedSignImpXYSignificanceClass1");
-  hsimcjetNormalizedSignImpXYSignificanceClass2 = (TH1D*)hsimcjetSignImpXYSignificanceClass2->Clone("hsimcjetNormalizedSignImpXYSignificanceClass2");
-  hsimcjetNormalizedSignImpXYSignificanceClass3 = (TH1D*)hsimcjetSignImpXYSignificanceClass3->Clone("hsimcjetNormalizedSignImpXYSignificanceClass3");
-
-  hsimbjetNormalizedSignImpXYSignificanceClass1 = (TH1D*)hsimbjetSignImpXYSignificanceClass1->Clone("hsimbjetNormalizedSignImpXYSignificanceClass1");
-  hsimbjetNormalizedSignImpXYSignificanceClass2 = (TH1D*)hsimbjetSignImpXYSignificanceClass2->Clone("hsimbjetNormalizedSignImpXYSignificanceClass2");
-  hsimbjetNormalizedSignImpXYSignificanceClass3 = (TH1D*)hsimbjetSignImpXYSignificanceClass3->Clone("hsimbjetNormalizedSignImpXYSignificanceClass3");
+//  // related Resolution function
+//  hsimlfjetNormalizedSignImpXYSignificanceClass1 = (TH1D*)hsimlfjetSignImpXYSignificanceClass1->Clone("hsimlfjetNormalizedSignImpXYSignificanceClass1");
+//  hsimlfjetNormalizedSignImpXYSignificanceClass2 = (TH1D*)hsimlfjetSignImpXYSignificanceClass2->Clone("hsimlfjetNormalizedSignImpXYSignificanceClass2");
+//  hsimlfjetNormalizedSignImpXYSignificanceClass3 = (TH1D*)hsimlfjetSignImpXYSignificanceClass3->Clone("hsimlfjetNormalizedSignImpXYSignificanceClass3");
+//
+//  hsimcjetNormalizedSignImpXYSignificanceClass1 = (TH1D*)hsimcjetSignImpXYSignificanceClass1->Clone("hsimcjetNormalizedSignImpXYSignificanceClass1");
+//  hsimcjetNormalizedSignImpXYSignificanceClass2 = (TH1D*)hsimcjetSignImpXYSignificanceClass2->Clone("hsimcjetNormalizedSignImpXYSignificanceClass2");
+//  hsimcjetNormalizedSignImpXYSignificanceClass3 = (TH1D*)hsimcjetSignImpXYSignificanceClass3->Clone("hsimcjetNormalizedSignImpXYSignificanceClass3");
+//
+//  hsimbjetNormalizedSignImpXYSignificanceClass1 = (TH1D*)hsimbjetSignImpXYSignificanceClass1->Clone("hsimbjetNormalizedSignImpXYSignificanceClass1");
+//  hsimbjetNormalizedSignImpXYSignificanceClass2 = (TH1D*)hsimbjetSignImpXYSignificanceClass2->Clone("hsimbjetNormalizedSignImpXYSignificanceClass2");
+//  hsimbjetNormalizedSignImpXYSignificanceClass3 = (TH1D*)hsimbjetSignImpXYSignificanceClass3->Clone("hsimbjetNormalizedSignImpXYSignificanceClass3");
 
   // related jetNormalized Probability
-  hsimlfjetNormalizedJP = (TH1D*)hsimlfjetJP->Clone("hsimlfjetNormalizedJP");
-  hsimlfjetNormalizedJPLog = (TH1D*)hsimlfjetJPLog->Clone("hsimlfjetNormalizedJPLog");
-  hsimlfjetNormalizedPtJP = (TH2D*)hsimlfjetPtJP->Clone("hsimlfjetNormalizedPtJP");
-  hsimlfjetNormalizedPtJPLog = (TH2D*)hsimlfjetPtJPLog->Clone("hsimlfjetNormalizedPtJPLog");
+  if (doJP) {
+    hsimlfjetNormalizedJP = (TH1D*)hsimlfjetJP->Clone("hsimlfjetNormalizedJP");
+    hsimlfjetNormalizedJPLog = (TH1D*)hsimlfjetJPLog->Clone("hsimlfjetNormalizedJPLog");
+    hsimlfjetNormalizedPtJP = (TH2D*)hsimlfjetPtJP->Clone("hsimlfjetNormalizedPtJP");
+    hsimlfjetNormalizedPtJPLog = (TH2D*)hsimlfjetPtJPLog->Clone("hsimlfjetNormalizedPtJPLog");
 
-  hsimcjetNormalizedJP = (TH1D*)hsimcjetJP->Clone("hsimcjetNormalizedJP");
-  hsimcjetNormalizedJPLog = (TH1D*)hsimcjetJPLog->Clone("hsimcjetNormalizedJPLog");
-  hsimcjetNormalizedPtJP = (TH2D*)hsimcjetPtJP->Clone("hsimcjetNormalizedPtJP");
-  hsimcjetNormalizedPtJPLog = (TH2D*)hsimcjetPtJPLog->Clone("hsimcjetNormalizedPtJPLog");
+    hsimcjetNormalizedJP = (TH1D*)hsimcjetJP->Clone("hsimcjetNormalizedJP");
+    hsimcjetNormalizedJPLog = (TH1D*)hsimcjetJPLog->Clone("hsimcjetNormalizedJPLog");
+    hsimcjetNormalizedPtJP = (TH2D*)hsimcjetPtJP->Clone("hsimcjetNormalizedPtJP");
+    hsimcjetNormalizedPtJPLog = (TH2D*)hsimcjetPtJPLog->Clone("hsimcjetNormalizedPtJPLog");
 
-  hsimbjetNormalizedJP = (TH1D*)hsimbjetJP->Clone("hsimbjetNormalizedJP");
-  hsimbjetNormalizedJPLog = (TH1D*)hsimbjetJPLog->Clone("hsimbjetNormalizedJPLog");
-  hsimbjetNormalizedPtJP = (TH2D*)hsimbjetPtJP->Clone("hsimbjetNormalizedPtJP");
-  hsimbjetNormalizedPtJPLog = (TH2D*)hsimbjetPtJPLog->Clone("hsimbjetNormalizedPtJPLog");
-
+    hsimbjetNormalizedJP = (TH1D*)hsimbjetJP->Clone("hsimbjetNormalizedJP");
+    hsimbjetNormalizedJPLog = (TH1D*)hsimbjetJPLog->Clone("hsimbjetNormalizedJPLog");
+    hsimbjetNormalizedPtJP = (TH2D*)hsimbjetPtJP->Clone("hsimbjetNormalizedPtJP");
+    hsimbjetNormalizedPtJPLog = (TH2D*)hsimbjetPtJPLog->Clone("hsimbjetNormalizedPtJPLog");
+  }
 }
 
-void HfJetTaggingAnalysis::NormalizedHistogram() {
+void HfJetTaggingAnalysis::NormalizedHistogram(bool doJP) {
 
   hsimlfjetNormalizedTrackPt->Scale(1. / hsimlfjetNormalizedTrackPt->GetEntries());
   hsimlfjetNormalizedTrackPhi->Scale(1. / hsimlfjetNormalizedTrackPhi->GetEntries());
@@ -805,27 +805,29 @@ void HfJetTaggingAnalysis::NormalizedHistogram() {
   //hsimbjetNormalizedPtSignImpXYSignificanceN2->Scale(1. / hsimbjetNormalizedPtSignImpXYSignificanceN2->GetEntries());
   //hsimbjetNormalizedPtSignImpXYSignificanceN3->Scale(1. / hsimbjetNormalizedPtSignImpXYSignificanceN3->GetEntries());
 
-  // Scaling histograms for NormalizedSignImpXYSignificanceClass1, NormalizedSignImpXYSignificanceClass2, and NormalizedSignImpXYSignificanceClass3
-  hsimlfjetNormalizedSignImpXYSignificanceClass1->Scale(1. / hsimlfjetNormalizedSignImpXYSignificanceClass1->GetEntries());
-  hsimlfjetNormalizedSignImpXYSignificanceClass2->Scale(1. / hsimlfjetNormalizedSignImpXYSignificanceClass2->GetEntries());
-  hsimlfjetNormalizedSignImpXYSignificanceClass3->Scale(1. / hsimlfjetNormalizedSignImpXYSignificanceClass3->GetEntries());
+//  // Scaling histograms for NormalizedSignImpXYSignificanceClass1, NormalizedSignImpXYSignificanceClass2, and NormalizedSignImpXYSignificanceClass3
+//  hsimlfjetNormalizedSignImpXYSignificanceClass1->Scale(1. / hsimlfjetNormalizedSignImpXYSignificanceClass1->GetEntries());
+//  hsimlfjetNormalizedSignImpXYSignificanceClass2->Scale(1. / hsimlfjetNormalizedSignImpXYSignificanceClass2->GetEntries());
+//  hsimlfjetNormalizedSignImpXYSignificanceClass3->Scale(1. / hsimlfjetNormalizedSignImpXYSignificanceClass3->GetEntries());
+//
+//  hsimcjetNormalizedSignImpXYSignificanceClass1->Scale(1. / hsimcjetNormalizedSignImpXYSignificanceClass1->GetEntries());
+//  hsimcjetNormalizedSignImpXYSignificanceClass2->Scale(1. / hsimcjetNormalizedSignImpXYSignificanceClass2->GetEntries());
+//  hsimcjetNormalizedSignImpXYSignificanceClass3->Scale(1. / hsimcjetNormalizedSignImpXYSignificanceClass3->GetEntries());
+//
+//  hsimbjetNormalizedSignImpXYSignificanceClass1->Scale(1. / hsimbjetNormalizedSignImpXYSignificanceClass1->GetEntries());
+//  hsimbjetNormalizedSignImpXYSignificanceClass2->Scale(1. / hsimbjetNormalizedSignImpXYSignificanceClass2->GetEntries());
+//  hsimbjetNormalizedSignImpXYSignificanceClass3->Scale(1. / hsimbjetNormalizedSignImpXYSignificanceClass3->GetEntries());
 
-  hsimcjetNormalizedSignImpXYSignificanceClass1->Scale(1. / hsimcjetNormalizedSignImpXYSignificanceClass1->GetEntries());
-  hsimcjetNormalizedSignImpXYSignificanceClass2->Scale(1. / hsimcjetNormalizedSignImpXYSignificanceClass2->GetEntries());
-  hsimcjetNormalizedSignImpXYSignificanceClass3->Scale(1. / hsimcjetNormalizedSignImpXYSignificanceClass3->GetEntries());
+  if (doJP) {
+    hsimlfjetNormalizedJP->Scale(1. / hsimlfjetNormalizedJP->GetEntries());
+    hsimlfjetNormalizedJPLog->Scale(1. / hsimlfjetNormalizedJPLog->GetEntries());
 
-  hsimbjetNormalizedSignImpXYSignificanceClass1->Scale(1. / hsimbjetNormalizedSignImpXYSignificanceClass1->GetEntries());
-  hsimbjetNormalizedSignImpXYSignificanceClass2->Scale(1. / hsimbjetNormalizedSignImpXYSignificanceClass2->GetEntries());
-  hsimbjetNormalizedSignImpXYSignificanceClass3->Scale(1. / hsimbjetNormalizedSignImpXYSignificanceClass3->GetEntries());
+    hsimcjetNormalizedJP->Scale(1. / hsimcjetNormalizedJP->GetEntries());
+    hsimcjetNormalizedJPLog->Scale(1. / hsimcjetNormalizedJPLog->GetEntries());
 
-  hsimlfjetNormalizedJP->Scale(1. / hsimlfjetNormalizedJP->GetEntries());
-  hsimlfjetNormalizedJPLog->Scale(1. / hsimlfjetNormalizedJPLog->GetEntries());
-
-  hsimcjetNormalizedJP->Scale(1. / hsimcjetNormalizedJP->GetEntries());
-  hsimcjetNormalizedJPLog->Scale(1. / hsimcjetNormalizedJPLog->GetEntries());
-
-  hsimbjetNormalizedJP->Scale(1. / hsimbjetNormalizedJP->GetEntries());
-  hsimbjetNormalizedJPLog->Scale(1. / hsimbjetNormalizedJPLog->GetEntries());
+    hsimbjetNormalizedJP->Scale(1. / hsimbjetNormalizedJP->GetEntries());
+    hsimbjetNormalizedJPLog->Scale(1. / hsimbjetNormalizedJPLog->GetEntries());
+  }
 }
 
 void HfJetTaggingAnalysis::SaveHistogram(TString outFile) {
@@ -943,15 +945,15 @@ void HfJetTaggingAnalysis::SaveHistogram(TString outFile) {
   delete fout;
 }
 
-int HfJetTaggingAnalysis::LoadSim(TString rootFile, TString taskName) {
+int HfJetTaggingAnalysis::LoadSim(TString rootFile, TString taskName, bool doJP) {
   if (gSystem->AccessPathName(rootFile.Data())) {
     std::cout << "Input file (MC) not found!" << std::endl;
     return 0;
   }
 
-  if (taskName.CompareTo("hf-tagging-task")>0 || taskName.CompareTo("hf-tagging-task")<0) {
-    taskName = "hf-tagging-task";
-  }
+  //if (taskName.CompareTo("hf-tagging-task")>0 || taskName.CompareTo("hf-tagging-task")<0) {
+    //taskName = "hf-tagging-task";
+  //}
 
   TFile* fin;
   fin = TFile::Open(rootFile, "READ");
@@ -1071,28 +1073,30 @@ int HfJetTaggingAnalysis::LoadSim(TString rootFile, TString taskName) {
   hsimlfjetSignImpXYZSignificance = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xyz_significance", taskName.Data()));
 
   // Jet Probability
-  hsimlfjetSignImpXYSignificanceClass1 = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy_significance_class1", taskName.Data()));
-  hsimlfjetSignImpXYSignificanceClass2 = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy_significance_class2", taskName.Data()));
-  hsimlfjetSignImpXYSignificanceClass3 = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy_significance_class3", taskName.Data()));
-  hsimcjetSignImpXYSignificanceClass1 = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy_significance_class1", taskName.Data()));
-  hsimcjetSignImpXYSignificanceClass2 = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy_significance_class2", taskName.Data()));
-  hsimcjetSignImpXYSignificanceClass3 = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy_significance_class3", taskName.Data()));
-  hsimbjetSignImpXYSignificanceClass1 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_significance_class1", taskName.Data()));
-  hsimbjetSignImpXYSignificanceClass2 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_significance_class2", taskName.Data()));
-  hsimbjetSignImpXYSignificanceClass3 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_significance_class3", taskName.Data()));
+  if (doJP) {
+    hsimlfjetSignImpXYSignificanceClass1 = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy_significance_class1", taskName.Data()));
+    hsimlfjetSignImpXYSignificanceClass2 = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy_significance_class2", taskName.Data()));
+    hsimlfjetSignImpXYSignificanceClass3 = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy_significance_class3", taskName.Data()));
+    hsimcjetSignImpXYSignificanceClass1 = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy_significance_class1", taskName.Data()));
+    hsimcjetSignImpXYSignificanceClass2 = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy_significance_class2", taskName.Data()));
+    hsimcjetSignImpXYSignificanceClass3 = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy_significance_class3", taskName.Data()));
+    hsimbjetSignImpXYSignificanceClass1 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_significance_class1", taskName.Data()));
+    hsimbjetSignImpXYSignificanceClass2 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_significance_class2", taskName.Data()));
+    hsimbjetSignImpXYSignificanceClass3 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_significance_class3", taskName.Data()));
 
-  hsimbjetJP = (TH1D*)fin->Get(Form("%s/h_bjet_JP", taskName.Data()));
-  hsimbjetJPLog = (TH1D*)fin->Get(Form("%s/h_bjet_JP_Log", taskName.Data()));
-  hsimbjetPtJP = (TH2D*)fin->Get(Form("%s/h_bjet_pt_JP", taskName.Data()));
-  hsimbjetPtJPLog = (TH2D*)fin->Get(Form("%s/h_bjet_pt_JP_Log", taskName.Data()));
-  hsimcjetJP = (TH1D*)fin->Get(Form("%s/h_cjet_JP", taskName.Data()));
-  hsimcjetJPLog = (TH1D*)fin->Get(Form("%s/h_cjet_JP_Log", taskName.Data()));
-  hsimcjetPtJP = (TH2D*)fin->Get(Form("%s/h_cjet_pt_JP", taskName.Data()));
-  hsimcjetPtJPLog = (TH2D*)fin->Get(Form("%s/h_cjet_pt_JP_Log", taskName.Data()));
-  hsimlfjetJP = (TH1D*)fin->Get(Form("%s/h_lfjet_JP", taskName.Data()));
-  hsimlfjetJPLog = (TH1D*)fin->Get(Form("%s/h_lfjet_JP_Log", taskName.Data()));
-  hsimlfjetPtJP = (TH2D*)fin->Get(Form("%s/h_lfjet_pt_JP", taskName.Data()));
-  hsimlfjetPtJPLog = (TH2D*)fin->Get(Form("%s/h_lfjet_pt_JP_Log", taskName.Data()));
+    hsimbjetJP = (TH1D*)fin->Get(Form("%s/h_bjet_JP", taskName.Data()));
+    hsimbjetJPLog = (TH1D*)fin->Get(Form("%s/h_bjet_JP_Log", taskName.Data()));
+    hsimbjetPtJP = (TH2D*)fin->Get(Form("%s/h_bjet_pt_JP", taskName.Data()));
+    hsimbjetPtJPLog = (TH2D*)fin->Get(Form("%s/h_bjet_pt_JP_Log", taskName.Data()));
+    hsimcjetJP = (TH1D*)fin->Get(Form("%s/h_cjet_JP", taskName.Data()));
+    hsimcjetJPLog = (TH1D*)fin->Get(Form("%s/h_cjet_JP_Log", taskName.Data()));
+    hsimcjetPtJP = (TH2D*)fin->Get(Form("%s/h_cjet_pt_JP", taskName.Data()));
+    hsimcjetPtJPLog = (TH2D*)fin->Get(Form("%s/h_cjet_pt_JP_Log", taskName.Data()));
+    hsimlfjetJP = (TH1D*)fin->Get(Form("%s/h_lfjet_JP", taskName.Data()));
+    hsimlfjetJPLog = (TH1D*)fin->Get(Form("%s/h_lfjet_JP_Log", taskName.Data()));
+    hsimlfjetPtJP = (TH2D*)fin->Get(Form("%s/h_lfjet_pt_JP", taskName.Data()));
+    hsimlfjetPtJPLog = (TH2D*)fin->Get(Form("%s/h_lfjet_pt_JP_Log", taskName.Data()));
+  }
 
   std::cout << "Load completed MC data" << std::endl;
   return 1;
@@ -1104,9 +1108,9 @@ int HfJetTaggingAnalysis::LoadData(TString rootFile, TString taskName) {
     return 0;
   }
 
-  if (taskName.CompareTo("hf-tagging-task")>0 || taskName.CompareTo("hf-tagging-task")<0) {
-    taskName = "hf-tagging-task";
-  }
+  //if (taskName.CompareTo("hf-tagging-task")>0 || taskName.CompareTo("hf-tagging-task")<0) {
+    //taskName = "hf-tagging-task";
+  //}
 
   return 1;
 }
@@ -1115,7 +1119,7 @@ void HfJetTaggingAnalysis::DrawCombined(int num, const std::vector<HistogramData
   TLegend *leg = new TLegend(xmin, ymin, xmax, ymax);
   for (int i=0; i<num; i++){
     TH1D *hist = histograms[i].hist;
-    this->HistColorStyle(hist, i+1, i+20, 0.5, i+1, 1);
+    this->HistColorStyle(hist, i+1, i+20, 0.3, i+1, 1);
     TString clfi = histograms[i].classification;
     leg->AddEntry(hist, clfi.Data(), "lep");
     hist->Draw("same");

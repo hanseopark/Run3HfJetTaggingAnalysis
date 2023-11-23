@@ -1,9 +1,12 @@
 #include "../include/HfJetTaggingAnalysis.h"
+#include "../include/JetAnalysis.h"
 #include <TString.h>
 
 void PlotHfJetTaggingTask(TString rootsim="") {
-  TString taskName = "hf-tagging-task";
-  HfJetTaggingAnalysis *HfJetTagObj = new HfJetTaggingAnalysis(rootsim.Data(), taskName.Data(), true);
+  TString taskName = "jet-taggerhf-tc-charged";
+  bool doMC = true;
+  bool doJP = false;
+  HfJetTaggingAnalysis *HfJetTagObj = new HfJetTaggingAnalysis(rootsim.Data(), taskName.Data(), doMC, doJP);
 
   // General Plot QA
   HfJetTagObj->DrawTaggedJetTrackPt();
@@ -34,7 +37,13 @@ void PlotHfJetTaggingTask(TString rootsim="") {
   HfJetTagObj->DrawTaggedJetSignImpXYSignificanceN3();
 
   // JP
-  HfJetTagObj->DrawTaggedJetProbability();
-  HfJetTagObj->DrawTaggedJetProbabilityLog();
+  if (doJP) {
+    HfJetTagObj->DrawTaggedJetProbability();
+    HfJetTagObj->DrawTaggedJetProbabilityLog();
+  }
+
+  // Template Fit
+  //HfJetTaggingTemplateFit& HfJetTagFitObj = dynamic_cast<HfJetTaggingAnalysis&>(*HfJetTagObj);
+  //HfJetTaggingTemplateFIt *HfJetTagFitObj = new HfJetTaggingTemplateFit(rootsim.Data(), taskName.Data(), true);
 }
 
