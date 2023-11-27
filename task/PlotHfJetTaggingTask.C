@@ -6,20 +6,21 @@ void PlotHfJetTaggingTask(TString rootsim="") {
   TString taskName = "jet-taggerhf-tc-charged";
   bool doMC = true;
   bool doJP = false;
+  bool withInc = true;
   HfJetTaggingAnalysis *HfJetTagObj = new HfJetTaggingAnalysis(rootsim.Data(), taskName.Data(), doMC, doJP);
 
   // General Plot QA
-  HfJetTagObj->DrawTaggedJetTrackPt();
-  HfJetTagObj->DrawTaggedJetTrackEta();
-  HfJetTagObj->DrawTaggedJetTrackPhi();
-  HfJetTagObj->DrawTaggedJetImpXY();
-  HfJetTagObj->DrawTaggedJetSignImpXY();
-  HfJetTagObj->DrawTaggedJetImpXYSignificance();
-  HfJetTagObj->DrawTaggedJetSignImpXYSignificance();
-  HfJetTagObj->DrawTaggedJetImpXYZ();
-  HfJetTagObj->DrawTaggedJetSignImpXYZ();
-  HfJetTagObj->DrawTaggedJetImpXYZSignificance();
-  HfJetTagObj->DrawTaggedJetSignImpXYZSignificance();
+  HfJetTagObj->DrawTaggedJetTrackPt(withInc);
+  HfJetTagObj->DrawTaggedJetTrackEta(withInc);
+  HfJetTagObj->DrawTaggedJetTrackPhi(withInc);
+  HfJetTagObj->DrawTaggedJetImpXY(withInc);
+  HfJetTagObj->DrawTaggedJetSignImpXY(withInc);
+  HfJetTagObj->DrawTaggedJetImpXYSignificance(withInc);
+  HfJetTagObj->DrawTaggedJetSignImpXYSignificance(withInc);
+  HfJetTagObj->DrawTaggedJetImpXYZ(withInc);
+  HfJetTagObj->DrawTaggedJetSignImpXYZ(withInc);
+  HfJetTagObj->DrawTaggedJetImpXYZSignificance(withInc);
+  HfJetTagObj->DrawTaggedJetSignImpXYZSignificance(withInc);
 
 
   // Track counting

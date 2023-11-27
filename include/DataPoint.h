@@ -35,15 +35,16 @@ namespace HfJetTagging{
   const int LFJETCOLOR=2;
   const int CJETCOLOR=3;
   const int BJETCOLOR=4;
+  const double MARKERSIZE=0.4;
   const double LEG[4]={0.7,0.7,0.9,0.9}; // xmin, ymin, xmax, ymax
   namespace REFHIST { // xmin, xmax, ymin, ymax
     const double TRACKPT[4]={-0.02,100.0,-1.0e-7,0.15};
     const double TRACKETA[4]={-1.f,1.f,-1.0e-7,0.1};
     const double TRACKPHI[4]={-0.02,2*TMath::Pi(),-1.0e-7,0.1};
-    const double IPXY[4]={-0.1,0.1,1.0e-6,0.1};
-    const double IPXYZ[4]={-0.4,0.4,1.0e-5,0.1};
-    const double IPXYSIG[4]={-10,10,1.0e-6,0.1};
-    const double IPXYZSIG[4]={-40,40,1.0e-5,0.1};
+    const double IPXY[4]={-0.04,0.04,1.0e-6,1.0};
+    const double IPXYZ[4]={-0.1,0.1,1.0e-5,1.0};
+    const double IPXYSIG[4]={-20,20,1.0e-4,1.0};
+    const double IPXYZSIG[4]={-100,100,1.0e-5,0.1};
     const double JP[4]={-0.01,1.0,1.0e-5,0.1};
     const double LOGJP[4]={-0.01,10,1.0e-5,0.1};
 

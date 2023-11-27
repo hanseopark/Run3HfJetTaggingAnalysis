@@ -34,8 +34,12 @@ class JetAnalysis {
     TH1D* hsimincjetSignImpXY;
     TH1D* hsimincjetImpXYSignificance;
     TH1D* hsimincjetSignImpXYSignificance;
+    TH2D* hsimincjetPtSignImpXYSignificance;
 
-    TH1D* hsimincjetPtSignImpXYSignificance;
+    TH1D* hsimincjetImpXYZ;
+    TH1D* hsimincjetSignImpXYZ;
+    TH1D* hsimincjetImpXYZSignificance;
+    TH1D* hsimincjetSignImpXYZSignificance;
 
     // related Track Counting
     TH1D* hsimincjetImpXYN1;
@@ -69,7 +73,11 @@ class JetAnalysis {
     TH1D* hsimincjetNormalizedSignImpXY;
     TH1D* hsimincjetNormalizedImpXYSignificance;
     TH1D* hsimincjetNormalizedSignImpXYSignificance;
-    TH1D* hsimincjetNormalizedPtSignImpXYSignificance;
+    TH2D* hsimincjetNormalizedPtSignImpXYSignificance;
+    TH1D* hsimincjetNormalizedImpXYZ;
+    TH1D* hsimincjetNormalizedSignImpXYZ;
+    TH1D* hsimincjetNormalizedImpXYZSignificance;
+    TH1D* hsimincjetNormalizedSignImpXYZSignificance;
 
     // related Track Counting
     TH1D* hsimincjetNormalizedImpXYN1;
@@ -107,6 +115,11 @@ JetAnalysis::~JetAnalysis() {
   if (hsimincjetSignImpXY) delete hsimincjetSignImpXY;
   if (hsimincjetImpXYSignificance) delete hsimincjetImpXYSignificance;
   if (hsimincjetSignImpXYSignificance) delete hsimincjetSignImpXYSignificance;
+  if (hsimincjetImpXYZ) delete hsimincjetImpXYZ;
+  if (hsimincjetSignImpXYZ) delete hsimincjetSignImpXYZ;
+  if (hsimincjetImpXYZSignificance) delete hsimincjetImpXYZSignificance;
+  if (hsimincjetSignImpXYZSignificance) delete hsimincjetSignImpXYZSignificance;
+
   if (hsimincjetImpXYN1) delete hsimincjetImpXYN1;
   if (hsimincjetSignImpXYN1) delete hsimincjetSignImpXYN1;
   if (hsimincjetImpXYSignificanceN1) delete hsimincjetImpXYSignificanceN1;
@@ -176,6 +189,10 @@ int JetAnalysis::LoadSimIncJet(TString rootFile, TString taskHfJetTagging, bool 
   hsimincjetSignImpXY = reinterpret_cast<TH1D*>(fin->Get(Form("%s/h_inc_jet_sign_impact_parameter_xy", taskHfJetTagging.Data())));
   hsimincjetImpXYSignificance = reinterpret_cast<TH1D*>(fin->Get(Form("%s/h_inc_jet_impact_parameter_xy_significance", taskHfJetTagging.Data())));
   hsimincjetSignImpXYSignificance = reinterpret_cast<TH1D*>(fin->Get(Form("%s/h_inc_jet_sign_impact_parameter_xy_significance", taskHfJetTagging.Data())));
+  hsimincjetImpXYZ = reinterpret_cast<TH1D*>(fin->Get(Form("%s/h_inc_jet_impact_parameter_xyz", taskHfJetTagging.Data())));
+  hsimincjetSignImpXYZ = reinterpret_cast<TH1D*>(fin->Get(Form("%s/h_inc_jet_sign_impact_parameter_xyz", taskHfJetTagging.Data())));
+  hsimincjetImpXYZSignificance = reinterpret_cast<TH1D*>(fin->Get(Form("%s/h_inc_jet_impact_parameter_xyz_significance", taskHfJetTagging.Data())));
+  hsimincjetSignImpXYZSignificance = reinterpret_cast<TH1D*>(fin->Get(Form("%s/h_inc_jet_sign_impact_parameter_xyz_significance", taskHfJetTagging.Data())));
   hsimincjetImpXYN1 = reinterpret_cast<TH1D*>(fin->Get(Form("%s/h_inc_jet_impact_parameter_xy_N1", taskHfJetTagging.Data())));
   hsimincjetSignImpXYN1 = reinterpret_cast<TH1D*>(fin->Get(Form("%s/h_inc_jet_sign_impact_parameter_xy_N1", taskHfJetTagging.Data())));
   hsimincjetImpXYSignificanceN1 = reinterpret_cast<TH1D*>(fin->Get(Form("%s/h_inc_jet_impact_parameter_xy_significance_N1", taskHfJetTagging.Data())));
@@ -189,7 +206,7 @@ int JetAnalysis::LoadSimIncJet(TString rootFile, TString taskHfJetTagging, bool 
   hsimincjetImpXYSignificanceN3 = reinterpret_cast<TH1D*>(fin->Get(Form("%s/h_inc_jet_impact_parameter_xy_significance_N3", taskHfJetTagging.Data())));
   hsimincjetSignImpXYSignificanceN3 = reinterpret_cast<TH1D*>(fin->Get(Form("%s/h_inc_jet_sign_impact_parameter_xy_significance_N3", taskHfJetTagging.Data())));
 
-  hsimincjetPtSignImpXYSignificance = (TH1D*)fin->Get(Form("%s/h_inc_jet_pt_sign_impact_parameter_xy_significance", taskHfJetTagging.Data()));
+  hsimincjetPtSignImpXYSignificance = (TH2D*)fin->Get(Form("%s/h_inc_jet_pt_sign_impact_parameter_xy_significance", taskHfJetTagging.Data()));
 
   if (doJP) {
     hsimincjetJP = (TH1D*)fin->Get(Form("%s/h_inc_jet_JP", taskHfJetTagging.Data()));
@@ -202,13 +219,17 @@ int JetAnalysis::LoadSimIncJet(TString rootFile, TString taskHfJetTagging, bool 
 }
 
 void JetAnalysis::InitHistogramIncJet(bool doJP) {
-  hsimincjetNormalizedTrackPt = reinterpret_cast<TH1D*>(hsimincjetImpXY->Clone("hsimincjetNormalizedTrackPt"));
-  hsimincjetNormalizedTrackPhi = reinterpret_cast<TH1D*>(hsimincjetImpXY->Clone("hsimincjetNormalizedTrackPhi"));
-  hsimincjetNormalizedTrackEta = reinterpret_cast<TH1D*>(hsimincjetImpXY->Clone("hsimincjetNormalizedTrackEta"));
+  hsimincjetNormalizedTrackPt = reinterpret_cast<TH1D*>(hsimincjetTrackPt->Clone("hsimincjetNormalizedTrackPt"));
+  hsimincjetNormalizedTrackPhi = reinterpret_cast<TH1D*>(hsimincjetTrackPhi->Clone("hsimincjetNormalizedTrackPhi"));
+  hsimincjetNormalizedTrackEta = reinterpret_cast<TH1D*>(hsimincjetTrackEta->Clone("hsimincjetNormalizedTrackEta"));
   hsimincjetNormalizedImpXY = reinterpret_cast<TH1D*>(hsimincjetImpXY->Clone("hsimincjetNormalizedImpXY"));
   hsimincjetNormalizedImpXYSignificance = (TH1D*)hsimincjetImpXYSignificance->Clone("hsimincjetNormalizedImpXYSignificance");
   hsimincjetNormalizedSignImpXY = (TH1D*)hsimincjetSignImpXY->Clone("hsimincjetNormalizedSignImpXY");
   hsimincjetNormalizedSignImpXYSignificance = (TH1D*)hsimincjetSignImpXYSignificance->Clone("hsimincjetNormalizedSignImpXYSignificance");
+  hsimincjetNormalizedImpXYZ = reinterpret_cast<TH1D*>(hsimincjetImpXYZ->Clone("hsimincjetNormalizedImpXYZ"));
+  hsimincjetNormalizedImpXYZSignificance = (TH1D*)hsimincjetImpXYZSignificance->Clone("hsimincjetNormalizedImpXYZSignificance");
+  hsimincjetNormalizedSignImpXYZ = (TH1D*)hsimincjetSignImpXYZ->Clone("hsimincjetNormalizedSignImpXYZ");
+  hsimincjetNormalizedSignImpXYZSignificance = (TH1D*)hsimincjetSignImpXYZSignificance->Clone("hsimincjetNormalizedSignImpXYZSignificance");
   hsimincjetNormalizedImpXYN1 = (TH1D*)hsimincjetImpXYN1->Clone("hsimincjetNormalizedImpXYN1");
   hsimincjetNormalizedImpXYSignificanceN1 = (TH1D*)hsimincjetImpXYSignificanceN1->Clone("hsimincjetNormalizedImpXYSignificanceN1");
   hsimincjetNormalizedSignImpXYN1 = (TH1D*)hsimincjetSignImpXYN1->Clone("hsimincjetNormalizedSignImpXYN1");
@@ -240,6 +261,10 @@ void JetAnalysis::NormalizedHistogramIncJet(bool doJP) {
   hsimincjetNormalizedImpXYSignificance->Scale(1. / hsimincjetNormalizedImpXYSignificance->GetEntries());
   hsimincjetNormalizedSignImpXY->Scale(1. / hsimincjetNormalizedSignImpXY->GetEntries());
   hsimincjetNormalizedSignImpXYSignificance->Scale(1. / hsimincjetNormalizedSignImpXYSignificance->GetEntries());
+  hsimincjetNormalizedImpXYZ->Scale(1. / hsimincjetNormalizedImpXYZ->GetEntries());
+  hsimincjetNormalizedImpXYZSignificance->Scale(1. / hsimincjetNormalizedImpXYZSignificance->GetEntries());
+  hsimincjetNormalizedSignImpXYZ->Scale(1. / hsimincjetNormalizedSignImpXYZ->GetEntries());
+  hsimincjetNormalizedSignImpXYZSignificance->Scale(1. / hsimincjetNormalizedSignImpXYZSignificance->GetEntries());
   hsimincjetNormalizedImpXYN1->Scale(1. / hsimincjetNormalizedImpXYN1->GetEntries());
   hsimincjetNormalizedImpXYSignificanceN1->Scale(1. / hsimincjetNormalizedImpXYSignificanceN1->GetEntries());
   hsimincjetNormalizedSignImpXYN1->Scale(1. / hsimincjetNormalizedSignImpXYN1->GetEntries());
