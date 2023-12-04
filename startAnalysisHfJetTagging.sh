@@ -4,8 +4,10 @@
 
 ## TO MAKE run.sh
 ## # !bin/bash
-## INPUT=/path/
-## bash startAnalysisHfJetTagging.sh $INPUT
+## TCINPUT=/path/
+## SV2PRONGINPUT=/path/
+## SV3PRONGINPUT=/path/
+## bash startAnalysisHfJetTagging.sh $TCINPUT $SV2PRONGINPUT $SV3PRONGINPUT
 
 # it needs to write cut information for direcoty
 mkdir -p fig/data/incjet fig/data/lfjet fig/data/cjet fig/data/bjet fig/sim/incjet fig/sim/lfjet/ fig/sim/cjet/ fig/sim/bjet
