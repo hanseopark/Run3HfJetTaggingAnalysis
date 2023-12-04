@@ -43,10 +43,14 @@ namespace HfJetTagging{
     const double TRACKPHI[4]={-0.02,2*TMath::Pi(),-1.0e-7,0.1};
     const double IPXY[4]={-0.04,0.04,1.0e-6,1.0};
     const double IPXYZ[4]={-0.1,0.1,1.0e-5,1.0};
-    const double IPXYSIG[4]={-20,20,1.0e-4,1.0};
+    const double IPXYSIG[4]={-20,20,1.0e-5,1.0};
     const double IPXYZSIG[4]={-100,100,1.0e-5,0.1};
     const double JP[4]={-0.01,1.0,1.0e-5,0.1};
     const double LOGJP[4]={-0.01,10,1.0e-5,0.1};
+    const double LXY[4]={-0.01,0.1,1.0e-5,1.0};
+    const double SXY[4]={-0.01,50,1.0e-5,1.0};
+    const double LXYZ[4]={-0.01,0.1,1.0e-5,1.0};
+    const double SXYZ[4]={-0.01,50,1.0e-5,1.0};
 
   } // namespace REFHIST
 } // namespace HfJetTagging
