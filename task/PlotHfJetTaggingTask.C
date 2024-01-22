@@ -1,73 +1,148 @@
+#include "../include/DataPoint.h"
+//#include "../include/HfJetTaggingAnalysis.h"
 #include "../include/HfJetTaggingTCAnalysis.h"
-#include "../include/HfJetTaggingSVAnalysis.h"
-#include "../include/JetAnalysis.h"
+//#include "../include/HfJetTaggingSVAnalysis.h"
+//#include "../include/JetAnalysis.h"
 #include <TString.h>
 
-void PlotHfJetTaggingTask(TString rootsimTC="", TString rootsimSV2Prong="", TString rootsimSV3Prong="") {
-  TString taskTC = "jet-taggerhf-tc-charged";
-  TString taskSV = "jet-taggerhf-sv-charged";
+//void PlotHfJetTaggingGeneralQA(TString rootdata="", TString rootsim="") {
+//  TString taskTC = "jet-taggerhf-tc-charged";
+//  TString taskSV = "jet-taggerhf-sv-charged";
+//  bool doData = false;
+//  bool doMC = true;
+//  bool dopartLevel = false;
+//  bool doJP = false;
+//  bool doSV2Prong = false;
+//  bool doSV3Prong = false;
+//  bool doTemplateFit = false;
+//  bool withInc = true;
+//  bool doLog = true;
+//
+//  //JetAnalysis *JetObj = new JetAnalysis(rootdata.Data(), rootsim.Data(), doData, doMC, dopartLevel);
+//  HfJetTaggingAnalysis *HfJetTagObj = new HfJetTaggingAnalysis(rootdata.Data(), rootsim.Data(), doData, doMC, dopartLevel);
+//
+////  HfJetTaggingAnalysis *HfJetTagObj = new HfJetTaggingAnalysis(rootdataTC.Data(), rootsimTC.Data(), true, true, false);
+//  // General Plot QA
+//  /// Each parameter distribution when compared jet flavour if you want to be able to add inclusive
+//  /// Data
+//  if (doData) {
+//    HfJetTagObj->DrawDataTagJetPt(doLog);
+//    HfJetTagObj->DrawDataTagTrackPt(doLog, 0);
+//    HfJetTagObj->DrawDataTagTrackEta(doLog, 0);
+//    HfJetTagObj->DrawDataTagTrackPhi(doLog, 0);
+//  }
+//
+//  /// MC
+//  if (doMC) {
+//    HfJetTagObj->DrawTaggedJetTrackPt(withInc, doLog, 0);
+//    HfJetTagObj->DrawTaggedJetTrackEta(withInc, doLog);
+//    HfJetTagObj->DrawTaggedJetTrackPhi(withInc, doLog);
+//    HfJetTagObj->DrawTaggedJetImpXY(withInc, doLog);
+//    HfJetTagObj->DrawTaggedJetSignImpXY(withInc, doLog);
+//    HfJetTagObj->DrawTaggedJetImpXYSignificance(withInc, doLog);
+//    HfJetTagObj->DrawTaggedJetSignImpXYSignificance(withInc, doLog);
+//    HfJetTagObj->DrawTaggedJetImpXYZ(withInc, doLog);
+//    HfJetTagObj->DrawTaggedJetSignImpXYZ(withInc, doLog);
+//    HfJetTagObj->DrawTaggedJetImpXYZSignificance(withInc, doLog);
+//    HfJetTagObj->DrawTaggedJetSignImpXYZSignificance(withInc, doLog);
+//  }
+//
+//  //HfJetTagObj->SaveHistogramFlavourQA("FlavourQA.root", true, false);
+//
+////  // For MC data
+////  if (doTC) { /// IP and TC method
+////    HfJetTaggingTCAnalysis *HfJetTagTCObj = new HfJetTaggingTCAnalysis(rootsimTC.Data(), rootsimSV2Prong.Data(), rootsimSV3Prong.Data(), taskTC.Data(), taskSV.Data(), doMC, doTC, doJP, doSV2Prong, doSV3Prong);
+////    // General Plot QA
+////    /// Each parameter distribution when compared jet flavour if you want to be able to add inclusive
+////    HfJetTagTCObj->DrawTaggedJetTrackPt(withInc, doLog, 0);
+////    HfJetTagTCObj->DrawTaggedJetTrackEta(withInc, doLog);
+////    HfJetTagTCObj->DrawTaggedJetTrackPhi(withInc, doLog);
+////    HfJetTagTCObj->DrawTaggedJetImpXY(withInc, doLog);
+////    HfJetTagTCObj->DrawTaggedJetSignImpXY(withInc, doLog);
+////    HfJetTagTCObj->DrawTaggedJetImpXYSignificance(withInc, doLog);
+////    HfJetTagTCObj->DrawTaggedJetSignImpXYSignificance(withInc, doLog);
+////    HfJetTagTCObj->DrawTaggedJetImpXYZ(withInc, doLog);
+////    HfJetTagTCObj->DrawTaggedJetSignImpXYZ(withInc, doLog);
+////    HfJetTagTCObj->DrawTaggedJetImpXYZSignificance(withInc, doLog);
+////    HfJetTagTCObj->DrawTaggedJetSignImpXYZSignificance(withInc, doLog);
+////
+////    /// Each parameter distribution in jet flavour when compared jet pT range 
+////    for (int i=1; i<4; i++) { // 1: charm, 2: beauty, 3: light flavour
+////      HfJetTagTCObj->DrawTaggedFlavourJetTrackPt(doLog, i, HfJetTagging::startJetPt);
+////      HfJetTagTCObj->DrawTaggedFlavourJetTrackEta(doLog, i, HfJetTagging::startJetPt);
+////      HfJetTagTCObj->DrawTaggedFlavourJetTrackPhi(doLog, i, HfJetTagging::startJetPt);
+////    }
+////    // TC
+////    HfJetTagTCObj->DrawTaggedJetSignImpXYSignificanceN1(withInc, doLog);
+////    HfJetTagTCObj->DrawTaggedJetSignImpXYSignificanceN2(withInc, doLog);
+////    HfJetTagTCObj->DrawTaggedJetSignImpXYSignificanceN3(withInc, doLog);
+////
+//////    // Track counting
+//////    HfJetTagTCObj->DrawTaggedJetImpXYN1(doLog);
+//////    HfJetTagTCObj->DrawTaggedJetSignImpXYN1(doLog);
+//////    HfJetTagTCObj->DrawTaggedJetImpXYSignificanceN1(doLog);
+//////    HfJetTagTCObj->DrawTaggedJetSignImpXYSignificanceN1(doLog);
+//////    HfJetTagTCObj->DrawTaggedJetImpXYN2(doLog);
+//////    HfJetTagTCObj->DrawTaggedJetSignImpXYN2(doLog);
+//////    HfJetTagTCObj->DrawTaggedJetImpXYSignificanceN2(doLog);
+//////    HfJetTagTCObj->DrawTaggedJetSignImpXYSignificanceN2(doLog);
+//////    HfJetTagTCObj->DrawTaggedJetImpXYN3(doLog);
+//////    HfJetTagTCObj->DrawTaggedJetSignImpXYN3(doLog);
+//////    HfJetTagTCObj->DrawTaggedJetImpXYSignificanceN3(doLog);
+//////    HfJetTagTCObj->DrawTaggedJetSignImpXYSignificanceN3(doLog);
+//////
+//////    // JP
+//////    if (doJP) {
+//////      HfJetTagTCObj->DrawTaggedJetProbability();
+//////      HfJetTagTCObj->DrawTaggedJetProbabilityLog();
+//////    }
+////    HfJetTagTCObj->SaveHistogram("tc.root");
+////  }
+////
+//////  if (doSV2Prong || doSV3Prong) {
+//////    HfJetTaggingSVAnalysis *HfJetTagSVObj = new HfJetTaggingSVAnalysis(rootsimTC.Data(), rootsimSV2Prong.Data(), rootsimSV3Prong.Data(), taskTC.Data(), taskSV.Data(), doMC, doSV2Prong, doSV3Prong);
+//////    if (doSV2Prong) {
+//////      HfJetTagSVObj->DrawTaggedJet2ProngLxy(false, doLog);
+//////      HfJetTagSVObj->DrawTaggedJet2ProngSxy(false, doLog);
+//////      HfJetTagSVObj->DrawTaggedJet2ProngLxyz(false, doLog);
+//////      HfJetTagSVObj->DrawTaggedJet2ProngSxyz(false, doLog);
+//////    }
+//////    if (doSV3Prong) {
+//////      HfJetTagSVObj->DrawTaggedJet3ProngLxy(false, doLog);
+//////      HfJetTagSVObj->DrawTaggedJet3ProngSxy(false, doLog);
+//////      HfJetTagSVObj->DrawTaggedJet3ProngLxyz(false, doLog);
+//////      HfJetTagSVObj->DrawTaggedJet3ProngSxyz(false, doLog);
+//////    }
+//////  }
+////
+////  if (doTemplateFit) { // Template Fit
+////  //HfJetTaggingTemplateFit& HfJetTagFitObj = dynamic_cast<HfJetTaggingAnalysis&>(*HfJetTagTCObj);
+////  //HfJetTaggingTemplateFIt *HfJetTagFitObj = new HfJetTaggingTemplateFit(rootsim.Data(), taskTC.Data(), true);
+////  }
+//}
+
+void PlotHfJetTaggingTCQA(TString rootdata, TString rootsim) {
+  bool doData = false;
   bool doMC = true;
-  bool doTC = true;
-  bool doJP = false;
-  bool doSV2Prong = true;
-  bool doSV3Prong = true;
-  bool withInc = true;
+  bool dopartLevel = false;
+  bool withInc = false;
+  bool doLog = true;
 
-  if (doTC) { /// IP and TC method
-    HfJetTaggingTCAnalysis *HfJetTagTCObj = new HfJetTaggingTCAnalysis(rootsimTC.Data(), rootsimSV2Prong.Data(), rootsimSV3Prong.Data(), taskTC.Data(), taskSV.Data(), doMC, doTC, doJP, doSV2Prong, doSV3Prong);
-    // General Plot QA
-    HfJetTagTCObj->DrawTaggedJetTrackPt(withInc);
-    HfJetTagTCObj->DrawTaggedJetTrackEta(withInc);
-    HfJetTagTCObj->DrawTaggedJetTrackPhi(withInc);
-    HfJetTagTCObj->DrawTaggedJetImpXY(withInc);
-    HfJetTagTCObj->DrawTaggedJetSignImpXY(withInc);
-    HfJetTagTCObj->DrawTaggedJetImpXYSignificance(withInc);
-    HfJetTagTCObj->DrawTaggedJetSignImpXYSignificance(withInc);
-    HfJetTagTCObj->DrawTaggedJetImpXYZ(withInc);
-    HfJetTagTCObj->DrawTaggedJetSignImpXYZ(withInc);
-    HfJetTagTCObj->DrawTaggedJetImpXYZSignificance(withInc);
-    HfJetTagTCObj->DrawTaggedJetSignImpXYZSignificance(withInc);
+  HfJetTaggingTCAnalysis *HfJetTagTCObj = new HfJetTaggingTCAnalysis(rootdata.Data(), rootsim.Data(), doData, doMC, dopartLevel);
+  HfJetTagTCObj->DrawTaggedJetSignImpXYSignificanceN1(withInc, doLog);
+  HfJetTagTCObj->DrawTaggedJetSignImpXYSignificanceN2(withInc, doLog);
+  HfJetTagTCObj->DrawTaggedJetSignImpXYSignificanceN3(withInc, doLog);
+  HfJetTagTCObj->DrawTaggedJetSignImpZSignificanceN1(withInc, doLog);
+  HfJetTagTCObj->DrawTaggedJetSignImpZSignificanceN2(withInc, doLog);
+  HfJetTagTCObj->DrawTaggedJetSignImpZSignificanceN3(withInc, doLog);
+  HfJetTagTCObj->DrawTaggedJetSignImpXYZSignificanceN1(withInc, doLog);
+  HfJetTagTCObj->DrawTaggedJetSignImpXYZSignificanceN2(withInc, doLog);
+  HfJetTagTCObj->DrawTaggedJetSignImpXYZSignificanceN3(withInc, doLog);
 
+}
 
-    // Track counting
-    HfJetTagTCObj->DrawTaggedJetImpXYN1();
-    HfJetTagTCObj->DrawTaggedJetSignImpXYN1();
-    HfJetTagTCObj->DrawTaggedJetImpXYSignificanceN1();
-    HfJetTagTCObj->DrawTaggedJetSignImpXYSignificanceN1();
-    HfJetTagTCObj->DrawTaggedJetImpXYN2();
-    HfJetTagTCObj->DrawTaggedJetSignImpXYN2();
-    HfJetTagTCObj->DrawTaggedJetImpXYSignificanceN2();
-    HfJetTagTCObj->DrawTaggedJetSignImpXYSignificanceN2();
-    HfJetTagTCObj->DrawTaggedJetImpXYN3();
-    HfJetTagTCObj->DrawTaggedJetSignImpXYN3();
-    HfJetTagTCObj->DrawTaggedJetImpXYSignificanceN3();
-    HfJetTagTCObj->DrawTaggedJetSignImpXYSignificanceN3();
-
-    // JP
-    if (doJP) {
-      HfJetTagTCObj->DrawTaggedJetProbability();
-      HfJetTagTCObj->DrawTaggedJetProbabilityLog();
-    }
-  }
-
-  if (doSV2Prong || doSV3Prong) {
-    HfJetTaggingSVAnalysis *HfJetTagSVObj = new HfJetTaggingSVAnalysis(rootsimTC.Data(), rootsimSV2Prong.Data(), rootsimSV3Prong.Data(), taskTC.Data(), taskSV.Data(), doMC, doSV2Prong, doSV3Prong);
-    if (doSV2Prong) {
-      HfJetTagSVObj->DrawTaggedJet2ProngLxy(false);
-      HfJetTagSVObj->DrawTaggedJet2ProngSxy(false);
-      HfJetTagSVObj->DrawTaggedJet2ProngLxyz(false);
-      HfJetTagSVObj->DrawTaggedJet2ProngSxyz(false);
-    }
-    if (doSV3Prong) {
-      HfJetTagSVObj->DrawTaggedJet3ProngLxy(false);
-      HfJetTagSVObj->DrawTaggedJet3ProngSxy(false);
-      HfJetTagSVObj->DrawTaggedJet3ProngLxyz(false);
-      HfJetTagSVObj->DrawTaggedJet3ProngSxyz(false);
-    }
-  }
-
-    // Template Fit
-  //HfJetTaggingTemplateFit& HfJetTagFitObj = dynamic_cast<HfJetTaggingAnalysis&>(*HfJetTagTCObj);
-  //HfJetTaggingTemplateFIt *HfJetTagFitObj = new HfJetTaggingTemplateFit(rootsim.Data(), taskTC.Data(), true);
+void PlotHfJetTaggingTask(TString rootdata="", TString rootsim="") {
+  //PlotHfJetTaggingGeneralQA(rootdata.Data(), rootsim.Data());
+  PlotHfJetTaggingTCQA(rootdata.Data(), rootsim.Data());
 }
 
