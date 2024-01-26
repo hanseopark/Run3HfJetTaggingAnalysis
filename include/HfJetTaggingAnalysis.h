@@ -33,6 +33,7 @@ class HfJetTaggingAnalysis {
       	CloneNormalizedHistogramFlavourQAMC();
       	NormalizedHistogramFlavourQAMC();
 			}
+      SaveHistogramFlavourQA("FlavourQA.root", doData, doMC, dopartLevel);
     }
     ~HfJetTaggingAnalysis();
 
@@ -48,7 +49,7 @@ class HfJetTaggingAnalysis {
     void CloneNormalizedHistogramFlavourQAMC();
     void NormalizedHistogramFlavourQAData();
     void NormalizedHistogramFlavourQAMC();
-    void SaveHistogramFlavourQA(TString rootFile, bool doData, bool doMC);
+    void SaveHistogramFlavourQA(TString rootFile, bool doData, bool doMC, bool dopartLevel);
 
 		/// Draw
     void HistColorStyle(TH1F* h1, int mc, int ms, double mS, int lc, int ls);
@@ -107,17 +108,17 @@ class HfJetTaggingAnalysis {
     TH1F* hsimTagjetSignImpXYZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
 
     TH1F* hsimtrackPtImpXY[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
-    TH1F* hsimtrackSignImpXY[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
-    TH1F* hsimtrackImpXYSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
-    TH1F* hsimtrackSignImpXYSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
-    TH1F* hsimtrackImpZ[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
-    TH1F* hsimtrackSignImpZ[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
-    TH1F* hsimtrackImpZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
-    TH1F* hsimtrackSignImpZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
-    TH1F* hsimtrackImpXYZ[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
-    TH1F* hsimtrackSignImpXYZ[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
-    TH1F* hsimtrackImpXYZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
-    TH1F* hsimtrackSignImpXYZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackPtSignImpXY[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackPtImpXYSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackPtSignImpXYSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackPtImpZ[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackPtSignImpZ[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackPtImpZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackPtSignImpZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackPtImpXYZ[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackPtSignImpXYZ[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackPtImpXYZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackPtSignImpXYZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
 
   protected:
     // draw option. It should be moved to JetAnalysis.h when itself will be merged
@@ -324,7 +325,7 @@ void HfJetTaggingAnalysis::ProjectionHistFlavourQAMC() {
 	int binsToFlavour[] = {1, 2, 3}; // 1: charm, 2: beauty, 3: light flavour
 	int numBinsToFlavour = sizeof(binsToFlavour) / sizeof(binsToFlavour[0]);
 	for (int i=0; i<numBinsToFlavour; i++) {
-		int binZ = binsToFlavour[i];
+		int binZ = binsToFlavour[i] + 1;
 		TH1F* projTrackPt = reinterpret_cast<TH1F*> (h3simTagjetPtTrackPtFlavour->ProjectionY(Form("projTrackPt_%d", binZ), 1, h3simTagjetPtTrackPtFlavour->GetNbinsX(), binZ, binZ));
 		TH1F* projTrackEta = reinterpret_cast<TH1F*> (h3simTagjetPtTrackEtaFlavour->ProjectionY(Form("projTrackEta_%d", binZ), 1, h3simTagjetPtTrackEtaFlavour->GetNbinsX(), binZ, binZ));
 		TH1F* projTrackPhi = reinterpret_cast<TH1F*> (h3simTagjetPtTrackPhiFlavour->ProjectionY(Form("projTrackPhi_%d", binZ), 1, h3simTagjetPtTrackPhiFlavour->GetNbinsX(), binZ, binZ));
@@ -506,16 +507,16 @@ void HfJetTaggingAnalysis::CloneNormalizedHistogramFlavourQAMC() {
 }
 
 void HfJetTaggingAnalysis::NormalizedHistogramFlavourQAData() {
-	hdataTagjetNormalizedPt->Scale(1. / hdataTagjetNormalizedPt->Integral());
+	hdataTagjetNormalizedPt->Scale(1. / hdataTagjetNormalizedPt->GetEntries());
 	for (int binJetPt =0; binJetPt < HfJetTagging::nBinsJetPt+1; binJetPt++) {
-		hdataTagjetNormalizedTrackPt[binJetPt]->Scale(1. / hdataTagjetNormalizedTrackPt[binJetPt]->Integral());
-		hdataTagjetNormalizedTrackEta[binJetPt]->Scale(1. / hdataTagjetNormalizedTrackEta[binJetPt]->Integral());
-		hdataTagjetNormalizedTrackPhi[binJetPt]->Scale(1. / hdataTagjetNormalizedTrackPhi[binJetPt]->Integral());
+		hdataTagjetNormalizedTrackPt[binJetPt]->Scale(1. / hdataTagjetNormalizedTrackPt[binJetPt]->GetEntries());
+		hdataTagjetNormalizedTrackEta[binJetPt]->Scale(1. / hdataTagjetNormalizedTrackEta[binJetPt]->GetEntries());
+		hdataTagjetNormalizedTrackPhi[binJetPt]->Scale(1. / hdataTagjetNormalizedTrackPhi[binJetPt]->GetEntries());
 		for (int binTrackPt=0; binTrackPt < HfJetTagging::nBinsTrackPt+1; binTrackPt++) {
-			hdataTagjetNormalizedImpXY[binJetPt][binTrackPt]->Scale(1. / hdataTagjetNormalizedImpXY[binJetPt][binTrackPt]->Integral());
-			hdataTagjetNormalizedSignImpXY[binJetPt][binTrackPt]->Scale(1. / hdataTagjetNormalizedSignImpXY[binJetPt][binTrackPt]->Integral());
-			hdataTagjetNormalizedImpXYSig[binJetPt][binTrackPt]->Scale(1. / hdataTagjetNormalizedImpXYSig[binJetPt][binTrackPt]->Integral());
-			hdataTagjetNormalizedSignImpXYSig[binJetPt][binTrackPt]->Scale(1. / hdataTagjetNormalizedSignImpXYSig[binJetPt][binTrackPt]->Integral());
+			hdataTagjetNormalizedImpXY[binJetPt][binTrackPt]->Scale(1. / hdataTagjetNormalizedImpXY[binJetPt][binTrackPt]->GetEntries());
+			hdataTagjetNormalizedSignImpXY[binJetPt][binTrackPt]->Scale(1. / hdataTagjetNormalizedSignImpXY[binJetPt][binTrackPt]->GetEntries());
+			hdataTagjetNormalizedImpXYSig[binJetPt][binTrackPt]->Scale(1. / hdataTagjetNormalizedImpXYSig[binJetPt][binTrackPt]->GetEntries());
+			hdataTagjetNormalizedSignImpXYSig[binJetPt][binTrackPt]->Scale(1. / hdataTagjetNormalizedSignImpXYSig[binJetPt][binTrackPt]->GetEntries());
 		}
 	}
 }
@@ -523,26 +524,26 @@ void HfJetTaggingAnalysis::NormalizedHistogramFlavourQAData() {
 void HfJetTaggingAnalysis::NormalizedHistogramFlavourQAMC() {
 	for (int flavour = 0; flavour < HfJetTagging::nFlavour+1; flavour++) {
 		for (int jetPt = 0; jetPt < HfJetTagging::nBinsJetPt+1; jetPt++) {
-			hsimTagjetNormalizedTrackPt[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedTrackPt[flavour][jetPt]->Integral());
-			hsimTagjetNormalizedTrackEta[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedTrackEta[flavour][jetPt]->Integral());
-			hsimTagjetNormalizedTrackPhi[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedTrackPhi[flavour][jetPt]->Integral());
-			hsimTagjetNormalizedImpXY[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedImpXY[flavour][jetPt]->Integral());
-			hsimTagjetNormalizedSignImpXY[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedSignImpXY[flavour][jetPt]->Integral());
-			hsimTagjetNormalizedImpXYSig[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedImpXYSig[flavour][jetPt]->Integral());
-			hsimTagjetNormalizedSignImpXYSig[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedSignImpXYSig[flavour][jetPt]->Integral());
-			hsimTagjetNormalizedImpZ[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedImpZ[flavour][jetPt]->Integral());
-			hsimTagjetNormalizedSignImpZ[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedSignImpZ[flavour][jetPt]->Integral());
-			hsimTagjetNormalizedImpZSig[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedImpZSig[flavour][jetPt]->Integral());
-			hsimTagjetNormalizedSignImpZSig[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedSignImpZSig[flavour][jetPt]->Integral());
-			hsimTagjetNormalizedImpXYZ[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedImpXYZ[flavour][jetPt]->Integral());
-			hsimTagjetNormalizedSignImpXYZ[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedSignImpXYZ[flavour][jetPt]->Integral());
-			hsimTagjetNormalizedImpXYZSig[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedImpXYZSig[flavour][jetPt]->Integral());
+			hsimTagjetNormalizedTrackPt[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedTrackPt[flavour][jetPt]->GetEntries());
+			hsimTagjetNormalizedTrackEta[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedTrackEta[flavour][jetPt]->GetEntries());
+			hsimTagjetNormalizedTrackPhi[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedTrackPhi[flavour][jetPt]->GetEntries());
+			hsimTagjetNormalizedImpXY[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedImpXY[flavour][jetPt]->GetEntries());
+			hsimTagjetNormalizedSignImpXY[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedSignImpXY[flavour][jetPt]->GetEntries());
+			hsimTagjetNormalizedImpXYSig[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedImpXYSig[flavour][jetPt]->GetEntries());
+			hsimTagjetNormalizedSignImpXYSig[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedSignImpXYSig[flavour][jetPt]->GetEntries());
+			hsimTagjetNormalizedImpZ[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedImpZ[flavour][jetPt]->GetEntries());
+			hsimTagjetNormalizedSignImpZ[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedSignImpZ[flavour][jetPt]->GetEntries());
+			hsimTagjetNormalizedImpZSig[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedImpZSig[flavour][jetPt]->GetEntries());
+			hsimTagjetNormalizedSignImpZSig[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedSignImpZSig[flavour][jetPt]->GetEntries());
+			hsimTagjetNormalizedImpXYZ[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedImpXYZ[flavour][jetPt]->GetEntries());
+			hsimTagjetNormalizedSignImpXYZ[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedSignImpXYZ[flavour][jetPt]->GetEntries());
+			hsimTagjetNormalizedImpXYZSig[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedImpXYZSig[flavour][jetPt]->GetEntries());
 			hsimTagjetNormalizedSignImpXYZSig[flavour][jetPt]->Scale(1. / hsimTagjetNormalizedSignImpXYZSig[flavour][jetPt]->GetEntries());
 		}
 	}
 }
 
-void HfJetTaggingAnalysis::SaveHistogramFlavourQA(TString rootFile, bool doData, bool doMC) {
+void HfJetTaggingAnalysis::SaveHistogramFlavourQA(TString rootFile, bool doData, bool doMC, bool dopartLevel) {
   TFile* fout = new TFile(rootFile.Data(), "RECREATE");
 
   // Check if the file is open successfully
@@ -562,15 +563,24 @@ void HfJetTaggingAnalysis::SaveHistogramFlavourQA(TString rootFile, bool doData,
   	}
 
 		hdataTagjetPt->Write();
+		hdataTagjetNormalizedPt->Write();
 		for (int binJetPt =0; binJetPt < HfJetTagging::nBinsJetPt+1; binJetPt++) {
 			hdataTagjetTrackPt[binJetPt]->Write();
 			hdataTagjetTrackEta[binJetPt]->Write();
 			hdataTagjetTrackPhi[binJetPt]->Write();
+      hdataTagjetNormalizedTrackPt[binJetPt]->Write();
+			hdataTagjetNormalizedTrackEta[binJetPt]->Write();
+			hdataTagjetNormalizedTrackPhi[binJetPt]->Write();
+      
 			for (int binTrackPt =0; binTrackPt < HfJetTagging::nBinsTrackPt+1; binTrackPt++) {
 				hdataTagjetImpXY[binJetPt][binTrackPt]->Write();
 				hdataTagjetSignImpXY[binJetPt][binTrackPt]->Write();
 				hdataTagjetImpXYSig[binJetPt][binTrackPt]->Write();
 				hdataTagjetSignImpXYSig[binJetPt][binTrackPt]->Write();
+        hdataTagjetNormalizedImpXY[binJetPt][binTrackPt]->Write();
+				hdataTagjetNormalizedSignImpXY[binJetPt][binTrackPt]->Write();
+				hdataTagjetNormalizedImpXYSig[binJetPt][binTrackPt]->Write();
+				hdataTagjetNormalizedSignImpXYSig[binJetPt][binTrackPt]->Write();
 			}
 		}
 	}
@@ -581,7 +591,54 @@ void HfJetTaggingAnalysis::SaveHistogramFlavourQA(TString rootFile, bool doData,
     	dir = fout->mkdir("sim");
     	dir->cd();
   	}
-
+		for (int binFlavour =0; binFlavour < HfJetTagging::nFlavour+1; binFlavour++) {
+		  for (int binJetPt =0; binJetPt < HfJetTagging::nBinsJetPt+1; binJetPt++) {
+        hsimTagjetTrackPt[binFlavour][binJetPt]->Write();
+        hsimTagjetTrackEta[binFlavour][binJetPt]->Write();
+        hsimTagjetTrackPhi[binFlavour][binJetPt]->Write();
+        hsimTagjetImpXY[binFlavour][binJetPt]->Write();
+        hsimTagjetSignImpXY[binFlavour][binJetPt]->Write();
+        hsimTagjetImpXYSig[binFlavour][binJetPt]->Write();
+        hsimTagjetSignImpXYSig[binFlavour][binJetPt]->Write();
+        hsimTagjetImpZ[binFlavour][binJetPt]->Write();
+        hsimTagjetSignImpZ[binFlavour][binJetPt]->Write();
+        hsimTagjetImpZSig[binFlavour][binJetPt]->Write();
+        hsimTagjetSignImpZSig[binFlavour][binJetPt]->Write();
+        hsimTagjetImpXYZ[binFlavour][binJetPt]->Write();
+        hsimTagjetSignImpXYZ[binFlavour][binJetPt]->Write();
+        hsimTagjetImpXYZSig[binFlavour][binJetPt]->Write();
+        hsimTagjetSignImpXYZSig[binFlavour][binJetPt]->Write();
+        hsimTagjetNormalizedTrackPt[binFlavour][binJetPt]->Write();
+        hsimTagjetNormalizedTrackEta[binFlavour][binJetPt]->Write();
+        hsimTagjetNormalizedTrackPhi[binFlavour][binJetPt]->Write();
+        hsimTagjetNormalizedImpXY[binFlavour][binJetPt]->Write();
+        hsimTagjetNormalizedSignImpXY[binFlavour][binJetPt]->Write();
+        hsimTagjetNormalizedImpXYSig[binFlavour][binJetPt]->Write();
+        hsimTagjetNormalizedSignImpXYSig[binFlavour][binJetPt]->Write();
+        hsimTagjetNormalizedImpZ[binFlavour][binJetPt]->Write();
+        hsimTagjetNormalizedSignImpZ[binFlavour][binJetPt]->Write();
+        hsimTagjetNormalizedImpZSig[binFlavour][binJetPt]->Write();
+        hsimTagjetNormalizedSignImpZSig[binFlavour][binJetPt]->Write();
+        hsimTagjetNormalizedImpXYZ[binFlavour][binJetPt]->Write();
+        hsimTagjetNormalizedSignImpXYZ[binFlavour][binJetPt]->Write();
+        hsimTagjetNormalizedImpXYZSig[binFlavour][binJetPt]->Write();
+        hsimTagjetNormalizedSignImpXYZSig[binFlavour][binJetPt]->Write();
+      }
+//      for (int binTrackPt =0; binTrackPt < HfJetTagging::nBinsTrackPt+1; binTrackPt++) {
+//        hsimtrackPtImpXY[binFlavour][binTrackPt]->Write();
+//        hsimtrackPtSignImpXY[binFlavour][binTrackPt]->Write();
+//        hsimtrackPtImpXYSig[binFlavour][binTrackPt]->Write();
+//        hsimtrackPtSignImpXYSig[binFlavour][binTrackPt]->Write();
+//        hsimtrackPtImpZ[binFlavour][binTrackPt]->Write();
+//        hsimtrackPtSignImpZ[binFlavour][binTrackPt]->Write();
+//        hsimtrackPtImpZSig[binFlavour][binTrackPt]->Write();
+//        hsimtrackPtSignImpZSig[binFlavour][binTrackPt]->Write();
+//        hsimtrackPtImpXYZ[binFlavour][binTrackPt]->Write();
+//        hsimtrackPtSignImpXYZ[binFlavour][binTrackPt]->Write();
+//        hsimtrackPtImpXYZSig[binFlavour][binTrackPt]->Write();
+//        hsimtrackPtSignImpXYZSig[binFlavour][binTrackPt]->Write();
+//      }
+    }
 	}
 
 	delete fout;
