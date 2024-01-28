@@ -19,7 +19,6 @@ class JetAnalysis {
       	ProjectionHistGeneralQAData();
       	CloneNormalizedHistogramGeneralQAData();
       	NormalizedHistogramGeneralQAData();
-
       }
       if (doMC) {
         LoadSimGeneralQA(rootSim.Data(), dopartLevel);
@@ -28,6 +27,7 @@ class JetAnalysis {
       	CloneNormalizedHistogramGeneralQAMC(dopartLevel);
       	NormalizedHistogramGeneralQAMC(dopartLevel);
       }
+      SaveHistogramGeneralQA("GeneralJetQA.root", doData, doMC, dopartLevel);
     }
 
     ~JetAnalysis();
@@ -43,6 +43,7 @@ class JetAnalysis {
     void CloneNormalizedHistogramGeneralQAMC(bool dopartLevel);
     void NormalizedHistogramGeneralQAData();
     void NormalizedHistogramGeneralQAMC(bool dopartLevel);
+    void SaveHistogramGeneralQA(TString rootFile, bool doData, bool doMC, bool dopartLevel);
 
     // Draw option
     void HistColorStyle(TH1F* h1, int mc, int ms, double mS, int lc, int ls);
@@ -118,10 +119,6 @@ class JetAnalysis {
 
     // histogram
     /// data
-    TH1F* hClonedataGenjetPt;
-    TH1F* hClonedataGenjetEta;
-    TH1F* hClonedataGenjetPhi;
-    TH1F* hClonedataGenjetNTracks;
     TH3F* h3dataGenjetRjetPtjetEta;
     TH3F* h3dataGenjetRjetPtjetPhi;
     TH3F* h3dataGenjetRjetEtajetPhi;
@@ -133,10 +130,6 @@ class JetAnalysis {
     TH3F* h3dataGenjetRjetPtLeadingTrackPt;
 
     /// MC
-    TH1F* hClonesimGenjetPt;
-    TH1F* hClonesimGenjetEta;
-    TH1F* hClonesimGenjetPhi;
-    TH1F* hClonesimGenjetNTracks;
     TH3F* h3simGenjetRjetPtjetEta;
     TH3F* h3simGenjetRjetPtjetPhi;
     TH3F* h3simGenjetRjetEtajetPhi;
@@ -148,10 +141,6 @@ class JetAnalysis {
     TH3F* h3simGenjetRjetPtLeadingTrackPt;
 
     //// particle level
-    TH1F* hClonesimGenpartjetPt;
-    TH1F* hClonesimGenpartjetEta;
-    TH1F* hClonesimGenpartjetPhi;
-    TH1F* hClonesimGenpartjetNTracks;
     TH3F* h3simGenpartjetRjetPtjetEta;
     TH3F* h3simGenpartjetRjetPtjetPhi;
     TH3F* h3simGenpartjetRjetEtajetPhi;
@@ -246,9 +235,6 @@ JetAnalysis::~JetAnalysis() {
     }
   }
   // Delete cloned data histograms
-  if (hClonedataGenjetPt) delete hClonedataGenjetPt;
-  if (hClonedataGenjetEta) delete hClonedataGenjetEta;
-  if (hClonedataGenjetPhi) delete hClonedataGenjetPhi;
   if (h3dataGenjetRjetPtjetEta) delete h3dataGenjetRjetPtjetEta;
   if (h3dataGenjetRjetPtjetPhi) delete h3dataGenjetRjetPtjetPhi;
   if (h3dataGenjetRjetEtajetPhi) delete h3dataGenjetRjetEtajetPhi;
@@ -260,9 +246,6 @@ JetAnalysis::~JetAnalysis() {
   if (h3dataGenjetRjetPtLeadingTrackPt) delete h3dataGenjetRjetPtLeadingTrackPt;
 
   // Delete cloned MC histograms
-  if (hClonesimGenjetPt) delete hClonesimGenjetPt;
-  if (hClonesimGenjetEta) delete hClonesimGenjetEta;
-  if (hClonesimGenjetPhi) delete hClonesimGenjetPhi;
   if (h3simGenjetRjetPtjetEta) delete h3simGenjetRjetPtjetEta;
   if (h3simGenjetRjetPtjetPhi) delete h3simGenjetRjetPtjetPhi;
   if (h3simGenjetRjetEtajetPhi) delete h3simGenjetRjetEtajetPhi;
@@ -274,9 +257,6 @@ JetAnalysis::~JetAnalysis() {
   if (h3simGenjetRjetPtLeadingTrackPt) delete h3simGenjetRjetPtLeadingTrackPt;
 
   // Delete cloned particle level histograms
-  if (hClonesimGenpartjetPt) delete hClonesimGenpartjetPt;
-  if (hClonesimGenpartjetEta) delete hClonesimGenpartjetEta;
-  if (hClonesimGenpartjetPhi) delete hClonesimGenpartjetPhi;
   if (h3simGenpartjetRjetPtjetEta) delete h3simGenpartjetRjetPtjetEta;
   if (h3simGenpartjetRjetPtjetPhi) delete h3simGenpartjetRjetPtjetPhi;
   if (h3simGenpartjetRjetEtajetPhi) delete h3simGenpartjetRjetEtajetPhi;
@@ -338,11 +318,6 @@ int JetAnalysis::LoadDataGeneralQA(TString rootData) {
   fin = TFile::Open(rootData.Data(), "READ");
   TString taskJetQA = "jet-finder-charged-qa";
 
-  hClonedataGenjetPt = reinterpret_cast<TH1F*>(fin->Get(Form("%s/h_jet_pt", taskJetQA.Data())));
-  hClonedataGenjetEta = reinterpret_cast<TH1F*>(fin->Get(Form("%s/h_jet_eta", taskJetQA.Data())));
-  hClonedataGenjetPhi = reinterpret_cast<TH1F*>(fin->Get(Form("%s/h_jet_phi", taskJetQA.Data())));
-  hClonedataGenjetNTracks = reinterpret_cast<TH1F*>(fin->Get(Form("%s/h_jet_ntracks", taskJetQA.Data())));
-
   h3dataGenjetRjetPtjetEta = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_eta", taskJetQA.Data())));
   h3dataGenjetRjetPtjetPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_phi", taskJetQA.Data())));
   h3dataGenjetRjetEtajetPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_eta_jet_phi", taskJetQA.Data())));
@@ -366,10 +341,6 @@ int JetAnalysis::LoadSimGeneralQA(TString rootSim, bool dopartLevel = false) {
   fin = TFile::Open(rootSim.Data(), "READ");
   TString taskJetQA = "jet-finder-charged-qa";
 
-  hClonesimGenjetPt = reinterpret_cast<TH1F*>(fin->Get(Form("%s/h_jet_pt", taskJetQA.Data())));
-  hClonesimGenjetEta = reinterpret_cast<TH1F*>(fin->Get(Form("%s/h_jet_eta", taskJetQA.Data())));
-  hClonesimGenjetPhi = reinterpret_cast<TH1F*>(fin->Get(Form("%s/h_jet_phi", taskJetQA.Data())));
-  hClonesimGenjetNTracks = reinterpret_cast<TH1F*>(fin->Get(Form("%s/h_jet_ntracks", taskJetQA.Data())));
   h3simGenjetRjetPtjetEta = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_eta", taskJetQA.Data())));
   h3simGenjetRjetPtjetPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_phi", taskJetQA.Data())));
   h3simGenjetRjetEtajetPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_eta_jet_phi", taskJetQA.Data())));
@@ -381,10 +352,6 @@ int JetAnalysis::LoadSimGeneralQA(TString rootSim, bool dopartLevel = false) {
   h3simGenjetRjetPtLeadingTrackPt = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_leadingtrack_pt", taskJetQA.Data())));
 
   if (dopartLevel) {
-    hClonesimGenpartjetPt = reinterpret_cast<TH1F*>(fin->Get(Form("%s/h_jet_pt_part", taskJetQA.Data())));
-    hClonesimGenpartjetEta = reinterpret_cast<TH1F*>(fin->Get(Form("%s/h_jet_eta_part", taskJetQA.Data())));
-    hClonesimGenpartjetPhi = reinterpret_cast<TH1F*>(fin->Get(Form("%s/h_jet_phi_part", taskJetQA.Data())));
-    hClonesimGenpartjetNTracks = reinterpret_cast<TH1F*>(fin->Get(Form("%s/h_jet_ntracks_part", taskJetQA.Data())));
     h3simGenpartjetRjetPtjetEta = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_part_jet_pt_part_jet_eta_part", taskJetQA.Data())));
     h3simGenpartjetRjetPtjetPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_phi", taskJetQA.Data())));
     h3simGenpartjetRjetEtajetPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_part_jet_eta_part_jet_phi_part", taskJetQA.Data())));
@@ -450,10 +417,9 @@ void JetAnalysis::InitHistogramForNormalizationGeneralQAMC(bool dopartLevel = fa
 }
 
 void JetAnalysis::ProjectionHistGeneralQAData() {
-  hdataGenjetPt[0] = reinterpret_cast<TH1F*>(hClonedataGenjetPt->Clone());
-  hdataGenjetEta[0][0] = reinterpret_cast<TH1F*>(hClonedataGenjetEta->Clone());
-  hdataGenjetPhi[0][0] = reinterpret_cast<TH1F*>(hClonedataGenjetPhi->Clone());
-  hdataGenjetNTracks[0][0] = reinterpret_cast<TH1F*>(hClonedataGenjetNTracks->Clone());
+  TH1F *projJetPt = reinterpret_cast<TH1F*> (h3dataGenjetRjetPtjetEta->ProjectionY("projJetPt", 1, h3dataGenjetRjetPtjetEta->GetNbinsX(), 1, h3dataGenjetRjetPtjetEta->GetNbinsZ()));
+  TH1F *projJetEta = reinterpret_cast<TH1F*> (h3dataGenjetRjetPtjetEta->ProjectionZ("projJetEta", 1, h3dataGenjetRjetPtjetEta->GetNbinsX(), 1, h3dataGenjetRjetPtjetEta->GetNbinsY()));
+  TH1F *projJetPhi = reinterpret_cast<TH1F*> (h3dataGenjetRjetPtjetPhi->ProjectionZ("projJetPhi", 1, h3dataGenjetRjetPtjetPhi->GetNbinsX(), 1, h3dataGenjetRjetPtjetPhi->GetNbinsY()));
   TH1F *projJetNTracks = reinterpret_cast<TH1F*> (h3dataGenjetRjetPtjetNTracks->ProjectionZ("projJetNTracks", 1, h3dataGenjetRjetPtjetNTracks->GetNbinsX(), 1, h3dataGenjetRjetPtjetNTracks->GetNbinsY()));
   TH1F *projJetArea = reinterpret_cast<TH1F*> (h3dataGenjetRjetPtjetArea->ProjectionZ("projJetArea", 1, h3dataGenjetRjetPtjetArea->GetNbinsX(), 1, h3dataGenjetRjetPtjetArea->GetNbinsY()));
   TH1F *projJetTrackPt = reinterpret_cast<TH1F*> (h3dataGenjetRjetPtTrackPt->ProjectionZ("projJetTrackPt", 1, h3dataGenjetRjetPtTrackPt->GetNbinsX(), 1, h3dataGenjetRjetPtTrackPt->GetNbinsY()));
@@ -461,6 +427,10 @@ void JetAnalysis::ProjectionHistGeneralQAData() {
   TH1F *projJetTrackPhi = reinterpret_cast<TH1F*> (h3dataGenjetRjetPtTrackPhi->ProjectionZ("projJetTrackPhi", 1, h3dataGenjetRjetPtTrackPhi->GetNbinsX(), 1, h3dataGenjetRjetPtTrackPhi->GetNbinsY()));
   TH1F *projLeadingTrackPt = reinterpret_cast<TH1F*> (h3dataGenjetRjetPtLeadingTrackPt->ProjectionZ("projLeadingTrackPt", 1, h3dataGenjetRjetPtLeadingTrackPt->GetNbinsX(), 1, h3dataGenjetRjetPtLeadingTrackPt->GetNbinsY()));
 
+  hdataGenjetPt[0] = reinterpret_cast<TH1F*>(projJetPt->Clone());
+  hdataGenjetEta[0][0] = reinterpret_cast<TH1F*>(projJetEta->Clone());
+  hdataGenjetPhi[0][0] = reinterpret_cast<TH1F*>(projJetPhi->Clone());
+  hdataGenjetNTracks[0][0] = reinterpret_cast<TH1F*>(projJetNTracks->Clone());
   hdataGenjetArea[0][0] = reinterpret_cast<TH1F*>(projJetArea->Clone());
   hdataGenjetTrackPt[0][0] = reinterpret_cast<TH1F*>(projJetTrackPt->Clone());
   hdataGenjetTrackEta[0][0] = reinterpret_cast<TH1F*>(projJetTrackEta->Clone());
@@ -584,9 +554,9 @@ void JetAnalysis::ProjectionHistGeneralQAData() {
 
 void JetAnalysis::ProjectionHistGeneralQAMC(bool dopartLevel= false) {
 
-  hsimGenjetPt[0] = reinterpret_cast<TH1F*>(hClonesimGenjetPt->Clone());
-  hsimGenjetEta[0][0] = reinterpret_cast<TH1F*>(hClonesimGenjetEta->Clone());
-  hsimGenjetPhi[0][0] = reinterpret_cast<TH1F*>(hClonesimGenjetPhi->Clone());
+  TH1F *projJetPt = reinterpret_cast<TH1F*> (h3simGenjetRjetPtjetEta->ProjectionY("projJetNTracks", 1, h3simGenjetRjetPtjetEta->GetNbinsX(), 1, h3simGenjetRjetPtjetEta->GetNbinsZ()));
+  TH1F *projJetEta = reinterpret_cast<TH1F*> (h3simGenjetRjetPtjetEta->ProjectionZ("projJetNTracks", 1, h3simGenjetRjetPtjetEta->GetNbinsX(), 1, h3simGenjetRjetPtjetEta->GetNbinsY()));
+  TH1F *projJetPhi = reinterpret_cast<TH1F*> (h3simGenjetRjetPtjetPhi->ProjectionZ("projJetNTracks", 1, h3simGenjetRjetPtjetPhi->GetNbinsX(), 1, h3simGenjetRjetPtjetPhi->GetNbinsY()));
   TH1F *projJetNTracks = reinterpret_cast<TH1F*> (h3simGenjetRjetPtjetNTracks->ProjectionZ("projJetNTracks", 1, h3simGenjetRjetPtjetNTracks->GetNbinsX(), 1, h3simGenjetRjetPtjetNTracks->GetNbinsY()));
   TH1F *projJetArea = reinterpret_cast<TH1F*> (h3simGenjetRjetPtjetArea->ProjectionZ("projJetArea", 1, h3simGenjetRjetPtjetArea->GetNbinsX(), 1, h3simGenjetRjetPtjetArea->GetNbinsY()));
   TH1F *projTrackPt = reinterpret_cast<TH1F*> (h3simGenjetRjetPtTrackPt->ProjectionZ("projTrackPt", 1, h3simGenjetRjetPtTrackPt->GetNbinsX(), 1, h3simGenjetRjetPtTrackPt->GetNbinsY()));
@@ -594,6 +564,9 @@ void JetAnalysis::ProjectionHistGeneralQAMC(bool dopartLevel= false) {
   TH1F *projTrackPhi = reinterpret_cast<TH1F*> (h3simGenjetRjetPtTrackPhi->ProjectionZ("projTrackPhi", 1, h3simGenjetRjetPtTrackPhi->GetNbinsX(), 1, h3simGenjetRjetPtTrackPhi->GetNbinsY()));
   TH1F *projLeadingTrackPt = reinterpret_cast<TH1F*> (h3simGenjetRjetPtLeadingTrackPt->ProjectionZ("projLeadingTrackPt", 1, h3simGenjetRjetPtLeadingTrackPt->GetNbinsX(), 1, h3simGenjetRjetPtLeadingTrackPt->GetNbinsY()));
 
+  hsimGenjetPt[0] = reinterpret_cast<TH1F*>(projJetPt->Clone());
+  hsimGenjetEta[0][0] = reinterpret_cast<TH1F*>(projJetEta->Clone());
+  hsimGenjetPhi[0][0] = reinterpret_cast<TH1F*>(projJetPhi->Clone());
   hsimGenjetNTracks[0][0] = reinterpret_cast<TH1F*>(projJetNTracks->Clone());
   hsimGenjetArea[0][0] = reinterpret_cast<TH1F*>(projJetArea->Clone());
   hsimGenjetTrackPt[0][0] = reinterpret_cast<TH1F*>(projTrackPt->Clone());
@@ -717,9 +690,9 @@ void JetAnalysis::ProjectionHistGeneralQAMC(bool dopartLevel= false) {
   }
 
   if (dopartLevel) {
-    hsimGenpartjetPt[0] = reinterpret_cast<TH1F*>(hClonesimGenpartjetPt->Clone());
-    hsimGenpartjetEta[0][0] = reinterpret_cast<TH1F*>(hClonesimGenpartjetEta->Clone());
-    hsimGenpartjetPhi[0][0] = reinterpret_cast<TH1F*>(hClonesimGenpartjetPhi->Clone());
+    TH1F *projJetPt = reinterpret_cast<TH1F*> (h3simGenpartjetRjetPtjetEta->ProjectionY("projJetPt", 1, h3simGenpartjetRjetPtjetEta->GetNbinsX(), 1, h3simGenpartjetRjetPtjetEta->GetNbinsZ()));
+    TH1F *projJetEta = reinterpret_cast<TH1F*> (h3simGenpartjetRjetPtjetEta->ProjectionZ("projJetEta", 1, h3simGenpartjetRjetPtjetEta->GetNbinsX(), 1, h3simGenpartjetRjetPtjetEta->GetNbinsY()));
+    TH1F *projJetPhi = reinterpret_cast<TH1F*> (h3simGenpartjetRjetPtjetPhi->ProjectionZ("projJetPhi", 1, h3simGenpartjetRjetPtjetPhi->GetNbinsX(), 1, h3simGenpartjetRjetPtjetPhi->GetNbinsY()));
     TH1F *projJetNTracks = reinterpret_cast<TH1F*> (h3simGenpartjetRjetPtjetNTracks->ProjectionZ("projJetNTracks", 1, h3simGenpartjetRjetPtjetNTracks->GetNbinsX(), 1, h3simGenpartjetRjetPtjetNTracks->GetNbinsY()));
     TH1F *projJetArea = reinterpret_cast<TH1F*> (h3simGenpartjetRjetPtjetArea->ProjectionZ("projJetArea", 1, h3simGenpartjetRjetPtjetArea->GetNbinsX(), 1, h3simGenpartjetRjetPtjetArea->GetNbinsY()));
     TH1F *projTrackPt = reinterpret_cast<TH1F*> (h3simGenpartjetRjetPtTrackPt->ProjectionZ("projTrackPt", 1, h3simGenpartjetRjetPtTrackPt->GetNbinsX(), 1, h3simGenpartjetRjetPtTrackPt->GetNbinsY()));
@@ -727,6 +700,9 @@ void JetAnalysis::ProjectionHistGeneralQAMC(bool dopartLevel= false) {
     TH1F *projTrackPhi = reinterpret_cast<TH1F*> (h3simGenpartjetRjetPtTrackPhi->ProjectionZ("projTrackPhi", 1, h3simGenpartjetRjetPtTrackPhi->GetNbinsX(), 1, h3simGenpartjetRjetPtTrackPhi->GetNbinsY()));
     TH1F *projLeadingTrackPt = reinterpret_cast<TH1F*> (h3simGenpartjetRjetPtLeadingTrackPt->ProjectionZ("projLeadingTrackPt", 1, h3simGenpartjetRjetPtLeadingTrackPt->GetNbinsX(), 1, h3simGenpartjetRjetPtLeadingTrackPt->GetNbinsY()));
 
+    hsimGenpartjetPt[0] = reinterpret_cast<TH1F*>(projJetPt->Clone());
+    hsimGenpartjetEta[0][0] = reinterpret_cast<TH1F*>(projJetEta->Clone());
+    hsimGenpartjetPhi[0][0] = reinterpret_cast<TH1F*>(projJetPhi->Clone());
     hsimGenpartjetNTracks[0][0] = reinterpret_cast<TH1F*>(projJetNTracks->Clone());
     hsimGenpartjetArea[0][0] = reinterpret_cast<TH1F*>(projJetArea->Clone());
     hsimGenpartjetTrackPt[0][0] = reinterpret_cast<TH1F*>(projTrackPt->Clone());
@@ -941,6 +917,106 @@ void JetAnalysis::NormalizedHistogramGeneralQAMC(bool dopartLevel=false) {
       }
     }
   }
+}
+
+void JetAnalysis::SaveHistogramGeneralQA(TString rootFile, bool doData, bool doMC, bool dopartLevel) {
+  TFile* fout = new TFile(rootFile.Data(), "RECREATE");
+
+  // Check if the file is open successfully
+  if (!fout || !fout->IsOpen()) {
+    std::cout << "Error: Could not open the ROOT file for writing." << std::endl;
+    return;
+  }
+
+  // Create or retrieve the directory
+  TDirectory* dir;
+
+  if (doData) {
+    dir = fout->GetDirectory("data");
+    if (!dir) {
+      dir = fout->mkdir("data");
+      dir->cd();
+    }
+
+    for (int binJetR =0; binJetR < GeneralJet::nBinsJetR+1; binJetR++) {
+      hdataGenjetPt[binJetR]->Write();
+      for (int binJetPt =0; binJetPt < GeneralJet::nBinsJetPt+1; binJetPt++) {
+        hdataGenjetEta[binJetPt][binJetR]->Write();
+        hdataGenjetPhi[binJetPt][binJetR]->Write();
+        hdataGenjetNTracks[binJetPt][binJetR]->Write();
+        hdataGenjetArea[binJetPt][binJetR]->Write();
+        hdataGenjetTrackPt[binJetPt][binJetR]->Write();
+        hdataGenjetTrackEta[binJetPt][binJetR]->Write();
+        hdataGenjetTrackPhi[binJetPt][binJetR]->Write();
+        hdataGenjetLeadingTrackPt[binJetPt][binJetR]->Write();
+
+        hdataGenjetNormalizedEta[binJetPt][binJetR]->Write();
+        hdataGenjetNormalizedPhi[binJetPt][binJetR]->Write();
+        hdataGenjetNormalizedNTracks[binJetPt][binJetR]->Write();
+        hdataGenjetNormalizedArea[binJetPt][binJetR]->Write();
+        hdataGenjetNormalizedTrackPt[binJetPt][binJetR]->Write();
+        hdataGenjetNormalizedTrackEta[binJetPt][binJetR]->Write();
+        hdataGenjetNormalizedTrackPhi[binJetPt][binJetR]->Write();
+        hdataGenjetNormalizedLeadingTrackPt[binJetPt][binJetR]->Write();
+      }
+    }
+  }
+
+  if (doMC) {
+    dir = fout->GetDirectory("sim");
+    if (!dir) {
+      dir = fout->mkdir("sim");
+      dir->cd();
+    }
+    for (int binJetR =0; binJetR < GeneralJet::nBinsJetR+1; binJetR++) {
+      hsimGenjetPt[binJetR]->Write();
+      hsimGenjetNormalizedPt[binJetR]->Write();
+      if (dopartLevel) {
+        hsimGenpartjetPt[binJetR]->Write();
+        hsimGenpartjetNormalizedPt[binJetR]->Write();
+      }
+      for (int binJetPt =0; binJetPt < GeneralJet::nBinsJetPt+1; binJetPt++) {
+        hsimGenjetEta[binJetPt][binJetR]->Write();
+        hsimGenjetPhi[binJetPt][binJetR]->Write();
+        hsimGenjetNTracks[binJetPt][binJetR]->Write();
+        hsimGenjetArea[binJetPt][binJetR]->Write();
+        hsimGenjetTrackPt[binJetPt][binJetR]->Write();
+        hsimGenjetTrackEta[binJetPt][binJetR]->Write();
+        hsimGenjetTrackPhi[binJetPt][binJetR]->Write();
+        hsimGenjetLeadingTrackPt[binJetPt][binJetR]->Write();
+
+        hsimGenjetNormalizedEta[binJetPt][binJetR]->Write();
+        hsimGenjetNormalizedPhi[binJetPt][binJetR]->Write();
+        hsimGenjetNormalizedNTracks[binJetPt][binJetR]->Write();
+        hsimGenjetNormalizedArea[binJetPt][binJetR]->Write();
+        hsimGenjetNormalizedTrackPt[binJetPt][binJetR]->Write();
+        hsimGenjetNormalizedTrackEta[binJetPt][binJetR]->Write();
+        hsimGenjetNormalizedTrackPhi[binJetPt][binJetR]->Write();
+        hsimGenjetNormalizedLeadingTrackPt[binJetPt][binJetR]->Write();
+
+        if (dopartLevel) {
+          hsimGenpartjetEta[binJetPt][binJetR]->Write();
+          hsimGenpartjetPhi[binJetPt][binJetR]->Write();
+          hsimGenpartjetNTracks[binJetPt][binJetR]->Write();
+          hsimGenpartjetArea[binJetPt][binJetR]->Write();
+          hsimGenpartjetTrackPt[binJetPt][binJetR]->Write();
+          hsimGenpartjetTrackEta[binJetPt][binJetR]->Write();
+          hsimGenpartjetTrackPhi[binJetPt][binJetR]->Write();
+          hsimGenpartjetLeadingTrackPt[binJetPt][binJetR]->Write();
+          hsimGenpartjetNormalizedEta[binJetPt][binJetR]->Write();
+          hsimGenpartjetNormalizedPhi[binJetPt][binJetR]->Write();
+          hsimGenpartjetNormalizedNTracks[binJetPt][binJetR]->Write();
+          hsimGenpartjetNormalizedArea[binJetPt][binJetR]->Write();
+          hsimGenpartjetNormalizedTrackPt[binJetPt][binJetR]->Write();
+          hsimGenpartjetNormalizedTrackEta[binJetPt][binJetR]->Write();
+          hsimGenpartjetNormalizedTrackPhi[binJetPt][binJetR]->Write();
+          hsimGenpartjetNormalizedLeadingTrackPt[binJetPt][binJetR]->Write();
+        }
+      }
+    }
+  }
+
+  delete fout;
 }
 
 // Draw function
