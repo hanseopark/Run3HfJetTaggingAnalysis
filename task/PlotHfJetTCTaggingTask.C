@@ -6,7 +6,7 @@ void PlotHfJetTaggingTCQA(TString rootdata, TString rootsim) {
   bool doData = false;
   bool doMC = true;
   bool dopartLevel = false;
-  bool withInc = false;
+  bool withInc = true;
   bool doLog = true;
 
   HfJetTaggingTCAnalysis *HfJetTagTCObj = new HfJetTaggingTCAnalysis(rootdata.Data(), rootsim.Data(), doData, doMC, dopartLevel);

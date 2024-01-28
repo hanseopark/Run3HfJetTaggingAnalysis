@@ -4,7 +4,6 @@
 #include <TH1.h>
 #include <TString.h>
 #include <TMath.h>
-
 namespace GeneralJet {
   const int nBinsJetPt = 8;
   const int binsJetPt[nBinsJetPt + 1] = {
@@ -41,12 +40,18 @@ namespace GeneralJet {
 } // namespace GeneralJet
 
 namespace HfJetTagging{
+
+  enum JetFlavour {
+    None = 0,   // Not used, as histogram bins start from 1
+    Charm = 1,
+    Beauty = 2,
+    LightFlavour = 3
+  };
+
   const int nFlavour = 3;
   const int startJetPt = 2;
-  const int nBinsJetPt = 8;
+  const int nBinsJetPt = 6;
   const int binsJetPt[nBinsJetPt + 1] = {
-  0,
-  5,
   10,
   20,
   40,
@@ -104,8 +109,8 @@ namespace HfJetTagging{
     const double TRACKPHIASJETPT[4]={-0.02,2*TMath::Pi(),1.0e-7,0.1};
     const double IPXY[4]={-400,400,1.0e-6,0.1};
     const double IPXYZ[4]={-1000,1000,1.0e-5,1.0};
-    const double IPXYSIG[4]={-20,20,1.0e-5,0.1};
-    const double IPXYZSIG[4]={-10000,10000,1.0e-5,0.1};
+    const double IPXYSIG[4]={-40,40,1.0e-5,0.1};
+    const double IPXYZSIG[4]={-100,100,1.0e-5,0.1};
     const double JP[4]={-0.01,1.0,1.0e-5,0.1};
     const double LOGJP[4]={-0.01,10,1.0e-5,0.1};
     const double LXY[4]={-0.01,0.1,1.0e-5,1.0};

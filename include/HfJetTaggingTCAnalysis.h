@@ -22,7 +22,6 @@ class HfJetTaggingTCAnalysis {
         }
         InitHistogramForProjectionTCQAData();
       	ProjectionHistTCQAData();
-      	CloneNormalizedHistogramTCQAData();
       	NormalizedHistogramTCQAData();
       }
       if (doMC) {
@@ -31,9 +30,9 @@ class HfJetTaggingTCAnalysis {
         }
         InitHistogramForProjectionTCQAMC();
       	ProjectionHistTCQAMC();
-      	CloneNormalizedHistogramTCQAMC();
       	NormalizedHistogramTCQAMC();
       }
+      SaveHistogramTCQA("TCQA.root", doData, doMC, dopartLevel);
     }
 //    HfJetTaggingTCAnalysis(const TString &rootFileTC, const TString &rootFileSV2Prong, const TString &rootFileSV3Prong, const TString &taskName, bool doMC, bool doTC, bool doJP, bool doSV2Prong, bool doSV3Prong, const TString &cutSelection) : JetAnalysis(rootFileTC, rootFileSV2Prong, rootFileSV3Prong, taskName, doMC, doTC, doJP, doSV2Prong, doSV3Prong, cutSelection){
 //      if (doMC) LoadSimTCQA(rootFileTC.Data(), taskName.Data(), doTC, doJP);
@@ -47,12 +46,10 @@ class HfJetTaggingTCAnalysis {
     void InitHistogramForProjectionTCQAMC();
     void ProjectionHistTCQAData();
     void ProjectionHistTCQAMC();
-    void CloneNormalizedHistogramTCQAData();
-    void CloneNormalizedHistogramTCQAMC();
     void NormalizedHistogramTCQAData();
     void NormalizedHistogramTCQAMC();
 
-    void SaveHistogramTCQA(TString file);
+    void SaveHistogramTCQA(TString rootFile, bool doData, bool doMC, bool dopartLevel);
 
     // Draw
     void HistColorStyle(TH1F* h1, int mc, int ms, double mS, int lc, int ls);
@@ -102,15 +99,15 @@ class HfJetTaggingTCAnalysis {
     TH3F* h3simTCjetPtSignImpXYZSigFlavourN3;
 
     //// Normalized
-    TH1F* hsimTCjetNormalizedSignImpXYSigN1[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTCjetNormalizedSignImpXYSigN2[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTCjetNormalizedSignImpXYSigN3[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTCjetNormalizedSignImpZSigN1[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTCjetNormalizedSignImpZSigN2[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTCjetNormalizedSignImpZSigN3[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTCjetNormalizedSignImpXYZSigN1[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTCjetNormalizedSignImpXYZSigN2[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTCjetNormalizedSignImpXYZSigN3[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTCjetNormalizedSignImpXYSigN1[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTCjetNormalizedSignImpXYSigN2[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTCjetNormalizedSignImpXYSigN3[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTCjetNormalizedSignImpZSigN1[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTCjetNormalizedSignImpZSigN2[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTCjetNormalizedSignImpZSigN3[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTCjetNormalizedSignImpXYZSigN1[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTCjetNormalizedSignImpXYZSigN2[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTCjetNormalizedSignImpXYZSigN3[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
 
   private:
 
@@ -177,10 +174,9 @@ void HfJetTaggingTCAnalysis::ProjectionHistTCQAData() {
 }
 
 void HfJetTaggingTCAnalysis::ProjectionHistTCQAMC() {
-  int binsToFlavour[] = {1, 2, 3}; // 1: charm, 2: beauty, 3: light flavour
-  int numBinsToFlavour = sizeof(binsToFlavour) / sizeof(binsToFlavour[0]);
-  for (int i=0; i<numBinsToFlavour; i++) {
-    int binFlavour = binsToFlavour[i];
+  HfJetTagging::JetFlavour jetFlavours[] = {HfJetTagging::None, HfJetTagging::Charm, HfJetTagging::Beauty, HfJetTagging::LightFlavour};
+	for (int binFlavour = 2; binFlavour < HfJetTagging::nFlavour+2; binFlavour++) {
+    HfJetTagging::JetFlavour flavour = jetFlavours[binFlavour - 1];
     TH1F* projSignImpXYSigN1 = reinterpret_cast<TH1F*> (h3simTCjetPtSignImpXYSigFlavourN1->ProjectionY(Form("projSignImpXYSigN1_%d", binFlavour), 1, h3simTCjetPtSignImpXYSigFlavourN1->GetNbinsX(), binFlavour, binFlavour));
     TH1F* projSignImpXYSigN2 = reinterpret_cast<TH1F*> (h3simTCjetPtSignImpXYSigFlavourN2->ProjectionY(Form("projSignImpXYSigN2_%d", binFlavour), 1, h3simTCjetPtSignImpXYSigFlavourN2->GetNbinsX(), binFlavour, binFlavour));
     TH1F* projSignImpXYSigN3 = reinterpret_cast<TH1F*> (h3simTCjetPtSignImpXYSigFlavourN3->ProjectionY(Form("projSignImpXYSigN3_%d", binFlavour), 1, h3simTCjetPtSignImpXYSigFlavourN3->GetNbinsX(), binFlavour, binFlavour));
@@ -203,82 +199,81 @@ void HfJetTaggingTCAnalysis::ProjectionHistTCQAMC() {
     hsimTCjetSignImpXYZSigN3[0][0]->Add(projSignImpXYZSigN3);
 
     // jet flavour
-    hsimTCjetSignImpXYSigN1[i+1][0] = reinterpret_cast<TH1F*>(projSignImpXYSigN1->Clone());
-    hsimTCjetSignImpXYSigN2[i+1][0] = reinterpret_cast<TH1F*>(projSignImpXYSigN2->Clone());
-    hsimTCjetSignImpXYSigN3[i+1][0] = reinterpret_cast<TH1F*>(projSignImpXYSigN3->Clone());
-    hsimTCjetSignImpZSigN1[i+1][0] = reinterpret_cast<TH1F*>(projSignImpZSigN1->Clone());
-    hsimTCjetSignImpZSigN2[i+1][0] = reinterpret_cast<TH1F*>(projSignImpZSigN2->Clone());
-    hsimTCjetSignImpZSigN3[i+1][0] = reinterpret_cast<TH1F*>(projSignImpZSigN3->Clone());
-    hsimTCjetSignImpXYZSigN1[i+1][0] = reinterpret_cast<TH1F*>(projSignImpXYZSigN1->Clone());
-    hsimTCjetSignImpXYZSigN2[i+1][0] = reinterpret_cast<TH1F*>(projSignImpXYZSigN2->Clone());
-    hsimTCjetSignImpXYZSigN3[i+1][0] = reinterpret_cast<TH1F*>(projSignImpXYZSigN3->Clone());
-
+    hsimTCjetSignImpXYSigN1[flavour][0] = reinterpret_cast<TH1F*>(projSignImpXYSigN1->Clone(Form("hsimTCjetSignImpXYSigN1_%d_0", flavour)));
+    hsimTCjetSignImpXYSigN2[flavour][0] = reinterpret_cast<TH1F*>(projSignImpXYSigN2->Clone(Form("hsimTCjetSignImpXYSigN2_%d_0", flavour)));
+    std::cout << " in proj: " << hsimTCjetSignImpXYSigN2[flavour][0]->GetName() << std::endl;
+    hsimTCjetSignImpXYSigN3[flavour][0] = reinterpret_cast<TH1F*>(projSignImpXYSigN3->Clone());
+    hsimTCjetSignImpZSigN1[flavour][0] = reinterpret_cast<TH1F*>(projSignImpZSigN1->Clone());
+    hsimTCjetSignImpZSigN2[flavour][0] = reinterpret_cast<TH1F*>(projSignImpZSigN2->Clone(Form("hsimTCjetSignImpZSigN2_%d_0", flavour)));
+    hsimTCjetSignImpZSigN3[flavour][0] = reinterpret_cast<TH1F*>(projSignImpZSigN3->Clone());
+    hsimTCjetSignImpXYZSigN1[flavour][0] = reinterpret_cast<TH1F*>(projSignImpXYZSigN1->Clone());
+    hsimTCjetSignImpXYZSigN2[flavour][0] = reinterpret_cast<TH1F*>(projSignImpXYZSigN2->Clone());
+    hsimTCjetSignImpXYZSigN3[flavour][0] = reinterpret_cast<TH1F*>(projSignImpXYZSigN3->Clone());
 
     for (int binJetPt =1; binJetPt<HfJetTagging::nBinsJetPt+1; binJetPt++) {
 
       int leftbinJetPtSignImpXYSigN1 = h3simTCjetPtSignImpXYSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
       int rightbinJetPtSignImpXYSigN1 = h3simTCjetPtSignImpXYSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpXYSigN1 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYSigFlavourN1->ProjectionY(Form("projJetPtRagneSignImpXYSigN1_%d_%d", binJetPt, binFlavour), leftbinJetPtSignImpXYSigN1, rightbinJetPtSignImpXYSigN1, binFlavour, binFlavour));
-      hsimTCjetSignImpXYSigN1[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYSigN1->Clone());
-      hsimTCjetSignImpXYSigN1[0][binJetPt]->Add(projJetPtRangeSignImpXYSigN1);
+      TH1F* projJetPtRangeSignImpXYSigN1 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYSigFlavourN1->ProjectionY(Form("projJetPtRagneSignImpXYSigN1_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYSigN1, rightbinJetPtSignImpXYSigN1, flavour, flavour));
+      hsimTCjetSignImpXYSigN1[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYSigN1->Clone(Form("hsimTCjetSignImpXYSigN1_%d_%d", flavour, binJetPt)));
+      if (hsimTCjetSignImpXYSigN1[0][binJetPt]->GetEntries()>0) hsimTCjetSignImpXYSigN1[0][binJetPt]->Add(projJetPtRangeSignImpXYSigN1);
 
       int leftbinJetPtSignImpXYSigN2 = h3simTCjetPtSignImpXYSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
       int rightbinJetPtSignImpXYSigN2 = h3simTCjetPtSignImpXYSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpXYSigN2 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYSigFlavourN2->ProjectionY(Form("projJetPtRagneSignImpXYSigN2_%d_%d", binJetPt, binFlavour), leftbinJetPtSignImpXYSigN2, rightbinJetPtSignImpXYSigN2, binFlavour, binFlavour));
-      hsimTCjetSignImpXYSigN2[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYSigN2->Clone());
+      TH1F* projJetPtRangeSignImpXYSigN2 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYSigFlavourN2->ProjectionY(Form("projJetPtRagneSignImpXYSigN2_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYSigN2, rightbinJetPtSignImpXYSigN2, flavour, flavour));
+      hsimTCjetSignImpXYSigN2[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYSigN2->Clone(Form("hsimTCjetSignImpXYSigN2_%d_%d", flavour, binJetPt)));
       hsimTCjetSignImpXYSigN2[0][binJetPt]->Add(projJetPtRangeSignImpXYSigN2);
+      std::cout << " in proj: " << hsimTCjetSignImpXYSigN2[0][binJetPt]->GetName() << std::endl;
 
       int leftbinJetPtSignImpXYSigN3 = h3simTCjetPtSignImpXYSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
       int rightbinJetPtSignImpXYSigN3 = h3simTCjetPtSignImpXYSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpXYSigN3 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYSigFlavourN3->ProjectionY(Form("projJetPtRagneSignImpXYSigN3_%d_%d", binJetPt, binFlavour), leftbinJetPtSignImpXYSigN3, rightbinJetPtSignImpXYSigN3, binFlavour, binFlavour));
-      hsimTCjetSignImpXYSigN3[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYSigN3->Clone());
+      TH1F* projJetPtRangeSignImpXYSigN3 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYSigFlavourN3->ProjectionY(Form("projJetPtRagneSignImpXYSigN3_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYSigN3, rightbinJetPtSignImpXYSigN3, flavour, flavour));
+      hsimTCjetSignImpXYSigN3[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYSigN3->Clone());
       hsimTCjetSignImpXYSigN3[0][binJetPt]->Add(projJetPtRangeSignImpXYSigN3);
 
       int leftbinJetPtSignImpZSigN1 = h3simTCjetPtSignImpZSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
       int rightbinJetPtSignImpZSigN1 = h3simTCjetPtSignImpZSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpZSigN1 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpZSigFlavourN1->ProjectionY(Form("projJetPtRagneSignImpZSigN1_%d_%d", binJetPt, binFlavour), leftbinJetPtSignImpZSigN1, rightbinJetPtSignImpZSigN1, binFlavour, binFlavour));
-      hsimTCjetSignImpZSigN1[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpZSigN1->Clone());
+      TH1F* projJetPtRangeSignImpZSigN1 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpZSigFlavourN1->ProjectionY(Form("projJetPtRagneSignImpZSigN1_%d_%d", binJetPt, flavour), leftbinJetPtSignImpZSigN1, rightbinJetPtSignImpZSigN1, flavour, flavour));
+      hsimTCjetSignImpZSigN1[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpZSigN1->Clone());
       hsimTCjetSignImpZSigN1[0][binJetPt]->Add(projJetPtRangeSignImpZSigN1);
 
       int leftbinJetPtSignImpZSigN2 = h3simTCjetPtSignImpZSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
       int rightbinJetPtSignImpZSigN2 = h3simTCjetPtSignImpZSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpZSigN2 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpZSigFlavourN2->ProjectionY(Form("projJetPtRagneSignImpZSigN2_%d_%d", binJetPt, binFlavour), leftbinJetPtSignImpZSigN2, rightbinJetPtSignImpZSigN2, binFlavour, binFlavour));
-      hsimTCjetSignImpZSigN2[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpZSigN2->Clone());
+      TH1F* projJetPtRangeSignImpZSigN2 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpZSigFlavourN2->ProjectionY(Form("projJetPtRagneSignImpZSigN2_%d_%d", binJetPt, flavour), leftbinJetPtSignImpZSigN2, rightbinJetPtSignImpZSigN2, flavour, flavour));
+      hsimTCjetSignImpZSigN2[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpZSigN2->Clone());
       hsimTCjetSignImpZSigN2[0][binJetPt]->Add(projJetPtRangeSignImpZSigN2);
 
       int leftbinJetPtSignImpZSigN3 = h3simTCjetPtSignImpZSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
       int rightbinJetPtSignImpZSigN3 = h3simTCjetPtSignImpZSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpZSigN3 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpZSigFlavourN3->ProjectionY(Form("projJetPtRagneSignImpZSigN3_%d_%d", binJetPt, binFlavour), leftbinJetPtSignImpZSigN3, rightbinJetPtSignImpZSigN3, binFlavour, binFlavour));
-      hsimTCjetSignImpZSigN3[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpZSigN3->Clone());
+      TH1F* projJetPtRangeSignImpZSigN3 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpZSigFlavourN3->ProjectionY(Form("projJetPtRagneSignImpZSigN3_%d_%d", binJetPt, flavour), leftbinJetPtSignImpZSigN3, rightbinJetPtSignImpZSigN3, flavour, flavour));
+      hsimTCjetSignImpZSigN3[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpZSigN3->Clone());
       hsimTCjetSignImpZSigN3[0][binJetPt]->Add(projJetPtRangeSignImpZSigN3);
 
       int leftbinJetPtSignImpXYZSigN1 = h3simTCjetPtSignImpXYZSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
       int rightbinJetPtSignImpXYZSigN1 = h3simTCjetPtSignImpXYZSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpXYZSigN1 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYZSigFlavourN1->ProjectionY(Form("projJetPtRagneSignImpXYZSigN1_%d_%d", binJetPt, binFlavour), leftbinJetPtSignImpXYZSigN1, rightbinJetPtSignImpXYZSigN1, binFlavour, binFlavour));
-      hsimTCjetSignImpXYZSigN1[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYZSigN1->Clone());
+      TH1F* projJetPtRangeSignImpXYZSigN1 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYZSigFlavourN1->ProjectionY(Form("projJetPtRagneSignImpXYZSigN1_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYZSigN1, rightbinJetPtSignImpXYZSigN1, flavour, flavour));
+      hsimTCjetSignImpXYZSigN1[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYZSigN1->Clone());
       hsimTCjetSignImpXYZSigN1[0][binJetPt]->Add(projJetPtRangeSignImpXYZSigN1);
 
       int leftbinJetPtSignImpXYZSigN2 = h3simTCjetPtSignImpXYZSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
       int rightbinJetPtSignImpXYZSigN2 = h3simTCjetPtSignImpXYZSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpXYZSigN2 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYZSigFlavourN2->ProjectionY(Form("projJetPtRagneSignImpXYZSigN2_%d_%d", binJetPt, binFlavour), leftbinJetPtSignImpXYZSigN2, rightbinJetPtSignImpXYZSigN2, binFlavour, binFlavour));
-      hsimTCjetSignImpXYZSigN2[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYZSigN2->Clone());
+      TH1F* projJetPtRangeSignImpXYZSigN2 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYZSigFlavourN2->ProjectionY(Form("projJetPtRagneSignImpXYZSigN2_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYZSigN2, rightbinJetPtSignImpXYZSigN2, flavour, flavour));
+      hsimTCjetSignImpXYZSigN2[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYZSigN2->Clone());
       hsimTCjetSignImpXYZSigN2[0][binJetPt]->Add(projJetPtRangeSignImpXYZSigN2);
 
       int leftbinJetPtSignImpXYZSigN3 = h3simTCjetPtSignImpXYZSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
       int rightbinJetPtSignImpXYZSigN3 = h3simTCjetPtSignImpXYZSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpXYZSigN3 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYZSigFlavourN3->ProjectionY(Form("projJetPtRagneSignImpXYZSigN3_%d_%d", binJetPt, binFlavour), leftbinJetPtSignImpXYZSigN3, rightbinJetPtSignImpXYZSigN3, binFlavour, binFlavour));
-      hsimTCjetSignImpXYZSigN3[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYZSigN3->Clone());
+      TH1F* projJetPtRangeSignImpXYZSigN3 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYZSigFlavourN3->ProjectionY(Form("projJetPtRagneSignImpXYZSigN3_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYZSigN3, rightbinJetPtSignImpXYZSigN3, flavour, flavour));
+      hsimTCjetSignImpXYZSigN3[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYZSigN3->Clone());
       hsimTCjetSignImpXYZSigN3[0][binJetPt]->Add(projJetPtRangeSignImpXYZSigN3);
-
     }
   }
 }
+void HfJetTaggingTCAnalysis::NormalizedHistogramTCQAData() {
 
-void HfJetTaggingTCAnalysis::CloneNormalizedHistogramTCQAData() {
 }
 
-
-void HfJetTaggingTCAnalysis::CloneNormalizedHistogramTCQAMC() {
+void HfJetTaggingTCAnalysis::NormalizedHistogramTCQAMC() {
   for (int flavour = 0; flavour < HfJetTagging::nFlavour+1; flavour++) {
     for (int jetPt = 0; jetPt < HfJetTagging::nBinsJetPt+1; jetPt++) {
       hsimTCjetNormalizedSignImpXYSigN1[flavour][jetPt] = reinterpret_cast<TH1F*> (hsimTCjetSignImpXYSigN1[flavour][jetPt]->Clone(Form("hsimTCjetNormalizedSignImpXYSigN1_%d_%d", flavour, jetPt)));
@@ -288,48 +283,84 @@ void HfJetTaggingTCAnalysis::CloneNormalizedHistogramTCQAMC() {
       hsimTCjetNormalizedSignImpZSigN2[flavour][jetPt] = reinterpret_cast<TH1F*> (hsimTCjetSignImpZSigN2[flavour][jetPt]->Clone(Form("hsimTCjetNormalizedSignImpZSigN2_%d_%d", flavour, jetPt)));
       hsimTCjetNormalizedSignImpZSigN3[flavour][jetPt] = reinterpret_cast<TH1F*> (hsimTCjetSignImpZSigN3[flavour][jetPt]->Clone(Form("hsimTCjetNormalizedSignImpZSigN3_%d_%d", flavour, jetPt)));
       hsimTCjetNormalizedSignImpXYZSigN1[flavour][jetPt] = reinterpret_cast<TH1F*> (hsimTCjetSignImpXYZSigN1[flavour][jetPt]->Clone(Form("hsimTCjetNormalizedSignImpXYZSigN1_%d_%d", flavour, jetPt)));
-hsimTCjetNormalizedSignImpXYZSigN2[flavour][jetPt] = reinterpret_cast<TH1F*> (hsimTCjetSignImpXYZSigN2[flavour][jetPt]->Clone(Form("hsimTCjetNormalizedSignImpXYZSigN2_%d_%d", flavour, jetPt)));
-hsimTCjetNormalizedSignImpXYZSigN3[flavour][jetPt] = reinterpret_cast<TH1F*> (hsimTCjetSignImpXYZSigN3[flavour][jetPt]->Clone(Form("hsimTCjetNormalizedSignImpXYZSigN3_%d_%d", flavour, jetPt)));
+      hsimTCjetNormalizedSignImpXYZSigN2[flavour][jetPt] = reinterpret_cast<TH1F*> (hsimTCjetSignImpXYZSigN2[flavour][jetPt]->Clone(Form("hsimTCjetNormalizedSignImpXYZSigN2_%d_%d", flavour, jetPt)));
+      hsimTCjetNormalizedSignImpXYZSigN3[flavour][jetPt] = reinterpret_cast<TH1F*> (hsimTCjetSignImpXYZSigN3[flavour][jetPt]->Clone(Form("hsimTCjetNormalizedSignImpXYZSigN3_%d_%d", flavour, jetPt)));
 
+      hsimTCjetNormalizedSignImpXYSigN1[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpXYSigN1[flavour][jetPt]->GetEntries());
+      hsimTCjetNormalizedSignImpXYSigN2[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpXYSigN2[flavour][jetPt]->GetEntries());
+      hsimTCjetNormalizedSignImpXYSigN3[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpXYSigN3[flavour][jetPt]->GetEntries());
+      hsimTCjetNormalizedSignImpZSigN1[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpZSigN1[flavour][jetPt]->GetEntries());
+      hsimTCjetNormalizedSignImpZSigN2[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpZSigN2[flavour][jetPt]->GetEntries());
+      hsimTCjetNormalizedSignImpZSigN3[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpZSigN3[flavour][jetPt]->GetEntries());
+      hsimTCjetNormalizedSignImpXYZSigN1[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpXYZSigN1[flavour][jetPt]->GetEntries());
+      hsimTCjetNormalizedSignImpXYZSigN2[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpXYZSigN2[flavour][jetPt]->GetEntries());
+      hsimTCjetNormalizedSignImpXYZSigN3[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpXYZSigN3[flavour][jetPt]->GetEntries());
+
+      if (hsimTCjetNormalizedSignImpXYSigN1[flavour][jetPt]->Integral()>1.00006) std::cout<< "ERROR: Not performing nomalization XY N1, Intergral: "<< hsimTCjetNormalizedSignImpXYSigN1[flavour][jetPt]->Integral() << std::endl;
+      if (hsimTCjetNormalizedSignImpXYSigN2[flavour][jetPt]->Integral()>1.00006) std::cout<< "ERROR: Not performing nomalization XY N2, Intergral: "<< hsimTCjetNormalizedSignImpXYSigN2[flavour][jetPt]->Integral() << std::endl;
+      if (hsimTCjetNormalizedSignImpXYSigN3[flavour][jetPt]->Integral()>1.00006) std::cout<< "ERROR: Not performing nomalization XY N3, Intergral: "<< hsimTCjetNormalizedSignImpXYSigN3[flavour][jetPt]->Integral() << std::endl;
+      if (hsimTCjetNormalizedSignImpZSigN1[flavour][jetPt]->Integral()>1.00006) std::cout<< "ERROR: Not performing nomalization Z N1, Intergral: "<< hsimTCjetNormalizedSignImpZSigN1[flavour][jetPt]->Integral() << std::endl;
+      if (hsimTCjetNormalizedSignImpZSigN2[flavour][jetPt]->Integral()>1.00006) std::cout<< "ERROR: Not performing nomalization Z N2, Intergral: "<< hsimTCjetNormalizedSignImpZSigN2[flavour][jetPt]->Integral() << std::endl;
+      if (hsimTCjetNormalizedSignImpZSigN3[flavour][jetPt]->Integral()>1.00006) std::cout<< "ERROR: Not performing nomalization Z N3, Intergral: "<< hsimTCjetNormalizedSignImpZSigN3[flavour][jetPt]->Integral() << std::endl;
+      if (hsimTCjetNormalizedSignImpXYZSigN1[flavour][jetPt]->Integral()>1.00006) std::cout<< "ERROR: Not performing nomalization XYZ N1, Intergral: "<< hsimTCjetNormalizedSignImpXYZSigN1[flavour][jetPt]->Integral() << std::endl;
+      if (hsimTCjetNormalizedSignImpXYZSigN2[flavour][jetPt]->Integral()>1.00006) std::cout<< "ERROR: Not performing nomalization XYZ N2, Intergral: "<< hsimTCjetNormalizedSignImpXYZSigN2[flavour][jetPt]->Integral() << std::endl;
+      if (hsimTCjetNormalizedSignImpXYZSigN3[flavour][jetPt]->Integral()>1.00006) std::cout<< "ERROR: Not performing nomalization XYZ N3, Intergral: "<< hsimTCjetNormalizedSignImpXYZSigN3[flavour][jetPt]->Integral() << std::endl;
     }
   }
 }
 
-void HfJetTaggingTCAnalysis::NormalizedHistogramTCQAData() {
-}
+void HfJetTaggingTCAnalysis::SaveHistogramTCQA(TString rootFile, bool doData, bool doMC, bool dopartLevel) {
+  TFile* fout = new TFile(rootFile.Data(), "RECREATE");
 
+  // Check if the file is open successfully
+  if (!fout || !fout->IsOpen()) {
+    std::cout << "Error: Could not open the ROOT file for writing." << std::endl;
+    return;
+  }
 
-void HfJetTaggingTCAnalysis::NormalizedHistogramTCQAMC() {
-  for (int flavour = 0; flavour < HfJetTagging::nFlavour+1; flavour++) {
-    for (int jetPt = 0; jetPt < HfJetTagging::nBinsJetPt+1; jetPt++) {
-      hsimTCjetNormalizedSignImpXYSigN1[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpXYSigN1[flavour][jetPt]->Integral());
-      hsimTCjetNormalizedSignImpXYSigN2[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpXYSigN2[flavour][jetPt]->Integral());
-      hsimTCjetNormalizedSignImpXYSigN3[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpXYSigN3[flavour][jetPt]->Integral());
-      hsimTCjetNormalizedSignImpZSigN1[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpZSigN1[flavour][jetPt]->Integral());
-      hsimTCjetNormalizedSignImpZSigN2[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpZSigN2[flavour][jetPt]->Integral());
-      hsimTCjetNormalizedSignImpZSigN3[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpZSigN3[flavour][jetPt]->Integral());
-      hsimTCjetNormalizedSignImpXYZSigN1[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpXYZSigN1[flavour][jetPt]->Integral());
-      hsimTCjetNormalizedSignImpXYZSigN2[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpXYZSigN2[flavour][jetPt]->Integral());
-      hsimTCjetNormalizedSignImpXYZSigN3[flavour][jetPt]->Scale(1. / hsimTCjetNormalizedSignImpXYZSigN3[flavour][jetPt]->Integral());
+  // Create or retrieve the directory
+  TDirectory* dir;
+
+	if (doData) {
+  	dir = fout->GetDirectory("data");
+  	if (!dir) {
+    	dir = fout->mkdir("data");
+    	dir->cd();
     }
   }
-}
 
-void HfJetTaggingTCAnalysis::SaveHistogramTCQA(TString outFile) {
-  TFile *fout = TFile::Open(outFile.Data(),"recreate");
-  if (!fout) return;
-//  for (int flavour=0; flavour<HfJetTagging::nFlavour+1; flavour++) {
-//    //if (!gSystem->AccessPathName(Form("%s/%s", outFile.Data(), HfJetTagging::FLAVOUR[flavour].Data()))) {
-//    fout->mkdir(Form("%sJet", HfJetTagging::FLAVOUR[flavour].Data()));
-//    //}
-//    for (int binJetPt=0; binJetPt<HfJetTagging::nBinsJetPt+1; binJetPt++) {
-//      hsimTCjetTrackPt[flavour][binJetPt]->Write(Form("%sJet/histTrackPt_binJetPt_%d", HfJetTagging::FLAVOUR[flavour].Data(), binJetPt));
-//      hsimTCjetImpXY[flavour][binJetPt]->Write(Form("%sJet/histImpXY_binJetPt_%d", HfJetTagging::FLAVOUR[flavour].Data(), binJetPt));
-//      hsimTCjetImpXYSig[flavour][binJetPt]->Write(Form("%sJet/histImpXYSig_binJetPt_%d", HfJetTagging::FLAVOUR[flavour].Data(), binJetPt));
-//      //hsimTCjetImpXYSig[flavour][binJetPt]->Write(Form("%s/", HfJetTagging::FLAVOUR[flavour].Data()) + TString(hsimTCjetImpXYSig[flavour][binJetPt]->GetName()));
-//      
-//    }
-//  }
+  if (doMC) {
+    dir = fout->GetDirectory("sim");
+    if (!dir) {
+      dir = fout->mkdir("sim");
+      dir->cd();
+      for (int binFlavour =0; binFlavour < HfJetTagging::nFlavour+1; binFlavour++) {
+        for (int binJetPt=0; binJetPt<HfJetTagging::nBinsJetPt+1; binJetPt++) {
+          hsimTCjetSignImpXYSigN1[binFlavour][binJetPt]->Write();
+          hsimTCjetSignImpXYSigN2[binFlavour][binJetPt]->Write();
+          hsimTCjetSignImpXYSigN3[binFlavour][binJetPt]->Write();
+          hsimTCjetSignImpZSigN1[binFlavour][binJetPt]->Write();
+          hsimTCjetSignImpZSigN2[binFlavour][binJetPt]->Write();
+          hsimTCjetSignImpZSigN3[binFlavour][binJetPt]->Write();
+          hsimTCjetSignImpXYZSigN1[binFlavour][binJetPt]->Write();
+          hsimTCjetSignImpXYZSigN2[binFlavour][binJetPt]->Write();
+          hsimTCjetSignImpXYZSigN3[binFlavour][binJetPt]->Write();
+
+          // Normalized
+          hsimTCjetNormalizedSignImpXYSigN1[binFlavour][binJetPt]->Write(Form("hsimTCjetNormazliedSignImpXYSigN1_%d_%d", binFlavour, binJetPt));
+          hsimTCjetNormalizedSignImpXYSigN2[binFlavour][binJetPt]->Write();
+          hsimTCjetNormalizedSignImpXYSigN3[binFlavour][binJetPt]->Write();
+          hsimTCjetNormalizedSignImpZSigN1[binFlavour][binJetPt]->Write();
+          hsimTCjetNormalizedSignImpZSigN2[binFlavour][binJetPt]->Write(Form("hsimTCjetNormalizedSignImpZSigN2_%d_%d", binFlavour, binJetPt));
+          hsimTCjetNormalizedSignImpZSigN3[binFlavour][binJetPt]->Write();
+          hsimTCjetNormalizedSignImpXYZSigN1[binFlavour][binJetPt]->Write();
+          hsimTCjetNormalizedSignImpXYZSigN2[binFlavour][binJetPt]->Write();
+          hsimTCjetNormalizedSignImpXYZSigN3[binFlavour][binJetPt]->Write();
+        }
+      }
+    }
+  }
+  fout->Close();
   delete fout;
 }
 
