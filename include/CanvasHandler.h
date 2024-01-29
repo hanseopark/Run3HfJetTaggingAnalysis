@@ -1,3 +1,6 @@
+#ifndef CANVASHANDLER_H
+#define CANVASHANDLER_H
+
 #include <TCanvas.h>
 #include <TPad.h>
 #include <TH2D.h>
@@ -32,8 +35,8 @@ CanvasHandler::~CanvasHandler() {
   if (mpad) delete mpad;
 }
 
-void CanvasHandler::createCanvas(int number=0, int xp=0, int yp=0, int x=400, int y=400,
-    double pleft=0.17, double pright=0.1, double ptop=0.1, double pbot=0.13) {
+void CanvasHandler::createCanvas(int number=0, int xp=0, int yp=0, int x=800, int y=600,
+    double pleft=0.12, double pright=0.05, double ptop=0.05, double pbot=0.12) {
   char name[100];
   std::snprintf(name, sizeof(name), "cc%d", number);
   canvas = dynamic_cast<TCanvas*>(gROOT->GetListOfCanvases()->FindObject(name));
@@ -75,11 +78,15 @@ void CanvasHandler::DrawRefHistogram(int number, double xmin, double xmax, doubl
   int ybin = 100;
   TH2D* href = new TH2D(name, name, xbin, xmin, xmax, ybin, ymin, ymax);
   href->GetXaxis()->SetTitle(xtitle.Data());
+  href->GetXaxis()->SetLabelSize(0.03);
+  href->GetXaxis()->SetTitleOffset(1.2);
   href->GetYaxis()->SetTitle(ytitle.Data());
+  href->GetYaxis()->SetLabelSize(0.03);
+  href->GetYaxis()->SetTitleOffset(1.5);
   href->Draw();
 }
 
-void CanvasHandler::createRatioCanvas(int number=0, int xp=0, int yp=0, int x=400, int y=400,
+void CanvasHandler::createRatioCanvas(int number=0, int xp=0, int yp=0, int x=1600, int y=900,
     double pleft=0.17, double pright=0.1, double ptop=0.1, double pbot=0.13) {
     char name[100];
     snprintf(name,sizeof(name),"cc%d",number);
@@ -112,6 +119,8 @@ void CanvasHandler::createRatioCanvas(int number=0, int xp=0, int yp=0, int x=40
     mlowpad->SetLeftMargin(0.15);
     mlowpad->SetRightMargin(0.05);
     mlowpad->Draw();
+
+
 }
 
 void CanvasHandler::drawUpperPad(TH1F* h1, int number, double xmin, double xmax, double ymin, double ymax, TString xtitle, TString ytitle) {
@@ -129,3 +138,5 @@ void CanvasHandler::drawLowerPad(TH1F* h1, int number, double xmin, double xmax,
   h1->Draw("same");
   gROOT->ProcessLine(Form("padd%d->Update()", number));
 }
+
+#endif // CANVASHANDLER_H
