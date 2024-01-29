@@ -554,9 +554,9 @@ void JetAnalysis::ProjectionHistGeneralQAData() {
 
 void JetAnalysis::ProjectionHistGeneralQAMC(bool dopartLevel= false) {
 
-  TH1F *projJetPt = reinterpret_cast<TH1F*> (h3simGenjetRjetPtjetEta->ProjectionY("projJetNTracks", 1, h3simGenjetRjetPtjetEta->GetNbinsX(), 1, h3simGenjetRjetPtjetEta->GetNbinsZ()));
-  TH1F *projJetEta = reinterpret_cast<TH1F*> (h3simGenjetRjetPtjetEta->ProjectionZ("projJetNTracks", 1, h3simGenjetRjetPtjetEta->GetNbinsX(), 1, h3simGenjetRjetPtjetEta->GetNbinsY()));
-  TH1F *projJetPhi = reinterpret_cast<TH1F*> (h3simGenjetRjetPtjetPhi->ProjectionZ("projJetNTracks", 1, h3simGenjetRjetPtjetPhi->GetNbinsX(), 1, h3simGenjetRjetPtjetPhi->GetNbinsY()));
+  TH1F *projJetPt = reinterpret_cast<TH1F*> (h3simGenjetRjetPtjetEta->ProjectionY("projJetPt", 1, h3simGenjetRjetPtjetEta->GetNbinsX(), 1, h3simGenjetRjetPtjetEta->GetNbinsZ()));
+  TH1F *projJetEta = reinterpret_cast<TH1F*> (h3simGenjetRjetPtjetEta->ProjectionZ("projJetEta", 1, h3simGenjetRjetPtjetEta->GetNbinsX(), 1, h3simGenjetRjetPtjetEta->GetNbinsY()));
+  TH1F *projJetPhi = reinterpret_cast<TH1F*> (h3simGenjetRjetPtjetPhi->ProjectionZ("projJetPhi", 1, h3simGenjetRjetPtjetPhi->GetNbinsX(), 1, h3simGenjetRjetPtjetPhi->GetNbinsY()));
   TH1F *projJetNTracks = reinterpret_cast<TH1F*> (h3simGenjetRjetPtjetNTracks->ProjectionZ("projJetNTracks", 1, h3simGenjetRjetPtjetNTracks->GetNbinsX(), 1, h3simGenjetRjetPtjetNTracks->GetNbinsY()));
   TH1F *projJetArea = reinterpret_cast<TH1F*> (h3simGenjetRjetPtjetArea->ProjectionZ("projJetArea", 1, h3simGenjetRjetPtjetArea->GetNbinsX(), 1, h3simGenjetRjetPtjetArea->GetNbinsY()));
   TH1F *projTrackPt = reinterpret_cast<TH1F*> (h3simGenjetRjetPtTrackPt->ProjectionZ("projTrackPt", 1, h3simGenjetRjetPtTrackPt->GetNbinsX(), 1, h3simGenjetRjetPtTrackPt->GetNbinsY()));
@@ -890,7 +890,7 @@ void JetAnalysis::NormalizedHistogramGeneralQAData() {
 
 void JetAnalysis::NormalizedHistogramGeneralQAMC(bool dopartLevel=false) {
   for (int binJetR =0; binJetR < GeneralJet::nBinsJetR+1; binJetR++) {
-    hsimGenjetNormalizedPt[binJetR]->Scale(1. / hsimGenjetNormalizedPt[binJetR]->Integral());
+    hsimGenjetNormalizedPt[binJetR]->Scale(1. / hsimGenjetNormalizedPt[binJetR]->GetEntries());
     for (int binJetPt =0; binJetPt < GeneralJet::nBinsJetPt+1; binJetPt++) {
       hsimGenjetNormalizedEta[binJetPt][binJetR]->Scale(1. / hsimGenjetNormalizedEta[binJetPt][binJetR]->Integral());
       hsimGenjetNormalizedPhi[binJetPt][binJetR]->Scale(1. / hsimGenjetNormalizedPhi[binJetPt][binJetR]->Integral());
@@ -1075,7 +1075,7 @@ void JetAnalysis::DrawSimGenJetPt(bool doLog = true, int binJetR=0) {
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, GeneralJet::REFHIST::JETPT[0], GeneralJet::REFHIST::JETPT[1], GeneralJet::REFHIST::JETPT[2], GeneralJet::REFHIST::JETPT[3], " #it{p}_{T}^{jet}", "#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d#it{p}_{T}^{jet}}");
+  canvasHandler->DrawRefHistogram(canvasNum, GeneralJet::REFHIST::JETPT[0], GeneralJet::REFHIST::JETPT[1], GeneralJet::REFHIST::JETPT[2], GeneralJet::REFHIST::JETPT[3], "#it{p}_{T}^{jet}", "#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d#it{p}_{T}^{jet}}");
   this->DrawCombined(NormHistList.size(), NormHistList, false, GeneralJet::LEG[0], GeneralJet::LEG[1], GeneralJet::LEG[2], GeneralJet::LEG[3]);
   if (binJetR == 0) {
     gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/general/jetmomentum.pdf\")", canvasNum - 1));
@@ -1105,7 +1105,7 @@ void JetAnalysis::DrawSimGenJetPhi(bool doLog = true, int binJetPt = 0, int binJ
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, GeneralJet::REFHIST::JETPHI[0], GeneralJet::REFHIST::JETPHI[1], GeneralJet::REFHIST::JETPHI[2], GeneralJet::REFHIST::JETPHI[3], "#it{#phi_{jet}}", "#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d##it{phi}_{jet}}");
+  canvasHandler->DrawRefHistogram(canvasNum, GeneralJet::REFHIST::JETPHI[0], GeneralJet::REFHIST::JETPHI[1], GeneralJet::REFHIST::JETPHI[2], GeneralJet::REFHIST::JETPHI[3], "#it{#phi_{jet}}", "#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d#it{#phi}_{jet}}");
   this->DrawCombined(NormHistList.size(), NormHistList, false, GeneralJet::LEG[0], GeneralJet::LEG[1], GeneralJet::LEG[2], GeneralJet::LEG[3]);
   if (binJetPt == 0 && binJetR == 0) {
     gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/general/jetphi.pdf\")", canvasNum - 1));
@@ -1120,7 +1120,7 @@ void JetAnalysis::DrawSimGenJetNTracks(bool doLog = true, int binJetPt = 0, int 
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, GeneralJet::REFHIST::JETNTRACKS[0], GeneralJet::REFHIST::JETNTRACKS[1], GeneralJet::REFHIST::JETNTRACKS[2], GeneralJet::REFHIST::JETNTRACKS[3], "#it{N_{track}}", "#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d##it{N_{track}}}");
+  canvasHandler->DrawRefHistogram(canvasNum, GeneralJet::REFHIST::JETNTRACKS[0], GeneralJet::REFHIST::JETNTRACKS[1], GeneralJet::REFHIST::JETNTRACKS[2], GeneralJet::REFHIST::JETNTRACKS[3], "#it{N_{track}}", "#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d#it{N_{track}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, false, GeneralJet::LEG[0], GeneralJet::LEG[1], GeneralJet::LEG[2], GeneralJet::LEG[3]);
   if (binJetPt == 0 && binJetR == 0) {
     gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/general/jetntracks.pdf\")", canvasNum - 1));
@@ -1135,7 +1135,7 @@ void JetAnalysis::DrawSimGenJetArea(bool doLog = true, int binJetPt = 0, int bin
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, GeneralJet::REFHIST::JETAREA[0], GeneralJet::REFHIST::JETAREA[1], GeneralJet::REFHIST::JETAREA[2], GeneralJet::REFHIST::JETAREA[3], "#it{A_{jet}}", "#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d##it{A_{jet}}}");
+  canvasHandler->DrawRefHistogram(canvasNum, GeneralJet::REFHIST::JETAREA[0], GeneralJet::REFHIST::JETAREA[1], GeneralJet::REFHIST::JETAREA[2], GeneralJet::REFHIST::JETAREA[3], "#it{A_{jet}}", "#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d#it{A_{jet}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, false, GeneralJet::LEG[0], GeneralJet::LEG[1], GeneralJet::LEG[2], GeneralJet::LEG[3]);
   if (binJetPt == 0 && binJetR == 0) {
     gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/general/jetarea.pdf\")", canvasNum - 1));
@@ -1150,7 +1150,7 @@ void JetAnalysis::DrawSimGenJetTrackPt(bool doLog = true, int binJetPt = 0, int 
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, GeneralJet::REFHIST::TRACKPT[0], GeneralJet::REFHIST::TRACKPT[1], GeneralJet::REFHIST::TRACKPT[2], GeneralJet::REFHIST::TRACKPT[3], "#it{p_{T}^{track}}", "#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d##it{p_{T}^{track}}}");
+  canvasHandler->DrawRefHistogram(canvasNum, GeneralJet::REFHIST::TRACKPT[0], GeneralJet::REFHIST::TRACKPT[1], GeneralJet::REFHIST::TRACKPT[2], GeneralJet::REFHIST::TRACKPT[3], "#it{p_{T}^{track}}", "#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d#it{p_{T}^{track}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, false, GeneralJet::LEG[0], GeneralJet::LEG[1], GeneralJet::LEG[2], GeneralJet::LEG[3]);
   if (binJetPt == 0 && binJetR == 0) {
     gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/general/trackpt.pdf\")", canvasNum - 1));
@@ -1165,7 +1165,7 @@ void JetAnalysis::DrawSimGenJetTrackEta(bool doLog = true, int binJetPt = 0, int
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, GeneralJet::REFHIST::TRACKETA[0], GeneralJet::REFHIST::TRACKETA[1], GeneralJet::REFHIST::TRACKETA[2], GeneralJet::REFHIST::TRACKETA[3], "#it{#eta_{track}}", "#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d##it{#eta_{track}}}");
+  canvasHandler->DrawRefHistogram(canvasNum, GeneralJet::REFHIST::TRACKETA[0], GeneralJet::REFHIST::TRACKETA[1], GeneralJet::REFHIST::TRACKETA[2], GeneralJet::REFHIST::TRACKETA[3], "#it{#eta_{track}}", "#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d#it{#eta_{track}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, false, GeneralJet::LEG[0], GeneralJet::LEG[1], GeneralJet::LEG[2], GeneralJet::LEG[3]);
   if (binJetPt == 0 && binJetR == 0) {
     gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/general/tracketa.pdf\")", canvasNum - 1));
@@ -1180,7 +1180,7 @@ void JetAnalysis::DrawSimGenJetTrackPhi(bool doLog = true, int binJetPt = 0, int
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, GeneralJet::REFHIST::TRACKPHI[0], GeneralJet::REFHIST::TRACKPHI[1], GeneralJet::REFHIST::TRACKPHI[2], GeneralJet::REFHIST::TRACKPHI[3], "#it{#phi_{track}}", "#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d##it{#phi_{track}}}");
+  canvasHandler->DrawRefHistogram(canvasNum, GeneralJet::REFHIST::TRACKPHI[0], GeneralJet::REFHIST::TRACKPHI[1], GeneralJet::REFHIST::TRACKPHI[2], GeneralJet::REFHIST::TRACKPHI[3], "#it{#phi_{track}}", "#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d#it{#phi_{track}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, false, GeneralJet::LEG[0], GeneralJet::LEG[1], GeneralJet::LEG[2], GeneralJet::LEG[3]);
   if (binJetPt == 0 && binJetR == 0) {
     gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/general/trackphi.pdf\")", canvasNum - 1));
@@ -1195,7 +1195,7 @@ void JetAnalysis::DrawSimGenJetLeadingTrackPt(bool doLog = true, int binJetPt = 
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, GeneralJet::REFHIST::TRACKPT[0], GeneralJet::REFHIST::TRACKPT[1], GeneralJet::REFHIST::TRACKPT[2], GeneralJet::REFHIST::TRACKPT[3], "#it{p_{T}^{leading track}}", "#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d##it{p_{T}^{leading track}}}");
+  canvasHandler->DrawRefHistogram(canvasNum, GeneralJet::REFHIST::TRACKPT[0], GeneralJet::REFHIST::TRACKPT[1], GeneralJet::REFHIST::TRACKPT[2], GeneralJet::REFHIST::TRACKPT[3], "#it{p_{T}^{leading track}}", "#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d#it{p_{T}^{leading track}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, false, GeneralJet::LEG[0], GeneralJet::LEG[1], GeneralJet::LEG[2], GeneralJet::LEG[3]);
   if (binJetPt == 0 && binJetR == 0) {
     gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/general/leadingtrackpt.pdf\")", canvasNum - 1));
@@ -1208,8 +1208,8 @@ void JetAnalysis::DrawRatioDataMCGenJetPt(bool doLog = false, int binJetR =0) {
   TH1F *hRatio = static_cast<TH1F*>(hdataGenjetNormalizedPt[binJetR]->Clone("hRatio"));
   hRatio->Divide(hsimGenjetNormalizedPt[binJetR]);
   canvasHandler = new CanvasHandler();
-  canvasHandler->drawUpperPad(hsimGenjetNormalizedPt[binJetR], canvasNum, GeneralJet::REFHIST::JETPT[0], GeneralJet::REFHIST::JETPT[1], GeneralJet::REFHIST::JETPT[2], GeneralJet::REFHIST::JETPT[3], "","1/N dN/djetPt");
-  canvasHandler->drawLowerPad(hRatio, canvasNum, GeneralJet::REFHIST::JETPT[0], GeneralJet::REFHIST::JETPT[1], GeneralJet::REFHIST::JETPT[2], GeneralJet::REFHIST::JETPT[3], "jet pT");
+  canvasHandler->drawUpperPad(hsimGenjetNormalizedPt[binJetR], canvasNum, GeneralJet::REFHIST::JETPT[0], GeneralJet::REFHIST::JETPT[1], GeneralJet::REFHIST::JETPT[2], GeneralJet::REFHIST::JETPT[3], "","#frac{1}{#it{N_{jet}}} #frac{d#it{N_{jet}}}{d#it{p}_{T}^{jet}}");
+  canvasHandler->drawLowerPad(hRatio, canvasNum, GeneralJet::REFHIST::JETPT[0], GeneralJet::REFHIST::JETPT[1], GeneralJet::REFHIST::JETPT[2], GeneralJet::REFHIST::JETPT[3], "#it{p}_{T}^{jet}");
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/general/temp.pdf\")", canvasNum));
   canvasNum++;
 }
