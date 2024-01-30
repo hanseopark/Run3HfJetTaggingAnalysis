@@ -1,3 +1,3 @@
 # !bin/bash
 
-bash startSysAnalysisHfJetTagging.sh
+bash startSysAnalysisHfJetTagging.sh --radius

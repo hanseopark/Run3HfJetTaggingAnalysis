@@ -1,11 +1,10 @@
 #include <iostream>
 #include <vector>
 #include "../include/DataPoint.h"
-#include "../include/HfJetTaggingSysAnalysis.h"
+#include "TFile.h"
+#include "TString.h"
 #include "../include/HfJetTaggingSysShowerAnalysis.h"
 #include "../include/HfJetTaggingSysRadiusAnalysis.h"
-
-//#include <TString.h>
 
 void PlotSysShowerHfJetTagging() {
   TString pwd="/Users/hanseopark/alice/work/PHD_Analysis/Run3/pp/13.6TeV/HfJets/Dev/HFJetsWork/MC/DetectorLevel";
@@ -13,10 +12,12 @@ void PlotSysShowerHfJetTagging() {
   rootFiles.push_back(Form("%s/AnalysisResults_shower_1.root", pwd.Data())); // include shower
   rootFiles.push_back(Form("%s/AnalysisResults_shower_0.root", pwd.Data())); // without shower
 
+  bool doData = false;
   bool doMC = true;
+  bool dopartLevel = false;
   bool doLog = true;
   
-  HfJetTaggingSysShowerAnalysis *HfJetTagSysShowerObj = new HfJetTaggingSysShowerAnalysis(rootFiles, doMC);
+  HfJetTaggingSysShowerAnalysis *HfJetTagSysShowerObj = new HfJetTaggingSysShowerAnalysis(rootFiles, doData, doMC, dopartLevel);
   HfJetTagSysShowerObj->DrawIncJetTrackPtShower(doLog, HfJetTagging::NumShower);
   HfJetTagSysShowerObj->DrawCharmJetTrackPtShower(doLog, HfJetTagging::NumShower);
   HfJetTagSysShowerObj->DrawBeautyJetTrackPtShower(doLog, HfJetTagging::NumShower);
@@ -40,12 +41,12 @@ void PlotSysRadiusHfJetTagging() {
   rootFiles.push_back(Form("%s/AnalysisResults_radius_0_5.root", pwd.Data()));
 //  TString taskTC = "jet-taggerhf-tc-charged";
 
+  bool doData = false;
   bool doMC = true;
+  bool dopartLevel = false;
   bool doLog = true;
-  //HfJetTaggingSysAnalysis *HfJetTagSysObj = new HfJetTaggingSysAnalysis();
 
-
-  HfJetTaggingSysRadiusAnalysis *HfJetTagSysRadiusObj = new HfJetTaggingSysRadiusAnalysis(rootFiles, doMC);
+  HfJetTaggingSysRadiusAnalysis *HfJetTagSysRadiusObj = new HfJetTaggingSysRadiusAnalysis(rootFiles, doData, doMC, dopartLevel);
   HfJetTagSysRadiusObj->DrawIncJetTrackPtRadius(doLog, HfJetTagging::MaxRadius);
   HfJetTagSysRadiusObj->DrawCharmJetTrackPtRadius(doLog, HfJetTagging::MaxRadius);
   HfJetTagSysRadiusObj->DrawBeautyJetTrackPtRadius(doLog, HfJetTagging::MaxRadius);
@@ -61,11 +62,7 @@ void PlotSysRadiusHfJetTagging() {
 }
 
 
-void PlotSysHfJetTagging(bool doShower = false, bool doRadius = false) {
-  doShower = true;
-  doRadius = true;
-  if (doShower) PlotSysShowerHfJetTagging();
-  if (doRadius) PlotSysRadiusHfJetTagging();
-
+void PlotSysHfJetTagging(TString doShower = "false", TString doRadius = "false") {
+  if (doShower.CompareTo("true")==0) PlotSysShowerHfJetTagging();
+  if (doRadius.CompareTo("true")==0) PlotSysRadiusHfJetTagging();
 }
-

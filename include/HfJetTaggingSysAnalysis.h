@@ -4,17 +4,16 @@
 #include <TH1F.h>
 #include <TString.h>
 #include "DataPoint.h"
-#include "CanvasHandler.h"
 
 class HfJetTaggingSysAnalysis {
   public:
-    HfJetTaggingSysAnalysis(bool doMC);
+    HfJetTaggingSysAnalysis(bool doData, bool doMC, bool dopartLevel);
     ~HfJetTaggingSysAnalysis();
-    int canvasNum=0;
-    CanvasHandler* canvasHandler;
 
     // fucntion
     void HistColorStyle(TH1F* h1, int mc, int ms, double mS, int lc, int ls);
+    int canvasNum=0;
+  protected:
 
   private:
     static const int temp =-1;
@@ -22,7 +21,7 @@ class HfJetTaggingSysAnalysis {
 
 };
 
-HfJetTaggingSysAnalysis::HfJetTaggingSysAnalysis(bool doMC) {
+HfJetTaggingSysAnalysis::HfJetTaggingSysAnalysis(bool doData, bool doMC, bool dopartLevel) {
   std::cout<< " " << std::endl;
 }
 
