@@ -49,9 +49,10 @@ namespace HfJetTagging{
   };
 
   const int nFlavour = 3;
-  const int startJetPt = 2;
-  const int nBinsJetPt = 6;
-  const int binsJetPt[nBinsJetPt + 1] = {
+  const int startJetPt = 0;
+  const int nBinsJetPt = 7;
+  const double binsJetPt[nBinsJetPt + 1] = {
+  0,
   10,
   20,
   40,
@@ -82,8 +83,8 @@ namespace HfJetTagging{
 
   const int NumShower = 2;
 
-  const TString FLAVOUR[4] = {"inclusive", "lf", "c", "b"};
-  const TString FLAVOURJET[4] = {"inclusive jet", "lf jet", "c jet", "b jet"};
+  const TString FLAVOUR[4] = {"inclusive", "c", "b", "lf"};
+  const TString FLAVOURJET[4] = {"inclusive jet", "c jet", "b jet", "lf jet"};
   const TString INCJET="inclusive jet";
   const TString LFJET="lf jet";
   const TString CJET="c jet";
@@ -102,14 +103,16 @@ namespace HfJetTagging{
   namespace REFHIST { // xmin, xmax, ymin, ymax
     const double JETPT[4] = {-0.02,200.0,1.0e-9,1.15};
     const double TRACKPT[4]={-0.02,100.0,1.0e-5,0.15};
-    const double TRACKPTASJETPT[4]={-0.02,100.0,1.0e-8,1.0e-4};
+    const double TRACKPTASJETPT[4]={-0.02,100.0,1.0e-5,1.0e-1};
     const double TRACKETA[4]={-1.f,1.f,1.0e-7,0.1};
     const double TRACKETAASJETPT[4]={-1.f,1.f,1.0e-7,0.1};
     const double TRACKPHI[4]={-0.02,2*TMath::Pi(),1.0e-7,0.1};
     const double TRACKPHIASJETPT[4]={-0.02,2*TMath::Pi(),1.0e-7,0.1};
     const double IPXY[4]={-400,400,1.0e-6,0.1};
+    const double IPZ[4]={-400,400,1.0e-6,0.1};
     const double IPXYZ[4]={-1000,1000,1.0e-5,1.0};
     const double IPXYSIG[4]={-40,40,1.0e-5,0.1};
+    const double IPZSIG[4]={-40,40,1.0e-5,0.1};
     const double IPXYZSIG[4]={-100,100,1.0e-5,0.1};
     const double JP[4]={-0.01,1.0,1.0e-5,0.1};
     const double LOGJP[4]={-0.01,10,1.0e-5,0.1};
@@ -117,6 +120,9 @@ namespace HfJetTagging{
     const double SXY[4]={-0.01,50,1.0e-5,1.0};
     const double LXYZ[4]={-0.01,0.1,1.0e-5,1.0};
     const double SXYZ[4]={-0.01,50,1.0e-5,1.0};
+
+    const double EFFI[4] = {-0.02, 200.0, 0, 1.0};
+    const double PURITY[4] = {-0.02, 200.0, 0, 1.0};
 
   } // namespace REFHIST
 } // namespace HfJetTagging
