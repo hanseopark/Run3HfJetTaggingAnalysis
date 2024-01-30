@@ -11,7 +11,7 @@ void PlotJetAnalysisGeneralQA(TString rootdata="", TString rootsim="") {
 
   JetAnalysis *jetObj = new JetAnalysis(rootdata.Data(), rootsim.Data(), doData, doMC, dopartLevel);
   for (int binJetR =0; binJetR < GeneralJet::nBinsJetR; binJetR++) {
-    jetObj->DrawSimGenJetPt(0, binJetR);
+    jetObj->DrawSimGenJetPt(doLog, binJetR);
     for (int binJetPt=0; binJetPt < GeneralJet::nBinsJetPt; binJetPt++) {
       jetObj->DrawSimGenJetEta(doLog, binJetPt, binJetR);
       jetObj->DrawSimGenJetPhi(doLog, binJetPt, binJetR);
