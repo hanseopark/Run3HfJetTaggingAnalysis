@@ -47,6 +47,11 @@ void PlotHfJetTaggingGeneralQA(TString rootdata="", TString rootsim="") {
     for (int flavour =1; flavour < HfJetTagging::nFlavour+1; flavour++) {
       HfJetTagObj->DrawTaggedFlavourJetTrackPt(doLog, flavour, HfJetTagging::startJetPt);
     }
+    HfJetTagObj->fitincJetSignImpXYSignificance(doLog);
+    HfJetTagObj->fitcJetSignImpXYSignificance(doLog);
+    HfJetTagObj->fitbJetSignImpXYSignificance(doLog);
+    HfJetTagObj->fitlfJetSignImpXYSignificance(doLog);
+    HfJetTagObj->fitTaggedJetSignImpXYSignificance(withInc, doLog);
   }
 
   //HfJetTagObj->SaveHistogramFlavourQA("FlavourQA.root", true, false);

@@ -15,6 +15,7 @@
 class HfJetTaggingAnalysis {
   public:
     HfJetTaggingAnalysis(const TString rootData, const TString rootSim, bool doData, bool doMC, bool dopartLevel) {
+      InitConfig();
       if (doData) {
 				if (!LoadDataFlavourQA(rootData.Data())) {
           return;
@@ -37,6 +38,7 @@ class HfJetTaggingAnalysis {
 
     // function
 		/// Basic
+    void InitConfig();
     int LoadDataFlavourQA(TString rootData);
     int LoadSimFlavourQA(TString rootSim);
     void InitHistogramForNormalizationFlavourQAData();
@@ -50,7 +52,7 @@ class HfJetTaggingAnalysis {
 		/// Draw
     void HistColorStyle(TH1F* h1, int mc, int ms, double mS, int lc, int ls);
     std::vector<HistogramData> histList;
-    void DrawCombined(int num, const std::vector<HistogramData>& histList, double legendxmin, double ymin, double xmax, double ymax);
+    void DrawCombined(int num, const std::vector<HistogramData>& histList, bool withLeg, double legendxmin, double ymin, double xmax, double ymax);
 		void DrawDataTagJetPt(bool doLog);
 		void DrawDataTagTrackPt(bool doLog, int binJetPt);
 		void DrawDataTagTrackEta(bool doLog, int binJetPt);
@@ -79,6 +81,12 @@ class HfJetTaggingAnalysis {
     void DrawTaggedJetSignImpXYZ(bool withInc, bool doLog);
     void DrawTaggedJetImpXYZSignificance(bool withInc, bool doLog);
     void DrawTaggedJetSignImpXYZSignificance(bool withInc, bool doLog);
+
+    void fitincJetSignImpXYSignificance(bool doLog);
+    void fitcJetSignImpXYSignificance(bool doLog);
+    void fitbJetSignImpXYSignificance(bool doLog);
+    void fitlfJetSignImpXYSignificance(bool doLog);
+    void fitTaggedJetSignImpXYSignificance(bool withInc, bool doLog);
 
     // histogram
 		/// Data
@@ -180,6 +188,7 @@ class HfJetTaggingAnalysis {
     TH1F* hsimTagjetNormalizedSignImpXYZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
 
   private:
+    TLatex latex;
 
 
 };
@@ -281,12 +290,17 @@ HfJetTaggingAnalysis::~HfJetTaggingAnalysis() {
   }
 }
 
+void HfJetTaggingAnalysis::InitConfig() {
+  latex.SetNDC(); // Use normalized coordinates
+  latex.SetTextSize(0.03); // Set text size
+}
+
 int HfJetTaggingAnalysis::LoadDataFlavourQA(TString rootData) {
   if (gSystem->AccessPathName(rootData.Data())) {
     std::cout << "Input file (DATA, Flavour QA) not found!" << std::endl;
     return 0;
   }
-  TString taskName = "jet-taggerhf-tc-charged";
+  TString taskName = "jet-taggerhf-qa-charged";
 
   TFile* fin;
   fin = TFile::Open(rootData.Data(), "READ");
@@ -306,7 +320,7 @@ int HfJetTaggingAnalysis::LoadSimFlavourQA(TString rootSim) {
     std::cout << "Input file (MC, Flavour QA) not found!" << std::endl;
     return 0;
   }
-  TString taskName = "jet-taggerhf-tc-charged";
+  TString taskName = "jet-taggerhf-qa-charged";
 
   TFile* fin;
   fin = TFile::Open(rootSim.Data(), "READ");
@@ -750,7 +764,7 @@ void HfJetTaggingAnalysis::HistColorStyle(TH1F* h1, int markercolor = 1, int mar
   h1->SetLineColor(linecolor);
 }
 
-void HfJetTaggingAnalysis::DrawCombined(int num, const std::vector<HistogramData>& histograms, double xmin, double ymin, double xmax, double ymax){
+void HfJetTaggingAnalysis::DrawCombined(int num, const std::vector<HistogramData>& histograms, bool withLeg, double xmin=0, double ymin=0, double xmax=1, double ymax=1){
   TLegend *leg = new TLegend(xmin, ymin, xmax, ymax);
   for (int i=0; i<num; i++){
     TH1F *hist = histograms[i].hist;
@@ -759,7 +773,7 @@ void HfJetTaggingAnalysis::DrawCombined(int num, const std::vector<HistogramData
     leg->AddEntry(hist, clfi.Data(), "lep");
     hist->Draw("same");
   }
-  leg->Draw();
+  if (withLeg) leg->Draw();
 }
 
 void HfJetTaggingAnalysis::DrawDataTagJetPt(bool doLog) {
@@ -817,7 +831,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetTrackPt(bool withInc = false, bool doLog
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/trackmomentum_%d.pdf\")", canvasNum - 1, static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
 
 }
@@ -831,7 +845,7 @@ void HfJetTaggingAnalysis::DrawTaggedFlavourJetTrackPt(bool doLog = true, int fl
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPTASJETPT[0], HfJetTagging::REFHIST::TRACKPTASJETPT[1], HfJetTagging::REFHIST::TRACKPTASJETPT[2], HfJetTagging::REFHIST::TRACKPTASJETPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%sjet/trackmomentum.pdf\")", canvasNum - 1, HfJetTagging::FLAVOUR[flavour].Data()));
 }
 
@@ -846,7 +860,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetTrackEta(bool withInc = false, bool doLo
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKETA[0], HfJetTagging::REFHIST::TRACKETA[1], HfJetTagging::REFHIST::TRACKETA[2], HfJetTagging::REFHIST::TRACKETA[3], "#eta_{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{#eta}_{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/tracketa.pdf\")", canvasNum - 1));
 
 }
@@ -860,7 +874,7 @@ void HfJetTaggingAnalysis::DrawTaggedFlavourJetTrackEta(bool doLog = true, int f
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKETAASJETPT[0], HfJetTagging::REFHIST::TRACKETAASJETPT[1], HfJetTagging::REFHIST::TRACKETAASJETPT[2], HfJetTagging::REFHIST::TRACKETAASJETPT[3], "#eta_{track}", " #frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{#eta}_{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%sjet/tracketa.pdf\")", canvasNum - 1, HfJetTagging::FLAVOUR[flavour].Data()));
 }
 
@@ -875,7 +889,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetTrackPhi(bool withInc = false, bool doLo
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPHI[0], HfJetTagging::REFHIST::TRACKPHI[1], HfJetTagging::REFHIST::TRACKPHI[2], HfJetTagging::REFHIST::TRACKPHI[3], "#phi_{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{#phi}_{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/trackphi.pdf\")", canvasNum - 1));
 
 }
@@ -889,7 +903,7 @@ void HfJetTaggingAnalysis::DrawTaggedFlavourJetTrackPhi(bool doLog = true, int f
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPHIASJETPT[0], HfJetTagging::REFHIST::TRACKPHIASJETPT[1], HfJetTagging::REFHIST::TRACKPHIASJETPT[2], HfJetTagging::REFHIST::TRACKPHIASJETPT[3], "#phi_{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{#phi}_{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%sjet/trackphi.pdf\")", canvasNum - 1, HfJetTagging::FLAVOUR[flavour].Data()));
 }
 
@@ -904,7 +918,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetImpXY(bool withInc = false, bool doLog =
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "IP_{XY} [#mum]", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{IP_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXY.pdf\")", canvasNum - 1));
 }
 
@@ -919,7 +933,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetSignImpXY(bool withInc = false, bool doL
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "Signed IP_{XY} [#mum]", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIP_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXY.pdf\")", canvasNum - 1));
 
 }
@@ -934,7 +948,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetImpXYSignificance(bool withInc = false, 
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{IPs_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYSignificance.pdf\")", canvasNum - 1));
 
 }
@@ -949,7 +963,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetSignImpXYSignificance(bool withInc = fal
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYSignificance.pdf\")", canvasNum - 1));
 }
 
@@ -964,7 +978,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetImpXYZ(bool withInc = false, bool doLog 
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYZ[0], HfJetTagging::REFHIST::IPXYZ[1], HfJetTagging::REFHIST::IPXYZ[2], HfJetTagging::REFHIST::IPXYZ[3], "IP_{XYZ} [#mum]", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{IP_{XYZ}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYZ.pdf\")", canvasNum - 1));
 
 }
@@ -980,7 +994,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetImpZ(bool withInc = false, bool doLog = 
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPZ[0], HfJetTagging::REFHIST::IPZ[1], HfJetTagging::REFHIST::IPZ[2], HfJetTagging::REFHIST::IPZ[3], "IP_{Z} [#mum]", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{IP_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpZ.pdf\")", canvasNum - 1));
 }
 
@@ -995,7 +1009,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetSignImpZ(bool withInc = false, bool doLo
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPZ[0], HfJetTagging::REFHIST::IPZ[1], HfJetTagging::REFHIST::IPZ[2], HfJetTagging::REFHIST::IPZ[3], "Signed IP_{Z} [#mum]", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIP_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpZ.pdf\")", canvasNum - 1));
 }
 
@@ -1010,7 +1024,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetImpZSignificance(bool withInc = false, b
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPZSIG[0], HfJetTagging::REFHIST::IPZSIG[1], HfJetTagging::REFHIST::IPZSIG[2], HfJetTagging::REFHIST::IPZSIG[3], "IPs_{Z}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{IPs_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpZSignificance.pdf\")", canvasNum - 1));
 
 }
@@ -1026,7 +1040,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetSignImpZSignificance(bool withInc = fals
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPZSIG[0], HfJetTagging::REFHIST::IPZSIG[1], HfJetTagging::REFHIST::IPZSIG[2], HfJetTagging::REFHIST::IPZSIG[3], "Signed IPs_{Z}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpZSignificance.pdf\")", canvasNum - 1));
 }
 
@@ -1041,10 +1055,11 @@ void HfJetTaggingAnalysis::DrawTaggedJetSignImpXYZ(bool withInc = false, bool do
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYZ[0], HfJetTagging::REFHIST::IPXYZ[1], HfJetTagging::REFHIST::IPXYZ[2], HfJetTagging::REFHIST::IPXYZ[3], "Signed IP_{XYZ} [#mum]", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIP_{XYZ}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYZ.pdf\")", canvasNum - 1));
 
 }
+
 void HfJetTaggingAnalysis::DrawTaggedJetImpXYZSignificance(bool withInc = false, bool doLog = true) {
   std::vector<HistogramData> NormHistList;
   if (withInc) NormHistList.push_back({hsimTagjetNormalizedImpXYZSig[0][0], HfJetTagging::INCJET});
@@ -1056,7 +1071,7 @@ void HfJetTaggingAnalysis::DrawTaggedJetImpXYZSignificance(bool withInc = false,
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYZSIG[0], HfJetTagging::REFHIST::IPXYZSIG[1], HfJetTagging::REFHIST::IPXYZSIG[2], HfJetTagging::REFHIST::IPXYZSIG[3], "IPs_{XYZ}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{IPs_{XYZ}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYZSignificance.pdf\")", canvasNum - 1));
 
 }
@@ -1071,10 +1086,174 @@ void HfJetTaggingAnalysis::DrawTaggedJetSignImpXYZSignificance(bool withInc = fa
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYZSIG[0], HfJetTagging::REFHIST::IPXYZSIG[1], HfJetTagging::REFHIST::IPXYZSIG[2], HfJetTagging::REFHIST::IPXYZSIG[3], "Signed IPs_{XYZ}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XYZ}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYZSignificance.pdf\")", canvasNum - 1));
 
 }
 
+void HfJetTaggingAnalysis::fitincJetSignImpXYSignificance(bool doLog = true) {
+  std::vector<HistogramData> NormHistList;
+  NormHistList.push_back({hsimTagjetSignImpXYSig[0][0], HfJetTagging::INCJET});
+
+  TF1 *fResoFunc = new TF1("fResoFunc", "expo(0)+expo(2)+expo(4)+gaus(6)", -40, 0);
+  fResoFunc->SetParameters(1, 0.5, 1, 0.5, 1, 0.5, 1, 0, 1);
+  fResoFunc->SetParLimits(7, -1, 1);
+  hsimTagjetSignImpXYSig[0][0]->Fit(fResoFunc, "QRL");
+
+  double params[9];
+  fResoFunc->GetParameters(params); // Retrieve the parameters
+
+  // Constructing the equation string with parameter values
+  TString equation = Form("f(x) = (%.3fe^{%.3fx}) + (%.3fe^{%.3fx}) + (%.3fe^{%.3fx}) + (%.3f e^{-(x-%.3f)^{2}/(2#times%.3f^{2})})", 
+      params[0], params[1],
+      params[2], params[3],
+      params[4], params[5],
+      params[6], params[7], params[8]);
+  // Position to draw the equation on the canvas
+  double posX = 0.15, posY = 0.85;
+
+  canvasHandler = new CanvasHandler();
+  canvasHandler->createCanvas(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], 0.1, hsimTagjetSignImpXYSig[0][0]->GetMaximum() * 10, "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  this->DrawCombined(NormHistList.size(), NormHistList, false);
+  latex.DrawLatex(posX, posY, equation);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/incjet/SignImpXYSignificanceWithFit.pdf\")", canvasNum - 1));
+
+}
+
+void HfJetTaggingAnalysis::fitcJetSignImpXYSignificance(bool doLog = true) {
+  std::vector<HistogramData> NormHistList;
+  NormHistList.push_back({hsimTagjetSignImpXYSig[1][0], HfJetTagging::CJET});
+
+  TF1 *fResoFunc = new TF1("fResoFunc", "expo(0)+expo(2)+expo(4)+gaus(6)", -40, 0);
+  fResoFunc->SetParameters(1, 0.5, 1, 0.5, 1, 0.5, 1, 0, 1);
+  fResoFunc->SetParLimits(7, -1, 1);
+  hsimTagjetSignImpXYSig[1][0]->Fit(fResoFunc, "QRL");
+
+  double params[9];
+  fResoFunc->GetParameters(params); // Retrieve the parameters
+
+  // Constructing the equation string with parameter values
+  TString equation = Form("f(x) = (%.3fe^{%.3fx}) + (%.3fe^{%.3fx}) + (%.3fe^{%.3fx}) + (%.3f e^{-(x-%.3f)^{2}/(2#times%.3f^{2})})", 
+      params[0], params[1],
+      params[2], params[3],
+      params[4], params[5],
+      params[6], params[7], params[8]);
+  // Position to draw the equation on the canvas
+  double posX = 0.15, posY = 0.85;
+
+  canvasHandler = new CanvasHandler();
+  canvasHandler->createCanvas(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], 0.1, hsimTagjetSignImpXYSig[0][0]->GetMaximum() * 10, "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  this->DrawCombined(NormHistList.size(), NormHistList, false);
+  latex.DrawLatex(posX, posY, equation);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/cjet/SignImpXYSignificanceWithFit.pdf\")", canvasNum - 1));
+
+}
+
+void HfJetTaggingAnalysis::fitbJetSignImpXYSignificance(bool doLog = true) {
+  std::vector<HistogramData> NormHistList;
+  NormHistList.push_back({hsimTagjetSignImpXYSig[2][0], HfJetTagging::BJET});
+
+  TF1 *fResoFunc = new TF1("fResoFunc", "expo(0)+expo(2)+expo(4)+gaus(6)", -40, 0);
+  fResoFunc->SetParameters(1, 0.5, 1, 0.5, 1, 0.5, 1, 0, 1);
+  fResoFunc->SetParLimits(7, -1, 1);
+  hsimTagjetSignImpXYSig[2][0]->Fit(fResoFunc, "QRL");
+
+  double params[9];
+  fResoFunc->GetParameters(params); // Retrieve the parameters
+
+  // Constructing the equation string with parameter values
+  TString equation = Form("f(x) = (%.3fe^{%.3fx}) + (%.3fe^{%.3fx}) + (%.3fe^{%.3fx}) + (%.3f e^{-(x-%.3f)^{2}/(2#times%.3f^{2})})", 
+      params[0], params[1],
+      params[2], params[3],
+      params[4], params[5],
+      params[6], params[7], params[8]);
+  // Position to draw the equation on the canvas
+  double posX = 0.15, posY = 0.85;
+
+  canvasHandler = new CanvasHandler();
+  canvasHandler->createCanvas(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], 0.1, hsimTagjetSignImpXYSig[0][0]->GetMaximum() * 10, "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  this->DrawCombined(NormHistList.size(), NormHistList, false);
+  latex.DrawLatex(posX, posY, equation);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/bjet/SignImpXYSignificanceWithFit.pdf\")", canvasNum - 1));
+
+}
+
+void HfJetTaggingAnalysis::fitlfJetSignImpXYSignificance(bool doLog = true) {
+  std::vector<HistogramData> NormHistList;
+  NormHistList.push_back({hsimTagjetSignImpXYSig[3][0], HfJetTagging::LFJET});
+
+  TF1 *fResoFunc = new TF1("fResoFunc", "expo(0)+expo(2)+expo(4)+gaus(6)", -40, 0);
+  fResoFunc->SetParameters(1, 0.5, 1, 0.5, 1, 0.5, 1, 0, 1);
+  fResoFunc->SetParLimits(7, -1, 1);
+  hsimTagjetSignImpXYSig[3][0]->Fit(fResoFunc, "QRL");
+
+  double params[9];
+  fResoFunc->GetParameters(params); // Retrieve the parameters
+
+  // Constructing the equation string with parameter values
+  TString equation = Form("f(x) = (%.3fe^{%.3fx}) + (%.3fe^{%.3fx}) + (%.3fe^{%.3fx}) + (%.3f e^{-(x-%.3f)^{2}/(2#times%.3f^{2})})", 
+      params[0], params[1],
+      params[2], params[3],
+      params[4], params[5],
+      params[6], params[7], params[8]);
+  // Position to draw the equation on the canvas
+  double posX = 0.15, posY = 0.85;
+
+  canvasHandler = new CanvasHandler();
+  canvasHandler->createCanvas(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], 0.1, hsimTagjetSignImpXYSig[0][0]->GetMaximum() * 10, "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  this->DrawCombined(NormHistList.size(), NormHistList, false);
+  latex.DrawLatex(posX, posY, equation);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/lfjet/SignImpXYSignificanceWithFit.pdf\")", canvasNum - 1));
+
+}
+
+void HfJetTaggingAnalysis::fitTaggedJetSignImpXYSignificance(bool withInc = false, bool doLog = true) {
+  std::vector<HistogramData> NormHistList;
+  if (withInc) NormHistList.push_back({hsimTagjetSignImpXYSig[0][0], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimTagjetSignImpXYSig[1][0], HfJetTagging::CJET});
+  NormHistList.push_back({hsimTagjetSignImpXYSig[2][0], HfJetTagging::BJET});
+  NormHistList.push_back({hsimTagjetSignImpXYSig[3][0], HfJetTagging::LFJET});
+  TF1 *fResoFunc[HfJetTagging::nFlavour+1];
+  // Open a file to save the parameters
+  std::ofstream outFile("fitParameters.txt");
+
+  for (int flavour=0; flavour<HfJetTagging::nFlavour+1; flavour++) {
+    fResoFunc[flavour]= new TF1(Form("fResoFunc_%d", flavour), "expo(0)+expo(2)+expo(4)+gaus(6)", -40, 0);
+    fResoFunc[flavour]->SetParameters(1, 0.5, 1, 0.5, 1, 0.5, 1, 0, 1);
+    fResoFunc[flavour]->SetParLimits(7, -1, 1);
+    hsimTagjetSignImpXYSig[flavour][0]->Fit(fResoFunc[flavour], "QRL");
+
+    // Assuming there are 9 parameters as in your example
+    double params[9];
+    fResoFunc[flavour]->GetParameters(params);
+
+    // Print and save the parameters
+    std::cout << "Flavour " << flavour << " parameters: ";
+    outFile << "Flavour " << flavour << " parameters: ";
+    for (int i = 0; i < 9; ++i) {
+      std::cout << params[i] << " ";
+      outFile << params[i] << " ";
+    }
+    std::cout << std::endl;
+    outFile << std::endl;
+  }
+  outFile.close();
+
+  canvasHandler = new CanvasHandler();
+  canvasHandler->createCanvas(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], 0.1, hsimTagjetSignImpXYSig[0][0]->GetMaximum()*10, "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYSignificanceWithFit.pdf\")", canvasNum - 1));
+
+}
 
 #endif // HFJETTAGGINGANALYSIS_H 
