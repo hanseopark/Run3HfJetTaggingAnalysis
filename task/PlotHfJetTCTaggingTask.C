@@ -10,6 +10,7 @@ void PlotHfJetTaggingTCQA(TString rootdata, TString rootsim) {
   bool doLog = true;
 
   double cutImpForEffi = 1.0;
+  double cutImpForPurity = 1.0;
   HfJetTaggingTCAnalysis *HfJetTagTCObj = new HfJetTaggingTCAnalysis(rootdata.Data(), rootsim.Data(), doData, doMC, dopartLevel);
   HfJetTagTCObj->DrawTaggedJetSignImpXYSignificanceN1(withInc, doLog);
   HfJetTagTCObj->DrawTaggedJetSignImpXYSignificanceN2(withInc, doLog);
@@ -23,9 +24,9 @@ void PlotHfJetTaggingTCQA(TString rootdata, TString rootsim) {
   HfJetTagTCObj->DrawTaggedJetEffiSignImpXYSigN1(cutImpForEffi);
   HfJetTagTCObj->DrawTaggedJetEffiSignImpXYSigN2(cutImpForEffi);
   HfJetTagTCObj->DrawTaggedJetEffiSignImpXYSigN3(cutImpForEffi);
-  HfJetTagTCObj->DrawTaggedJetPurityN1();
-  HfJetTagTCObj->DrawTaggedJetPurityN2();
-  HfJetTagTCObj->DrawTaggedJetPurityN3();
+  HfJetTagTCObj->DrawTaggedJetPurityN1(cutImpForPurity);
+  HfJetTagTCObj->DrawTaggedJetPurityN2(cutImpForPurity);
+  HfJetTagTCObj->DrawTaggedJetPurityN3(cutImpForPurity);
 
 }
 
