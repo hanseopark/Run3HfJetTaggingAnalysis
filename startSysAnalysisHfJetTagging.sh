@@ -7,6 +7,7 @@ data_types=("data" "sim")
 # Boolean flags for systematics
 doShower="false"
 doRadius="false"
+doTrackSelection="false"
 
 # Parse command-line arguments
 while [ "$1" != "" ]; do
@@ -16,6 +17,9 @@ while [ "$1" != "" ]; do
       ;;
     --radius )
       doRadius=true
+      ;;
+    --ts )
+      doTrackSelection=true
       ;;
   esac
   shift
@@ -34,6 +38,11 @@ for jet_type in "${jet_types[@]}"; do
       mkdir -p "$directory"
       echo "Created directory: $directory"
     fi
+    if [ "$doTrackSelection" = "true" ]; then
+      directory="fig/${data_type}/${jet_type}/trackselection"
+      mkdir -p "$directory"
+      echo "Created directory: $directory"
+    fi
   done
 done
 
@@ -41,4 +50,4 @@ echo "Directories creation completed."
 
 # Now call your ROOT script with these options
 # Ensure your ROOT macro 'PlotSysHfJetTagging.C' can handle these boolean arguments
-root -x -l -b -q 'task/PlotSysHfJetTagging.C("'"$doShower"'", "'"$doRadius"'")'
+root -x -l -b -q 'task/PlotSysHfJetTagging.C("'"$doShower"'", "'"$doRadius"'", "'"$doTrackSelection"'")'

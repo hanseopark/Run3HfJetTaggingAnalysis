@@ -5,6 +5,7 @@
 #include "TString.h"
 #include "../include/HfJetTaggingSysShowerAnalysis.h"
 #include "../include/HfJetTaggingSysRadiusAnalysis.h"
+#include "../include/HfJetTaggingSysTrackSelectionAnalysis.h"
 
 void PlotSysShowerHfJetTagging() {
   TString pwd="/Users/hanseopark/alice/work/PHD_Analysis/Run3/pp/13.6TeV/HfJets/Dev/HFJetsWork/MC/DetectorLevel";
@@ -61,8 +62,26 @@ void PlotSysRadiusHfJetTagging() {
   
 }
 
+void PlotSysTrackSelectionHfJetTagging() {
+  TString pwd="/Users/hanseopark/alice/work/PHD_Analysis/Run3/pp/13.6TeV/HfJets/Dev/HFJetsWork/MC/DetectorLevel";
+  std::vector<TString> rootFiles;
 
-void PlotSysHfJetTagging(TString doShower = "false", TString doRadius = "false") {
+  // include root file to get systematic uncertainty and plots compared when it has different parameters
+  rootFiles.push_back(Form("%s/AnalysisResults_globalTracks.root", pwd.Data()));
+  rootFiles.push_back(Form("%s/AnalysisResults_QualityTracks.root", pwd.Data()));
+
+  bool doData = false;
+  bool doMC = true;
+  bool dopartLevel = false;
+  bool doLog = true;
+
+  HfJetTaggingSysTrackSelectionAnalysis *HfJetTagSysTrackSelectionObj = new HfJetTaggingSysTrackSelectionAnalysis(rootFiles, doData, doMC, dopartLevel);
+  HfJetTagSysTrackSelectionObj->DrawIncJetTrackPtTrackSelection(doLog, HfJetTagging::numTrackSelection);
+
+}
+
+void PlotSysHfJetTagging(TString doShower = "false", TString doRadius = "false", TString doTS = "false") {
   if (doShower.CompareTo("true")==0) PlotSysShowerHfJetTagging();
   if (doRadius.CompareTo("true")==0) PlotSysRadiusHfJetTagging();
+  if (doTS.CompareTo("true")==0)     PlotSysTrackSelectionHfJetTagging();
 }

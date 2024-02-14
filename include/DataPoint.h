@@ -81,6 +81,8 @@ namespace HfJetTagging{
   0.5
   };
 
+  const int numTrackSelection =2;
+
   const int NumShower = 2;
 
   const TString FLAVOUR[4] = {"inclusive", "c", "b", "lf"};
@@ -98,6 +100,7 @@ namespace HfJetTagging{
   namespace SYS { // As regard of systematic uncertainty
     const TString RADIUS[5] = {"#DeltaR < 0.1", "#DeltaR < 0.2", "#DeltaR < 0.3", "#DeltaR < 0.4", "#DeltaR < 0.5"};
     const TString SHOWER[2] = {"with gluon spliting", "without gluon spliting"};
+    const TString TRACKSELECTION[numTrackSelection] = {"globalTracks", "QualityTracks"};
 
   }
   namespace REFHIST { // xmin, xmax, ymin, ymax
