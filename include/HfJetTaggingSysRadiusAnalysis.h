@@ -69,7 +69,7 @@ class HfJetTaggingSysRadiusAnalysis {
 //}
 
 int HfJetTaggingSysRadiusAnalysis::LoadSimRadius(const std::vector<TString> &rootFiles) {
-  const TString &taskName = "jet-taggerhf-tc-charged";
+  const TString &taskName = "jet-taggerhf-qa-charged";
   int maxRadius=0;
   for (const auto& rootFile : rootFiles) {
     if (gSystem->AccessPathName(rootFile.Data())) {
