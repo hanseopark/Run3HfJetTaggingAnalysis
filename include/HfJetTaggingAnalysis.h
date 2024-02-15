@@ -1128,6 +1128,7 @@ void HfJetTaggingAnalysis::fitcJetSignImpXYSignificance(bool doLog = true) {
 
   TF1 *fResoFunc = new TF1("fResoFunc", "expo(0)+expo(2)+expo(4)+gaus(6)", -40, 0);
   fResoFunc->SetParameters(1, 0.5, 1, 0.5, 1, 0.5, 1, 0, 1);
+  fResoFunc->SetParLimits(6, 0, 1e+10);
   fResoFunc->SetParLimits(7, -1, 1);
   hsimTagjetSignImpXYSig[1][0]->Fit(fResoFunc, "QRL");
 
@@ -1159,6 +1160,7 @@ void HfJetTaggingAnalysis::fitbJetSignImpXYSignificance(bool doLog = true) {
 
   TF1 *fResoFunc = new TF1("fResoFunc", "expo(0)+expo(2)+expo(4)+gaus(6)", -40, 0);
   fResoFunc->SetParameters(1, 0.5, 1, 0.5, 1, 0.5, 1, 0, 1);
+  fResoFunc->SetParLimits(6, 0, 1e+10);
   fResoFunc->SetParLimits(7, -1, 1);
   hsimTagjetSignImpXYSig[2][0]->Fit(fResoFunc, "QRL");
 
@@ -1228,6 +1230,7 @@ void HfJetTaggingAnalysis::fitTaggedJetSignImpXYSignificance(bool withInc = fals
   for (int flavour=0; flavour<HfJetTagging::nFlavour+1; flavour++) {
     fResoFunc[flavour]= new TF1(Form("fResoFunc_%d", flavour), "expo(0)+expo(2)+expo(4)+gaus(6)", -40, 0);
     fResoFunc[flavour]->SetParameters(1, 0.5, 1, 0.5, 1, 0.5, 1, 0, 1);
+    fResoFunc[flavour]->SetParLimits(6, 0, 1e+10);
     fResoFunc[flavour]->SetParLimits(7, -1, 1);
     hsimTagjetSignImpXYSig[flavour][0]->Fit(fResoFunc[flavour], "QRL");
 
