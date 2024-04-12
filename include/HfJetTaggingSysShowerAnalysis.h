@@ -66,7 +66,7 @@ class HfJetTaggingSysShowerAnalysis {
 //}
 
 int HfJetTaggingSysShowerAnalysis::LoadSimShower(const std::vector<TString> &rootFiles) {
-  const TString &taskName = "jet-taggerhf-tc-charged";
+  const TString &taskName = "jet-taggerhf-qa-charged";
   int shower=0;
   for (const auto& rootFile : rootFiles) {
     if (gSystem->AccessPathName(rootFile.Data())) {
@@ -157,7 +157,7 @@ void HfJetTaggingSysShowerAnalysis::DrawIncJetTrackPtShower(bool doLog = true, i
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/incjet/shower/trackmomentum.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/shower/trackmomentum.pdf\")", canvasNum - 1));
 }
 
 void HfJetTaggingSysShowerAnalysis::DrawCharmJetTrackPtShower(bool doLog = true, int Num = HfJetTagging::NumShower) {
@@ -170,7 +170,7 @@ void HfJetTaggingSysShowerAnalysis::DrawCharmJetTrackPtShower(bool doLog = true,
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/cjet/shower/trackmomentum.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/cjet/shower/trackmomentum.pdf\")", canvasNum - 1));
 
 }
 
@@ -184,7 +184,7 @@ void HfJetTaggingSysShowerAnalysis::DrawBeautyJetTrackPtShower(bool doLog = true
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/bjet/shower/trackmomentum.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/bjet/shower/trackmomentum.pdf\")", canvasNum - 1));
 
 }
 
@@ -198,7 +198,7 @@ void HfJetTaggingSysShowerAnalysis::DrawLfJetTrackPtShower(bool doLog = true, in
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/lfjet/shower/trackmomentum.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/shower/trackmomentum.pdf\")", canvasNum - 1));
 
 }
 
@@ -213,7 +213,7 @@ void HfJetTaggingSysShowerAnalysis::DrawIncJetSignImpXYSignificanceShower(bool d
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/incjet/shower/SignImpXYSignificance.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/shower/SignImpXYSignificance.pdf\")", canvasNum - 1));
 }
 
 void HfJetTaggingSysShowerAnalysis::DrawCharmJetSignImpXYSignificanceShower(bool doLog = true, int Num = HfJetTagging::NumShower) {
@@ -227,7 +227,7 @@ void HfJetTaggingSysShowerAnalysis::DrawCharmJetSignImpXYSignificanceShower(bool
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/cjet/shower/SignImpXYSignificance.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/cjet/shower/SignImpXYSignificance.pdf\")", canvasNum - 1));
 }
 
 void HfJetTaggingSysShowerAnalysis::DrawBeautyJetSignImpXYSignificanceShower(bool doLog = true, int Num = HfJetTagging::NumShower) {
@@ -241,7 +241,7 @@ void HfJetTaggingSysShowerAnalysis::DrawBeautyJetSignImpXYSignificanceShower(boo
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/bjet/shower/SignImpXYSignificance.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/bjet/shower/SignImpXYSignificance.pdf\")", canvasNum - 1));
 }
 
 void HfJetTaggingSysShowerAnalysis::DrawLfJetSignImpXYSignificanceShower(bool doLog = true, int Num = HfJetTagging::NumShower) {
@@ -255,6 +255,6 @@ void HfJetTaggingSysShowerAnalysis::DrawLfJetSignImpXYSignificanceShower(bool do
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/lfjet/shower/SignImpXYSignificance.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/shower/SignImpXYSignificance.pdf\")", canvasNum - 1));
 }
 #endif // HFJETTAGGINGSYSSHOWERANALYSIS_H

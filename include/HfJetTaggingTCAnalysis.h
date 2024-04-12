@@ -14,66 +14,72 @@
 
 class HfJetTaggingTCAnalysis {
   public:
-    //HfJetTaggingTCAnalysis(const TString rootFile, const TString taskName, bool doMC) {
-    HfJetTaggingTCAnalysis(TString rootData, TString rootSim, bool doData, bool doMC, bool dopartLevel) {
+    HfJetTaggingTCAnalysis(TString rootData, TString rootSim, bool doData, bool doMC, TString trigger, bool dopartLevel) {
+      initConfig(trigger.Data());
       if (doData) {
-        if(!LoadDataTCQA(rootData.Data())) {
+        if(!loadDataTCQA(rootData.Data())) {
           return;
         }
-        InitHistogramForProjectionTCQAData();
-      	ProjectionHistTCQAData();
-      	NormalizedHistogramTCQAData();
+        initHistogramForProjectionTCQAData();
+      	projectionHistTCQAData();
+      	normalizedHistogramTCQAData();
       }
       if (doMC) {
-        if(!LoadSimTCQA(rootSim.Data())) {
+        if(!loadSimTCQA(rootSim.Data())) {
           return;
         }
-        InitHistogramForProjectionTCQAMC();
-      	ProjectionHistTCQAMC();
-      	NormalizedHistogramTCQAMC();
+        initHistogramForProjectionTCQAMC();
+      	projectionHistTCQAMC();
+      	normalizedHistogramTCQAMC();
       }
-      SaveHistogramTCQA("TCQA.root", doData, doMC, dopartLevel);
+      saveHistogramTCQA("TCQA.root", doData, doMC, dopartLevel);
     }
 //    HfJetTaggingTCAnalysis(const TString &rootFileTC, const TString &rootFileSV2Prong, const TString &rootFileSV3Prong, const TString &taskName, bool doMC, bool doTC, bool doJP, bool doSV2Prong, bool doSV3Prong, const TString &cutSelection) : JetAnalysis(rootFileTC, rootFileSV2Prong, rootFileSV3Prong, taskName, doMC, doTC, doJP, doSV2Prong, doSV3Prong, cutSelection){
-//      if (doMC) LoadSimTCQA(rootFileTC.Data(), taskName.Data(), doTC, doJP);
-//      else LoadDataTCQA(rootFileTC.Data(), taskName.Data());
+//      if (doMC) loadSimTCQA(rootFileTC.Data(), taskName.Data(), doTC, doJP);
+//      else loadDataTCQA(rootFileTC.Data(), taskName.Data());
 //    }
     ~HfJetTaggingTCAnalysis();
 
-    int LoadDataTCQA(TString rootData);
-    int LoadSimTCQA(TString rootSim);
-    void InitHistogramForProjectionTCQAData();
-    void InitHistogramForProjectionTCQAMC();
-    void ProjectionHistTCQAData();
-    void ProjectionHistTCQAMC();
-    void NormalizedHistogramTCQAData();
-    void NormalizedHistogramTCQAMC();
+    void initConfig(TString triggerNAME);
+    int loadDataTCQA(TString rootData);
+    int loadSimTCQA(TString rootSim);
+    void initHistogramForProjectionTCQAData();
+    void initHistogramForProjectionTCQAMC();
+    void projectionHistTCQAData();
+    void projectionHistTCQAMC();
+    void normalizedHistogramTCQAData();
+    void normalizedHistogramTCQAMC();
 
-    void SaveHistogramTCQA(TString rootFile, bool doData, bool doMC, bool dopartLevel);
+    void saveHistogramTCQA(TString rootFile, bool doData, bool doMC, bool dopartLevel);
 
     // Calculation
     double calculateEffiSignedImpXYSig(TH1F* htagjet, float cutImp);
     double calculatePurity(int flavour, int binJetPt, TH1F* htagjet[][HfJetTagging::nBinsJetPt+1], float cutImp);
 
     // Draw
-    void HistColorStyle(TH1F* h1, int mc, int ms, double mS, int lc, int ls);
+    void histColorStyle(TH1F* h1, int mc, int ms, double mS, int lc, int ls);
     std::vector<HistogramData> histList;
-    void DrawCombined(int num, const std::vector<HistogramData>& histList, double legendxmin, double ymin, double xmax, double ymax);
-    void DrawTaggedJetSignImpXYSignificanceN1(bool withInc, bool doLog);
-    void DrawTaggedJetSignImpXYSignificanceN2(bool withInc, bool doLog);
-    void DrawTaggedJetSignImpXYSignificanceN3(bool withInc, bool doLog);
-    void DrawTaggedJetSignImpZSignificanceN1(bool withInc, bool doLog);
-    void DrawTaggedJetSignImpZSignificanceN2(bool withInc, bool doLog);
-    void DrawTaggedJetSignImpZSignificanceN3(bool withInc, bool doLog);
-    void DrawTaggedJetSignImpXYZSignificanceN1(bool withInc, bool doLog);
-    void DrawTaggedJetSignImpXYZSignificanceN2(bool withInc, bool doLog);
-    void DrawTaggedJetSignImpXYZSignificanceN3(bool withInc, bool doLog);
-    void DrawTaggedJetEffiSignImpXYSigN1(float cutImp);
-    void DrawTaggedJetEffiSignImpXYSigN2(float cutImp);
-    void DrawTaggedJetEffiSignImpXYSigN3(float cutImp);
-    void DrawTaggedJetPurityN1(float cutImp);
-    void DrawTaggedJetPurityN2(float cutImp);
-    void DrawTaggedJetPurityN3(float cutImp);
+    void drawCombined(int num, const std::vector<HistogramData>& histList, double legendxmin, double ymin, double xmax, double ymax);
+    void drawSimJetSignImpXYSignificanceN1(bool withInc, bool doLog, int binJetPt);
+    void drawSimJetSignImpXYSignificanceN2(bool withInc, bool doLog, int binJetPt);
+    void drawSimJetSignImpXYSignificanceN3(bool withInc, bool doLog, int binJetPt);
+    void drawSimJetSignImpXYSignificanceN3x1(bool withInc, bool doLog, int binJetPt);
+    void drawSimJetSignImpZSignificanceN1(bool withInc, bool doLog, int binJetPt);
+    void drawSimJetSignImpZSignificanceN2(bool withInc, bool doLog, int binJetPt);
+    void drawSimJetSignImpZSignificanceN3(bool withInc, bool doLog, int binJetPt);
+    void drawSimJetSignImpZSignificanceN3x1(bool withInc, bool doLog, int binJetPt);
+    void drawSimJetSignImpXYZSignificanceN1(bool withInc, bool doLog, int binJetPt);
+    void drawSimJetSignImpXYZSignificanceN2(bool withInc, bool doLog, int binJetPt);
+    void drawSimJetSignImpXYZSignificanceN3(bool withInc, bool doLog, int binJetPt);
+    void drawSimJetSignImpXYZSignificanceN3x1(bool withInc, bool doLog, int binJetPt);
+    void drawSimJetEffiSignImpXYSigN1(float cutImp);
+    void drawSimJetEffiSignImpXYSigN2(float cutImp);
+    void drawSimJetEffiSignImpXYSigN3(float cutImp);
+    void drawSimJetEffiSignImpXYSigN3x1(float cutImp);
+    void drawSimJetPurityN1(float cutImp);
+    void drawSimJetPurityN2(float cutImp);
+    void drawSimJetPurityN3(float cutImp);
+    void drawSimJetPurityN3x1(float cutImp);
 
     // Histogram
     //// Projeceted
@@ -88,7 +94,7 @@ class HfJetTaggingTCAnalysis {
     TH1F* hsimTCjetSignImpXYZSigN3[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
 
   protected:
-    int canvasNum = 0;
+    int canvasNum = 10000;
     CanvasHandler* canvasHandler;
     // Histogram
     /// Data
@@ -124,6 +130,11 @@ class HfJetTaggingTCAnalysis {
     TH1F* hsimTCjetPurityN3[HfJetTagging::nFlavour+1];
 
   private:
+    TLatex latex;
+    TString triggerName;
+    int numCanXYNX[3] = {-1}; 
+    int numCanXYZNX[3] = {-1}; 
+    int numCanZNX[3] = {-1}; 
 
 };
 
@@ -131,7 +142,16 @@ HfJetTaggingTCAnalysis::~HfJetTaggingTCAnalysis() {
 
 }
 
-int HfJetTaggingTCAnalysis::LoadDataTCQA(TString rootData) {
+void HfJetTaggingTCAnalysis::initConfig(TString trigger) {
+  latex.SetNDC(); // Use normalized coordinates
+  latex.SetTextSize(0.03); // Set text size
+  triggerName=trigger.Data();
+
+  TString dirSim = Form("fig/sim/%s/tc", SIMSET.Data());
+  gSystem->mkdir(dirSim, kTRUE); // kTRUE: create parent directories if they don't exist
+}
+
+int HfJetTaggingTCAnalysis::loadDataTCQA(TString rootData) {
   if (gSystem->AccessPathName(rootData.Data())) {
     std::cout << "Input file (DATA) not found!" << std::endl;
     return 0;
@@ -141,7 +161,7 @@ int HfJetTaggingTCAnalysis::LoadDataTCQA(TString rootData) {
   return 1;
 }
 
-int HfJetTaggingTCAnalysis::LoadSimTCQA(TString rootSim) {
+int HfJetTaggingTCAnalysis::loadSimTCQA(TString rootSim) {
   if (gSystem->AccessPathName(rootSim.Data())) {
     std::cout << "Input file (MC) not found!" << std::endl;
     return 0;
@@ -165,10 +185,10 @@ int HfJetTaggingTCAnalysis::LoadSimTCQA(TString rootSim) {
   return 1;
 }
 
-void HfJetTaggingTCAnalysis::InitHistogramForProjectionTCQAData() {
+void HfJetTaggingTCAnalysis::initHistogramForProjectionTCQAData() {
 }
 
-void HfJetTaggingTCAnalysis::InitHistogramForProjectionTCQAMC() {
+void HfJetTaggingTCAnalysis::initHistogramForProjectionTCQAMC() {
   for (int flavour = 0; flavour < HfJetTagging::nFlavour+1; flavour++) {
     hsimTCjetEffiSignImpXYSigN1[flavour] = new TH1F(Form("hsimTCjetEffiSignImpXYSigN1_%d", flavour), "",  HfJetTagging::nBinsJetPt, HfJetTagging::binsJetPt);
     hsimTCjetEffiSignImpXYSigN2[flavour] = new TH1F(Form("hsimTCjetEffiSignImpXYSigN2_%d", flavour), "",  HfJetTagging::nBinsJetPt, HfJetTagging::binsJetPt);
@@ -190,10 +210,10 @@ void HfJetTaggingTCAnalysis::InitHistogramForProjectionTCQAMC() {
   }
 }
 
-void HfJetTaggingTCAnalysis::ProjectionHistTCQAData() {
+void HfJetTaggingTCAnalysis::projectionHistTCQAData() {
 }
 
-void HfJetTaggingTCAnalysis::ProjectionHistTCQAMC() {
+void HfJetTaggingTCAnalysis::projectionHistTCQAMC() {
   HfJetTagging::JetFlavour jetFlavours[] = {HfJetTagging::None, HfJetTagging::Charm, HfJetTagging::Beauty, HfJetTagging::LightFlavour};
 	for (int binFlavour = 2; binFlavour < HfJetTagging::nFlavour+2; binFlavour++) {
     HfJetTagging::JetFlavour flavour = jetFlavours[binFlavour - 1];
@@ -231,67 +251,68 @@ void HfJetTaggingTCAnalysis::ProjectionHistTCQAMC() {
 
     for (int binJetPt =1; binJetPt<HfJetTagging::nBinsJetPt+1; binJetPt++) {
 
-      int leftbinJetPtSignImpXYSigN1 = h3simTCjetPtSignImpXYSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
-      int rightbinJetPtSignImpXYSigN1 = h3simTCjetPtSignImpXYSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpXYSigN1 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYSigFlavourN1->ProjectionY(Form("projJetPtRagneSignImpXYSigN1_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYSigN1, rightbinJetPtSignImpXYSigN1, flavour, flavour));
+      int leftbinJetPtSignImpXYSigN1 = h3simTCjetPtSignImpXYSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
+      int rightbinJetPtSignImpXYSigN1 = h3simTCjetPtSignImpXYSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
+      TH1F* projJetPtRangeSignImpXYSigN1 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYSigFlavourN1->ProjectionY(Form("projJetPtRagneSignImpXYSigN1_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYSigN1, rightbinJetPtSignImpXYSigN1, binFlavour, binFlavour));
       hsimTCjetSignImpXYSigN1[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYSigN1->Clone(Form("hsimTCjetSignImpXYSigN1_%d_%d", flavour, binJetPt)));
       hsimTCjetSignImpXYSigN1[0][binJetPt]->Add(projJetPtRangeSignImpXYSigN1);
 
-      int leftbinJetPtSignImpXYSigN2 = h3simTCjetPtSignImpXYSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
-      int rightbinJetPtSignImpXYSigN2 = h3simTCjetPtSignImpXYSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpXYSigN2 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYSigFlavourN2->ProjectionY(Form("projJetPtRagneSignImpXYSigN2_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYSigN2, rightbinJetPtSignImpXYSigN2, flavour, flavour));
+      int leftbinJetPtSignImpXYSigN2 = h3simTCjetPtSignImpXYSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
+      int rightbinJetPtSignImpXYSigN2 = h3simTCjetPtSignImpXYSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
+      TH1F* projJetPtRangeSignImpXYSigN2 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYSigFlavourN2->ProjectionY(Form("projJetPtRagneSignImpXYSigN2_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYSigN2, rightbinJetPtSignImpXYSigN2, binFlavour, binFlavour));
       hsimTCjetSignImpXYSigN2[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYSigN2->Clone(Form("hsimTCjetSignImpXYSigN2_%d_%d", flavour, binJetPt)));
       hsimTCjetSignImpXYSigN2[0][binJetPt]->Add(projJetPtRangeSignImpXYSigN2);
 
-      int leftbinJetPtSignImpXYSigN3 = h3simTCjetPtSignImpXYSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
-      int rightbinJetPtSignImpXYSigN3 = h3simTCjetPtSignImpXYSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpXYSigN3 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYSigFlavourN3->ProjectionY(Form("projJetPtRagneSignImpXYSigN3_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYSigN3, rightbinJetPtSignImpXYSigN3, flavour, flavour));
+      int leftbinJetPtSignImpXYSigN3 = h3simTCjetPtSignImpXYSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
+      int rightbinJetPtSignImpXYSigN3 = h3simTCjetPtSignImpXYSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
+      TH1F* projJetPtRangeSignImpXYSigN3 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYSigFlavourN3->ProjectionY(Form("projJetPtRagneSignImpXYSigN3_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYSigN3, rightbinJetPtSignImpXYSigN3, binFlavour, binFlavour));
       hsimTCjetSignImpXYSigN3[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYSigN3->Clone());
       hsimTCjetSignImpXYSigN3[0][binJetPt]->Add(projJetPtRangeSignImpXYSigN3);
 
-      int leftbinJetPtSignImpZSigN1 = h3simTCjetPtSignImpZSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
-      int rightbinJetPtSignImpZSigN1 = h3simTCjetPtSignImpZSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpZSigN1 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpZSigFlavourN1->ProjectionY(Form("projJetPtRagneSignImpZSigN1_%d_%d", binJetPt, flavour), leftbinJetPtSignImpZSigN1, rightbinJetPtSignImpZSigN1, flavour, flavour));
+      int leftbinJetPtSignImpZSigN1 = h3simTCjetPtSignImpZSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
+      int rightbinJetPtSignImpZSigN1 = h3simTCjetPtSignImpZSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
+      TH1F* projJetPtRangeSignImpZSigN1 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpZSigFlavourN1->ProjectionY(Form("projJetPtRagneSignImpZSigN1_%d_%d", binJetPt, flavour), leftbinJetPtSignImpZSigN1, rightbinJetPtSignImpZSigN1, binFlavour, binFlavour));
       hsimTCjetSignImpZSigN1[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpZSigN1->Clone());
       hsimTCjetSignImpZSigN1[0][binJetPt]->Add(projJetPtRangeSignImpZSigN1);
 
-      int leftbinJetPtSignImpZSigN2 = h3simTCjetPtSignImpZSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
-      int rightbinJetPtSignImpZSigN2 = h3simTCjetPtSignImpZSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpZSigN2 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpZSigFlavourN2->ProjectionY(Form("projJetPtRagneSignImpZSigN2_%d_%d", binJetPt, flavour), leftbinJetPtSignImpZSigN2, rightbinJetPtSignImpZSigN2, flavour, flavour));
+      int leftbinJetPtSignImpZSigN2 = h3simTCjetPtSignImpZSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
+      int rightbinJetPtSignImpZSigN2 = h3simTCjetPtSignImpZSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
+      TH1F* projJetPtRangeSignImpZSigN2 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpZSigFlavourN2->ProjectionY(Form("projJetPtRagneSignImpZSigN2_%d_%d", binJetPt, flavour), leftbinJetPtSignImpZSigN2, rightbinJetPtSignImpZSigN2, binFlavour, binFlavour));
       hsimTCjetSignImpZSigN2[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpZSigN2->Clone());
       hsimTCjetSignImpZSigN2[0][binJetPt]->Add(projJetPtRangeSignImpZSigN2);
 
-      int leftbinJetPtSignImpZSigN3 = h3simTCjetPtSignImpZSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
-      int rightbinJetPtSignImpZSigN3 = h3simTCjetPtSignImpZSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpZSigN3 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpZSigFlavourN3->ProjectionY(Form("projJetPtRagneSignImpZSigN3_%d_%d", binJetPt, flavour), leftbinJetPtSignImpZSigN3, rightbinJetPtSignImpZSigN3, flavour, flavour));
+      int leftbinJetPtSignImpZSigN3 = h3simTCjetPtSignImpZSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
+      int rightbinJetPtSignImpZSigN3 = h3simTCjetPtSignImpZSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
+      TH1F* projJetPtRangeSignImpZSigN3 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpZSigFlavourN3->ProjectionY(Form("projJetPtRagneSignImpZSigN3_%d_%d", binJetPt, flavour), leftbinJetPtSignImpZSigN3, rightbinJetPtSignImpZSigN3, binFlavour, binFlavour));
       hsimTCjetSignImpZSigN3[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpZSigN3->Clone());
       hsimTCjetSignImpZSigN3[0][binJetPt]->Add(projJetPtRangeSignImpZSigN3);
 
-      int leftbinJetPtSignImpXYZSigN1 = h3simTCjetPtSignImpXYZSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
-      int rightbinJetPtSignImpXYZSigN1 = h3simTCjetPtSignImpXYZSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpXYZSigN1 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYZSigFlavourN1->ProjectionY(Form("projJetPtRagneSignImpXYZSigN1_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYZSigN1, rightbinJetPtSignImpXYZSigN1, flavour, flavour));
+      int leftbinJetPtSignImpXYZSigN1 = h3simTCjetPtSignImpXYZSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
+      int rightbinJetPtSignImpXYZSigN1 = h3simTCjetPtSignImpXYZSigFlavourN1->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
+      TH1F* projJetPtRangeSignImpXYZSigN1 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYZSigFlavourN1->ProjectionY(Form("projJetPtRagneSignImpXYZSigN1_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYZSigN1, rightbinJetPtSignImpXYZSigN1, binFlavour, binFlavour));
       hsimTCjetSignImpXYZSigN1[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYZSigN1->Clone());
       hsimTCjetSignImpXYZSigN1[0][binJetPt]->Add(projJetPtRangeSignImpXYZSigN1);
 
-      int leftbinJetPtSignImpXYZSigN2 = h3simTCjetPtSignImpXYZSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
-      int rightbinJetPtSignImpXYZSigN2 = h3simTCjetPtSignImpXYZSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpXYZSigN2 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYZSigFlavourN2->ProjectionY(Form("projJetPtRagneSignImpXYZSigN2_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYZSigN2, rightbinJetPtSignImpXYZSigN2, flavour, flavour));
+      int leftbinJetPtSignImpXYZSigN2 = h3simTCjetPtSignImpXYZSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
+      int rightbinJetPtSignImpXYZSigN2 = h3simTCjetPtSignImpXYZSigFlavourN2->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
+      TH1F* projJetPtRangeSignImpXYZSigN2 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYZSigFlavourN2->ProjectionY(Form("projJetPtRagneSignImpXYZSigN2_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYZSigN2, rightbinJetPtSignImpXYZSigN2, binFlavour, binFlavour));
       hsimTCjetSignImpXYZSigN2[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYZSigN2->Clone());
       hsimTCjetSignImpXYZSigN2[0][binJetPt]->Add(projJetPtRangeSignImpXYZSigN2);
 
-      int leftbinJetPtSignImpXYZSigN3 = h3simTCjetPtSignImpXYZSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
-      int rightbinJetPtSignImpXYZSigN3 = h3simTCjetPtSignImpXYZSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
-      TH1F* projJetPtRangeSignImpXYZSigN3 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYZSigFlavourN3->ProjectionY(Form("projJetPtRagneSignImpXYZSigN3_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYZSigN3, rightbinJetPtSignImpXYZSigN3, flavour, flavour));
+      int leftbinJetPtSignImpXYZSigN3 = h3simTCjetPtSignImpXYZSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
+      int rightbinJetPtSignImpXYZSigN3 = h3simTCjetPtSignImpXYZSigFlavourN3->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
+      TH1F* projJetPtRangeSignImpXYZSigN3 = reinterpret_cast<TH1F*>(h3simTCjetPtSignImpXYZSigFlavourN3->ProjectionY(Form("projJetPtRagneSignImpXYZSigN3_%d_%d", binJetPt, flavour), leftbinJetPtSignImpXYZSigN3, rightbinJetPtSignImpXYZSigN3, binFlavour, binFlavour));
       hsimTCjetSignImpXYZSigN3[flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYZSigN3->Clone());
       hsimTCjetSignImpXYZSigN3[0][binJetPt]->Add(projJetPtRangeSignImpXYZSigN3);
     }
   }
 }
-void HfJetTaggingTCAnalysis::NormalizedHistogramTCQAData() {
+
+void HfJetTaggingTCAnalysis::normalizedHistogramTCQAData() {
 
 }
 
-void HfJetTaggingTCAnalysis::NormalizedHistogramTCQAMC() {
+void HfJetTaggingTCAnalysis::normalizedHistogramTCQAMC() {
   for (int flavour = 0; flavour < HfJetTagging::nFlavour+1; flavour++) {
     for (int jetPt = 0; jetPt < HfJetTagging::nBinsJetPt+1; jetPt++) {
       hsimTCjetNormalizedSignImpXYSigN1[flavour][jetPt] = reinterpret_cast<TH1F*> (hsimTCjetSignImpXYSigN1[flavour][jetPt]->Clone(Form("hsimTCjetNormalizedSignImpXYSigN1_%d_%d", flavour, jetPt)));
@@ -327,7 +348,7 @@ void HfJetTaggingTCAnalysis::NormalizedHistogramTCQAMC() {
   }
 }
 
-void HfJetTaggingTCAnalysis::SaveHistogramTCQA(TString rootFile, bool doData, bool doMC, bool dopartLevel) {
+void HfJetTaggingTCAnalysis::saveHistogramTCQA(TString rootFile, bool doData, bool doMC, bool dopartLevel) {
   TFile* fout = new TFile(rootFile.Data(), "RECREATE");
 
   // Check if the file is open successfully
@@ -383,7 +404,7 @@ void HfJetTaggingTCAnalysis::SaveHistogramTCQA(TString rootFile, bool doData, bo
 }
 
 // Draw function
-void HfJetTaggingTCAnalysis::HistColorStyle(TH1F* h1, int markercolor = 1, int markerstyle = 20,
+void HfJetTaggingTCAnalysis::histColorStyle(TH1F* h1, int markercolor = 1, int markerstyle = 20,
     double markersize = 1, int linecolor = 1,
     int linestyle = 1)
 {
@@ -394,13 +415,12 @@ void HfJetTaggingTCAnalysis::HistColorStyle(TH1F* h1, int markercolor = 1, int m
   h1->SetLineColor(linecolor);
 }
 
-void HfJetTaggingTCAnalysis::DrawCombined(int num, const std::vector<HistogramData>& histograms, double xmin, double ymin, double xmax, double ymax) {
+void HfJetTaggingTCAnalysis::drawCombined(int num, const std::vector<HistogramData>& histograms, double xmin, double ymin, double xmax, double ymax) {
   TLegend *leg = new TLegend(xmin, ymin, xmax, ymax);
-  leg->SetBorderSize(0);
-  leg->SetFillColor(0);
+  SetLegendBoxSize(leg, num);
   for (int i=0; i<num; i++) {
     TH1F *hist = histograms[i].hist;
-    this->HistColorStyle(hist, i+1, i+20, HfJetTagging::MARKERSIZE, i+1, 1);
+    this->histColorStyle(hist, i+1, i+20, HfJetTagging::MARKERSIZE, i+1, 1);
     TString clfi = histograms[i].classification;
     leg->AddEntry(hist, clfi.Data(), "lep");
     hist->Draw("same");
@@ -408,148 +428,223 @@ void HfJetTaggingTCAnalysis::DrawCombined(int num, const std::vector<HistogramDa
   leg->Draw();
 }
 
-void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYSignificanceN1(bool withInc = false, bool doLog = true){
+void HfJetTaggingTCAnalysis::drawSimJetSignImpXYSignificanceN1(bool withInc = false, bool doLog = true, int binJetPt=0) {
   std::vector<HistogramData> NormHistList;
-  if (withInc) NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN1[0][0], HfJetTagging::INCJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN1[1][0], HfJetTagging::CJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN1[2][0], HfJetTagging::BJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN1[3][0], HfJetTagging::LFJET});
+  if (withInc) NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN1[0][binJetPt], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN1[1][binJetPt], HfJetTagging::CJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN1[2][binJetPt], HfJetTagging::BJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN1[3][binJetPt], HfJetTagging::LFJET});
 
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}^{N_{1}}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}^{N_{1}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYSignificanceN1.pdf\")", canvasNum - 1));
-
+  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  latexSimJetInfo(0.2, 0.9, binJetPt, triggerName.Data());
+  latexSimSet();
+  latex.DrawLatex(0.2, 0.9-0.20, "TC: N=1");
+  numCanXYNX[0] = canvasNum-1;
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/SignImpXYSignificanceN1_%d.pdf\")", canvasNum - 1, SIMSET.Data(), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
 }
 
-void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYSignificanceN2(bool withInc = false, bool doLog = true){
+void HfJetTaggingTCAnalysis::drawSimJetSignImpXYSignificanceN2(bool withInc = false, bool doLog = true, int binJetPt=0){
   std::vector<HistogramData> NormHistList;
-  if (withInc) NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN2[0][0], HfJetTagging::INCJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN2[1][0], HfJetTagging::CJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN2[2][0], HfJetTagging::BJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN2[3][0], HfJetTagging::LFJET});
+  if (withInc) NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN2[0][binJetPt], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN2[1][binJetPt], HfJetTagging::CJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN2[2][binJetPt], HfJetTagging::BJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN2[3][binJetPt], HfJetTagging::LFJET});
 
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}^{N_{2}}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}^{N_{2}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYSignificanceN2.pdf\")", canvasNum - 1));
+  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  latexSimJetInfo(0.2, 0.9, binJetPt, triggerName.Data());
+  latexSimSet();
+  latex.DrawLatex(0.2, 0.9-0.20, "TC: N=2");
+  numCanXYNX[1] = canvasNum-1;
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/SignImpXYSignificanceN2_%d.pdf\")", canvasNum - 1, SIMSET.Data(), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
 
 }
 
-void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYSignificanceN3(bool withInc = false, bool doLog = true){
+void HfJetTaggingTCAnalysis::drawSimJetSignImpXYSignificanceN3(bool withInc = false, bool doLog = true, int binJetPt=0){
   std::vector<HistogramData> NormHistList;
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN3[0][0], HfJetTagging::INCJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN3[1][0], HfJetTagging::CJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN3[2][0], HfJetTagging::BJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN3[3][0], HfJetTagging::LFJET});
+  if(withInc) NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN3[0][binJetPt], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN3[1][binJetPt], HfJetTagging::CJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN3[2][binJetPt], HfJetTagging::BJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYSigN3[3][binJetPt], HfJetTagging::LFJET});
 
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}^{N_{3}}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}^{N_{3}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYSignificanceN3.pdf\")", canvasNum - 1));
+  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  latexSimJetInfo(0.2, 0.9, binJetPt, triggerName.Data());
+  latexSimSet();
+  latex.DrawLatex(0.2, 0.9-0.20, "TC: N=3");
+  numCanXYNX[2] = canvasNum-1;
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/SignImpXYSignificanceN3_%d.pdf\")", canvasNum - 1, SIMSET.Data(), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
 }
-void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpZSignificanceN1(bool withInc = false, bool doLog = true){
+
+//void HfJetTaggingTCAnalysis::drawSimJetSignImpXYSignificanceN3x1(bool withInc = false, bool doLog = true, int binJetPt=0) {
+//  canvasHandler = new CanvasHandler();
+//  canvasHandler->createCanvas(canvasNum++);
+//  int canN[3] ={-1};
+//  canN[0] = canvasNum-1;
+//  canvasHandler->createCanvas(canvasNum++);
+//  canN[1] = canvasNum-1;
+//  canvasHandler->createCanvas(canvasNum++);
+//  canN[2] = canvasNum-1;
+//
+//  canvasHandler->createCanvas3x1(canvasNum++);
+//  int can3x1 = canvasNum-1;
+//
+//  for (int mpad=0; mpad<3; mpad++) {
+//    gROOT->ProcessLine(Form("mpad%d_%d->cd()", canN[mpad], mpad));
+//    gROOT->ProcessLine(Form("cc%d->Draw()", numCanXYNX[mpad]));
+//  }
+//  gROOT->ProcessLine(Form("cc%d->Update()", can3x1));
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/SignImpXYSignificanceN3x1_%d.pdf\")", can3x1, SIMSET.Data(), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
+//}
+
+void HfJetTaggingTCAnalysis::drawSimJetSignImpXYSignificanceN3x1(bool withInc = false, bool doLog = true, int binJetPt=0) {
+  std::vector<HistogramData> histListN1;
+  if(withInc) histListN1.push_back({hsimTCjetNormalizedSignImpXYSigN1[0][binJetPt], HfJetTagging::INCJET});
+  histListN1.push_back({hsimTCjetNormalizedSignImpXYSigN1[1][binJetPt], HfJetTagging::CJET});
+  histListN1.push_back({hsimTCjetNormalizedSignImpXYSigN1[2][binJetPt], HfJetTagging::BJET});
+  histListN1.push_back({hsimTCjetNormalizedSignImpXYSigN1[3][binJetPt], HfJetTagging::LFJET});
+
+  std::vector<HistogramData> histListN2;
+  if(withInc) histListN2.push_back({hsimTCjetNormalizedSignImpXYSigN2[0][binJetPt], HfJetTagging::INCJET});
+  histListN2.push_back({hsimTCjetNormalizedSignImpXYSigN2[1][binJetPt], HfJetTagging::CJET});
+  histListN2.push_back({hsimTCjetNormalizedSignImpXYSigN2[2][binJetPt], HfJetTagging::BJET});
+  histListN2.push_back({hsimTCjetNormalizedSignImpXYSigN2[3][binJetPt], HfJetTagging::LFJET});
+
+  std::vector<HistogramData> histListN3;
+  if(withInc) histListN3.push_back({hsimTCjetNormalizedSignImpXYSigN3[0][binJetPt], HfJetTagging::INCJET});
+  histListN3.push_back({hsimTCjetNormalizedSignImpXYSigN3[1][binJetPt], HfJetTagging::CJET});
+  histListN3.push_back({hsimTCjetNormalizedSignImpXYSigN3[2][binJetPt], HfJetTagging::BJET});
+  histListN3.push_back({hsimTCjetNormalizedSignImpXYSigN3[3][binJetPt], HfJetTagging::LFJET});
+
+  canvasHandler->createCanvas3x1(canvasNum++);
+  int numCan = canvasNum-1;
+  // mpad0
+  canvasHandler->drawPadCombined(histListN1, false, doLog, numCan, 0, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], HfJetTagging::X_AXIS_IMPXY[3], HfJetTagging::Y_AXIS_IMPXY[3]);
+  // mpad1
+  canvasHandler->drawPadCombined(histListN2, false, doLog, numCan, 1, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], HfJetTagging::X_AXIS_IMPXY[3], HfJetTagging::Y_AXIS_IMPXY[3]);
+  // mpad2
+  canvasHandler->drawPadCombined(histListN3, false, doLog, numCan, 2, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], HfJetTagging::X_AXIS_IMPXY[3], HfJetTagging::Y_AXIS_IMPXY[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/SignImpXYSignificanceN3x1_%d.pdf\")", numCan, SIMSET.Data(), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
+}
+
+void HfJetTaggingTCAnalysis::drawSimJetSignImpZSignificanceN1(bool withInc = false, bool doLog = true, int binJetPt=0){
   std::vector<HistogramData> NormHistList;
-  if (withInc) NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN1[0][0], HfJetTagging::INCJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN1[1][0], HfJetTagging::CJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN1[2][0], HfJetTagging::BJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN1[3][0], HfJetTagging::LFJET});
+  if (withInc) NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN1[0][binJetPt], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN1[1][binJetPt], HfJetTagging::CJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN1[2][binJetPt], HfJetTagging::BJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN1[3][binJetPt], HfJetTagging::LFJET});
 
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{Z}^{N_{1}}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{Z}}^{N_{1}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpZSignificanceN1.pdf\")", canvasNum - 1));
+  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  latexSimJetInfo(0.2, 0.9, binJetPt, triggerName.Data());
+  latexSimSet();
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/SignImpZSignificanceN1_%d.pdf\")", canvasNum - 1, SIMSET.Data(), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
 
 }
 
-void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpZSignificanceN2(bool withInc = false, bool doLog = true){
+void HfJetTaggingTCAnalysis::drawSimJetSignImpZSignificanceN2(bool withInc = false, bool doLog = true, int binJetPt=0){
   std::vector<HistogramData> NormHistList;
-  if (withInc) NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN2[0][0], HfJetTagging::INCJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN2[1][0], HfJetTagging::CJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN2[2][0], HfJetTagging::BJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN2[3][0], HfJetTagging::LFJET});
+  if (withInc) NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN2[0][binJetPt], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN2[1][binJetPt], HfJetTagging::CJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN2[2][binJetPt], HfJetTagging::BJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN2[3][binJetPt], HfJetTagging::LFJET});
 
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{Z}^{N_{2}}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{Z}}^{N_{2}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpZSignificanceN2.pdf\")", canvasNum - 1));
+  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  latexSimJetInfo(0.2, 0.9, binJetPt, triggerName.Data());
+  latexSimSet();
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/SignImpZSignificanceN2_%d.pdf\")", canvasNum - 1, SIMSET.Data(), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
 
 }
 
-void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpZSignificanceN3(bool withInc = false, bool doLog = true){
+void HfJetTaggingTCAnalysis::drawSimJetSignImpZSignificanceN3(bool withInc = false, bool doLog = true, int binJetPt=0){
   std::vector<HistogramData> NormHistList;
-  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN3[0][0], HfJetTagging::INCJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN3[1][0], HfJetTagging::CJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN3[2][0], HfJetTagging::BJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN3[0][binJetPt], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN3[1][binJetPt], HfJetTagging::CJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN3[2][binJetPt], HfJetTagging::BJET});
   NormHistList.push_back({hsimTCjetNormalizedSignImpZSigN3[3][0], HfJetTagging::LFJET});
 
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{Z}^{N_{3}}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{Z}}^{N_{3}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpZSignificanceN3.pdf\")", canvasNum - 1));
+  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  latexSimJetInfo(0.2, 0.9, binJetPt, triggerName.Data());
+  latexSimSet();
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/SignImpZSignificanceN3_%d.pdf\")", canvasNum - 1, SIMSET.Data(), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
 }
 
-void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYZSignificanceN1(bool withInc = false, bool doLog = true){
+void HfJetTaggingTCAnalysis::drawSimJetSignImpXYZSignificanceN1(bool withInc = false, bool doLog = true, int binJetPt=0){
   std::vector<HistogramData> NormHistList;
-  if (withInc) NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN1[0][0], HfJetTagging::INCJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN1[1][0], HfJetTagging::CJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN1[2][0], HfJetTagging::BJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN1[3][0], HfJetTagging::LFJET});
+  if (withInc) NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN1[0][binJetPt], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN1[1][binJetPt], HfJetTagging::CJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN1[2][binJetPt], HfJetTagging::BJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN1[3][binJetPt], HfJetTagging::LFJET});
 
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XYZ}^{N_{1}}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XYZ}}^{N_{1}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYZSignificanceN1.pdf\")", canvasNum - 1));
+  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  latexSimJetInfo(0.2, 0.9, binJetPt, triggerName.Data());
+  latexSimSet();
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/SignImpXYZSignificanceN1_%d.pdf\")", canvasNum - 1, SIMSET.Data(), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
 
 }
 
-void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYZSignificanceN2(bool withInc = false, bool doLog = true){
+void HfJetTaggingTCAnalysis::drawSimJetSignImpXYZSignificanceN2(bool withInc = false, bool doLog = true, int binJetPt=0){
   std::vector<HistogramData> NormHistList;
-  if (withInc) NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN2[0][0], HfJetTagging::INCJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN2[1][0], HfJetTagging::CJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN2[2][0], HfJetTagging::BJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN2[3][0], HfJetTagging::LFJET});
+  if (withInc) NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN2[0][binJetPt], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN2[1][binJetPt], HfJetTagging::CJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN2[2][binJetPt], HfJetTagging::BJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN2[3][binJetPt], HfJetTagging::LFJET});
 
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XYZ}^{N_{2}}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XYZ}}^{N_{2}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYZSignificanceN2.pdf\")", canvasNum - 1));
+  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  latexSimJetInfo(0.2, 0.9, binJetPt, triggerName.Data());
+  latexSimSet();
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/SignImpXYZSignificanceN2_%d.pdf\")", canvasNum - 1, SIMSET.Data(), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
 
 }
 
-void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYZSignificanceN3(bool withInc = false, bool doLog = true){
+void HfJetTaggingTCAnalysis::drawSimJetSignImpXYZSignificanceN3(bool withInc = false, bool doLog = true, int binJetPt=0){
   std::vector<HistogramData> NormHistList;
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN3[0][0], HfJetTagging::INCJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN3[1][0], HfJetTagging::CJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN3[2][0], HfJetTagging::BJET});
-  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN3[3][0], HfJetTagging::LFJET});
+  if (withInc) NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN3[0][binJetPt], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN3[1][binJetPt], HfJetTagging::CJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN3[2][binJetPt], HfJetTagging::BJET});
+  NormHistList.push_back({hsimTCjetNormalizedSignImpXYZSigN3[3][binJetPt], HfJetTagging::LFJET});
 
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XYZ}^{N_{3}}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XYZ}}^{N_{3}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYZSignificanceN3.pdf\")", canvasNum - 1));
+  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  latexSimJetInfo(0.2, 0.9, binJetPt, triggerName.Data());
+  latexSimSet();
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/SignImpXYZSignificanceN3_%d.pdf\")", canvasNum - 1, SIMSET.Data(), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
 }
 
 //
-//void HfJetTaggingTCAnalysis::DrawTaggedJetProbability(){
+//void HfJetTaggingTCAnalysis::drawSimJetProbability(){
 //  std::vector<HistogramData> NormHistList;
 //  //NormHistList.push_back({hsimincjetNormalizedJP, HfJetTagging::INCJET});
 //  NormHistList.push_back({hsimlfjetNormalizedJP, HfJetTagging::LFJET});
@@ -559,10 +654,10 @@ void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYZSignificanceN3(bool withInc 
 //  canvasHandler = new CanvasHandler();
 //  canvasHandler->createCanvas(canvasNum++);
 //  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::JP[0], HfJetTagging::REFHIST::JP[1], HfJetTagging::REFHIST::JP[2], HfJetTagging::REFHIST::JP[3], "JP", "Probability distribution");
-//  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/JetProbability.pdf\")", canvasNum - 1));
+//  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/JetProbability.pdf\")", canvasNum - 1, static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
 //}
-//void HfJetTaggingTCAnalysis::DrawTaggedJetProbabilityLog(){
+//void HfJetTaggingTCAnalysis::drawSimJetProbabilityLog(){
 //  std::vector<HistogramData> NormHistList;
 //  //NormHistList.push_back({hsimincjetNormalizedJPLog, HfJetTagging::INCJET});
 //  NormHistList.push_back({hsimlfjetNormalizedJPLog, HfJetTagging::LFJET});
@@ -572,8 +667,8 @@ void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYZSignificanceN3(bool withInc 
 //  canvasHandler = new CanvasHandler();
 //  canvasHandler->createCanvas(canvasNum++);
 //  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::LOGJP[0], HfJetTagging::REFHIST::LOGJP[1], HfJetTagging::REFHIST::LOGJP[2], HfJetTagging::REFHIST::LOGJP[3], "-Log(JP)", "Probability distribution");
-//  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/JetProbabilityLog.pdf\")", canvasNum - 1));
+//  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/JetProbabilityLog.pdf\")", canvasNum - 1, static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
 //}
 
 double HfJetTaggingTCAnalysis::calculateEffiSignedImpXYSig(TH1F* htagjet, float cutImp = 2.5) {
@@ -581,13 +676,21 @@ double HfJetTaggingTCAnalysis::calculateEffiSignedImpXYSig(TH1F* htagjet, float 
 
   double numcutTagjet = htagjet->Integral(cuttagBin, htagjet->GetNbinsX());
   double numTagjet = htagjet->Integral(1, htagjet->GetNbinsX());
-  
-  double effi = static_cast<double> (numcutTagjet / numTagjet);
-  if (effi<0 || effi>1) {
-    std::cout << "Warning: efficience is over than 1 or less than 0, " << effi << std::endl;
-    effi = -1;
+
+  double effi = -1;
+  // Check if numTagjet is not zero to avoid division by zero
+  if (numTagjet != 0) {
+    effi = static_cast<double> (numcutTagjet / numTagjet);
+    // It's still a good idea to check if the efficiency is within expected bounds
+    if (effi < 0 || effi > 1) {
+      std::cout << "Warning: Efficiency is over 1 or less than 0, " << effi << std::endl;
+      effi = -1; // Or handle this case as needed
+    }
+  } else {
+    std::cout << "Warning: Total number of tag jets is zero, efficiency is undefined." << std::endl;
   }
 
+  if (std::isnan(effi)) return -1;
   return effi;
 }
 
@@ -602,7 +705,8 @@ double HfJetTaggingTCAnalysis::calculatePurity(int specificFlavour, int binJetPt
   }
 
   int binTargetjet = hbasejet[specificFlavour][binJetPt]->FindBin(cutImp);
-  double purity = hbasejet[specificFlavour][binJetPt]->Integral(binTargetjet, hbasejet[specificFlavour][binJetPt]->GetNbinsX());
+  double purity = -1;
+  purity = hbasejet[specificFlavour][binJetPt]->Integral(binTargetjet, hbasejet[specificFlavour][binJetPt]->GetNbinsX());
 
   double sumBase = 0;
 
@@ -611,16 +715,25 @@ double HfJetTaggingTCAnalysis::calculatePurity(int specificFlavour, int binJetPt
     double integral = hbasejet[flavour][binJetPt]->Integral(binBasejet, hbasejet[flavour][binJetPt]->GetNbinsX());
     sumBase +=integral;
   }
-  purity /= sumBase; 
+  // Check if sumBase is not zero to avoid division by zero
+  if (sumBase != 0) {
+    purity /= sumBase;
+  } else {
+    std::cerr << "Warning: Total base sum is zero, purity is undefined." << std::endl;
+  }
+
+  if (std::isnan(purity)) return -1;
   return purity;
 }
 
-void HfJetTaggingTCAnalysis::DrawTaggedJetEffiSignImpXYSigN1(float cutImp = 2.5) {
+void HfJetTaggingTCAnalysis::drawSimJetEffiSignImpXYSigN1(float cutImp = 2.5) {
 	std::vector<HistogramData> NormHistList;
   for (int flavour = 1; flavour < HfJetTagging::nFlavour+1; flavour++) {
     for (int binJetPt = HfJetTagging::startJetPt; binJetPt <= HfJetTagging::nBinsJetPt; binJetPt++) {
       if (binJetPt < 1) continue; // 0 is inclusive jet pt
+      std::cout<< HfJetTagging::binsJetPt[binJetPt-1] <<" < jetPt < " << HfJetTagging::binsJetPt[binJetPt] <<std::endl;
       double effi = this->calculateEffiSignedImpXYSig(hsimTCjetSignImpXYSigN1[flavour][binJetPt], cutImp);
+      if (effi < 0) continue;
       hsimTCjetEffiSignImpXYSigN1[flavour]->SetBinContent(binJetPt, effi);
     }
 	  NormHistList.push_back({hsimTCjetEffiSignImpXYSigN1[flavour], HfJetTagging::FLAVOURJET[flavour]});
@@ -628,11 +741,13 @@ void HfJetTaggingTCAnalysis::DrawTaggedJetEffiSignImpXYSigN1(float cutImp = 2.5)
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::EFFI[0], HfJetTagging::REFHIST::EFFI[1], HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "#it{p_{T}^{jet}}", "#epsilon");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/EffiSignedImpXYSigN1.pdf\")", canvasNum - 1));
+  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  latex.DrawLatex(0.2, 0.9-0.00, "TC: N=1");
+  latex.DrawLatex(0.2, 0.9-0.04, Form("tagger point (sIPs)=%0.1f", cutImp));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/EffiSignedImpXYSigN1.pdf\")", canvasNum - 1, SIMSET.Data()));
 }
 
-void HfJetTaggingTCAnalysis::DrawTaggedJetEffiSignImpXYSigN2(float cutImp = 2.5) {
+void HfJetTaggingTCAnalysis::drawSimJetEffiSignImpXYSigN2(float cutImp = 2.5) {
 	std::vector<HistogramData> NormHistList;
   for (int flavour = 1; flavour < HfJetTagging::nFlavour+1; flavour++) {
     for (int binJetPt = HfJetTagging::startJetPt; binJetPt <= HfJetTagging::nBinsJetPt; binJetPt++) {
@@ -645,11 +760,13 @@ void HfJetTaggingTCAnalysis::DrawTaggedJetEffiSignImpXYSigN2(float cutImp = 2.5)
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::EFFI[0], HfJetTagging::REFHIST::EFFI[1], HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "#it{p_{T}^{jet}}", "#epsilon");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/EffiSignedImpXYSigN2.pdf\")", canvasNum - 1));
+  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  latex.DrawLatex(0.2, 0.9-0.00, "TC: N=2");
+  latex.DrawLatex(0.2, 0.9-0.04, Form("tagger point (sIPs)=%0.1f", cutImp));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/EffiSignedImpXYSigN2.pdf\")", canvasNum - 1, SIMSET.Data()));
 }
 
-void HfJetTaggingTCAnalysis::DrawTaggedJetEffiSignImpXYSigN3(float cutImp = 2.5) {
+void HfJetTaggingTCAnalysis::drawSimJetEffiSignImpXYSigN3(float cutImp = 2.5) {
 	std::vector<HistogramData> NormHistList;
   for (int flavour = 1; flavour < HfJetTagging::nFlavour+1; flavour++) {
     for (int binJetPt = HfJetTagging::startJetPt; binJetPt <= HfJetTagging::nBinsJetPt; binJetPt++) {
@@ -662,11 +779,32 @@ void HfJetTaggingTCAnalysis::DrawTaggedJetEffiSignImpXYSigN3(float cutImp = 2.5)
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::EFFI[0], HfJetTagging::REFHIST::EFFI[1], HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "#it{p_{T}^{jet}}", "#epsilon");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/EffiSignedImpXYSigN3.pdf\")", canvasNum - 1));
+  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  latex.DrawLatex(0.2, 0.9-0.00, "TC: N=3");
+  latex.DrawLatex(0.2, 0.9-0.04, Form("tagger point (sIPs)=%0.1f", cutImp));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/EffiSignedImpXYSigN3.pdf\")", canvasNum - 1, SIMSET.Data()));
 }
 
-void HfJetTaggingTCAnalysis::DrawTaggedJetPurityN1(float cutImp = 2.5) {
+void HfJetTaggingTCAnalysis::drawSimJetEffiSignImpXYSigN3x1(float cutImp = 2.5) {
+	std::vector<HistogramData> NormHistList;
+  int flavour = 2; // bjet
+	NormHistList.push_back({hsimTCjetEffiSignImpXYSigN1[flavour], HfJetTagging::FLAVOURJET[flavour]});
+	NormHistList.push_back({hsimTCjetEffiSignImpXYSigN2[flavour], HfJetTagging::FLAVOURJET[flavour]});
+	NormHistList.push_back({hsimTCjetEffiSignImpXYSigN3[flavour], HfJetTagging::FLAVOURJET[flavour]});
+  canvasHandler = new CanvasHandler();
+  canvasHandler->createCanvas3x1(canvasNum++);
+  for (int mpad=0; mpad<3; mpad++) {
+    canvasHandler->drawPad(NormHistList, false, canvasNum-1, mpad, HfJetTagging::REFHIST::EFFI[0], HfJetTagging::REFHIST::EFFI[1], HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "#it{p_{T}^{jet}}", "#epsilon");
+    latex.DrawLatex(0.2, 0.9, Form("N=%d", mpad+1));
+    latex.DrawLatex(0.2, 0.86, Form("tagger point (sIPs)=%0.1f", cutImp));
+  }
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/EffiSignedImpXYSigN3x1.pdf\")", canvasNum - 1, SIMSET.Data()));
+}
+
+//void HfJetTaggingTCAnalysis::drawSimJetEffiSignImpXYSigNX(float cutImp = 2.5) {
+//}
+
+void HfJetTaggingTCAnalysis::drawSimJetPurityN1(float cutImp = 2.5) {
 	std::vector<HistogramData> NormHistList;
   for (int flavour = 1; flavour < HfJetTagging::nFlavour+1; flavour++) {
     for (int binJetPt = HfJetTagging::startJetPt; binJetPt <= HfJetTagging::nBinsJetPt; binJetPt++) {
@@ -679,11 +817,11 @@ void HfJetTaggingTCAnalysis::DrawTaggedJetPurityN1(float cutImp = 2.5) {
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::PURITY[0], HfJetTagging::REFHIST::PURITY[1], HfJetTagging::REFHIST::PURITY[2], HfJetTagging::REFHIST::PURITY[3], "#it{p_{T}^{jet}}", "purity");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/PurityN1.pdf\")", canvasNum - 1));
+  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/PurityN1.pdf\")", canvasNum - 1, SIMSET.Data()));
 }
 
-void HfJetTaggingTCAnalysis::DrawTaggedJetPurityN2(float cutImp=2.5) {
+void HfJetTaggingTCAnalysis::drawSimJetPurityN2(float cutImp=2.5) {
 	std::vector<HistogramData> NormHistList;
   for (int flavour = 1; flavour < HfJetTagging::nFlavour+1; flavour++) {
     for (int binJetPt = HfJetTagging::startJetPt; binJetPt <= HfJetTagging::nBinsJetPt; binJetPt++) {
@@ -696,11 +834,11 @@ void HfJetTaggingTCAnalysis::DrawTaggedJetPurityN2(float cutImp=2.5) {
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::PURITY[0], HfJetTagging::REFHIST::PURITY[1], HfJetTagging::REFHIST::PURITY[2], HfJetTagging::REFHIST::PURITY[3], "#it{p_{T}^{jet}}", "purity");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/PurityN2.pdf\")", canvasNum - 1));
+  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/PurityN2.pdf\")", canvasNum - 1, SIMSET.Data()));
 }
 
-void HfJetTaggingTCAnalysis::DrawTaggedJetPurityN3(float cutImp=2.5) {
+void HfJetTaggingTCAnalysis::drawSimJetPurityN3(float cutImp=2.5) {
 	std::vector<HistogramData> NormHistList;
   for (int flavour = 1; flavour < HfJetTagging::nFlavour+1; flavour++) {
     for (int binJetPt = HfJetTagging::startJetPt; binJetPt <= HfJetTagging::nBinsJetPt; binJetPt++) {
@@ -713,8 +851,26 @@ void HfJetTaggingTCAnalysis::DrawTaggedJetPurityN3(float cutImp=2.5) {
   canvasHandler = new CanvasHandler();
   canvasHandler->createCanvas(canvasNum++);
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::PURITY[0], HfJetTagging::REFHIST::PURITY[1], HfJetTagging::REFHIST::PURITY[2], HfJetTagging::REFHIST::PURITY[3], "#it{p_{T}^{jet}}", "purity");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/PurityN3.pdf\")", canvasNum - 1));
+  this->drawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/PurityN3.pdf\")", canvasNum - 1, SIMSET.Data()));
 }
+
+void HfJetTaggingTCAnalysis::drawSimJetPurityN3x1(float cutImp=2.5) {
+	std::vector<HistogramData> NormHistList;
+  int flavour = 2; // bjet
+	NormHistList.push_back({hsimTCjetPurityN1[flavour], HfJetTagging::FLAVOURJET[flavour]});
+	NormHistList.push_back({hsimTCjetPurityN2[flavour], HfJetTagging::FLAVOURJET[flavour]});
+	NormHistList.push_back({hsimTCjetPurityN3[flavour], HfJetTagging::FLAVOURJET[flavour]});
+  canvasHandler = new CanvasHandler();
+  canvasHandler->createCanvas3x1(canvasNum++);
+  for (int mpad=0; mpad<3; mpad++) {
+    canvasHandler->drawPad(NormHistList, false, canvasNum-1, mpad, HfJetTagging::REFHIST::EFFI[0], HfJetTagging::REFHIST::EFFI[1], HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "#it{p_{T}^{jet}}", "#epsilon");
+    latex.DrawLatex(0.2, 0.9, Form("N=%d", mpad+1));
+    latex.DrawLatex(0.2, 0.86, Form("tagging point=%0.1f", cutImp));
+  }
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%s/tc/PurityN3x1.pdf\")", canvasNum - 1, SIMSET.Data()));
+}
+
+
 
 #endif // HFJETTAGGINGTCANALYSIS_H 

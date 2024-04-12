@@ -21,8 +21,8 @@ class HfJetTaggingSysRadiusAnalysis {
           return;
         }
         InitHistogram();
-        ProjectionHist();
-        NormalizedHistogram();
+        //ProjectionHist();
+        //NormalizedHistogram();
       }
     }
     ~HfJetTaggingSysRadiusAnalysis();
@@ -161,7 +161,7 @@ void HfJetTaggingSysRadiusAnalysis::DrawIncJetTrackPtRadius(bool doLog = true, i
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/incjet/radius/trackmomentum.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/radius/trackmomentum.pdf\")", canvasNum - 1));
 
 }
 
@@ -175,7 +175,7 @@ void HfJetTaggingSysRadiusAnalysis::DrawCharmJetTrackPtRadius(bool doLog = true,
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/cjet/radius/trackmomentum.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/cjet/radius/trackmomentum.pdf\")", canvasNum - 1));
 
 }
 
@@ -189,7 +189,7 @@ void HfJetTaggingSysRadiusAnalysis::DrawBeautyJetTrackPtRadius(bool doLog = true
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/bjet/radius/trackmomentum.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/bjet/radius/trackmomentum.pdf\")", canvasNum - 1));
 
 }
 
@@ -203,7 +203,7 @@ void HfJetTaggingSysRadiusAnalysis::DrawLfJetTrackPtRadius(bool doLog = true, in
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/lfjet/radius/trackmomentum.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/radius/trackmomentum.pdf\")", canvasNum - 1));
 
 }
 
@@ -218,7 +218,7 @@ void HfJetTaggingSysRadiusAnalysis::DrawIncJetSignImpXYSignificanceRadius(bool d
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/incjet/radius/SignImpXYSignificance.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/radius/SignImpXYSignificance.pdf\")", canvasNum - 1));
 }
 
 void HfJetTaggingSysRadiusAnalysis::DrawCharmJetSignImpXYSignificanceRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
@@ -232,7 +232,7 @@ void HfJetTaggingSysRadiusAnalysis::DrawCharmJetSignImpXYSignificanceRadius(bool
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/cjet/radius/SignImpXYSignificance.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/cjet/radius/SignImpXYSignificance.pdf\")", canvasNum - 1));
 }
 
 void HfJetTaggingSysRadiusAnalysis::DrawBeautyJetSignImpXYSignificanceRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
@@ -246,7 +246,7 @@ void HfJetTaggingSysRadiusAnalysis::DrawBeautyJetSignImpXYSignificanceRadius(boo
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/bjet/radius/SignImpXYSignificance.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/bjet/radius/SignImpXYSignificance.pdf\")", canvasNum - 1));
 }
 
 void HfJetTaggingSysRadiusAnalysis::DrawLfJetSignImpXYSignificanceRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
@@ -260,7 +260,7 @@ void HfJetTaggingSysRadiusAnalysis::DrawLfJetSignImpXYSignificanceRadius(bool do
   if (doLog) gPad->SetLogy();
   canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
   this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/lfjet/radius/SignImpXYSignificance.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/radius/SignImpXYSignificance.pdf\")", canvasNum - 1));
 }
 
 #endif // HFJETTAGGINGSYSRADIUSANALYSIS_H
