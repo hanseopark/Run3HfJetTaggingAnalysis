@@ -384,16 +384,17 @@ int JetAnalysis::loadDataGeneralQA(TString rootData) {
   TFile* fin;
   fin = TFile::Open(rootData.Data(), "READ");
   TString taskJetQA = "jet-finder-charged-qa";
-
-  h3dataGenJetRjetPtjetEta = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_eta", taskJetQA.Data())));
-  h3dataGenJetRjetPtjetPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_phi", taskJetQA.Data())));
-  h3dataGenJetRjetEtajetPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_eta_jet_phi", taskJetQA.Data())));
-  h3dataGenJetRjetPtjetNTracks = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_ntracks", taskJetQA.Data())));
-  h3dataGenJetRjetPtjetArea = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_area", taskJetQA.Data())));
-  h3dataGenJetRjetPtTrackPt = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_track_pt", taskJetQA.Data())));
-  h3dataGenJetRjetPtTrackEta = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_track_eta", taskJetQA.Data())));
-  h3dataGenJetRjetPtTrackPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_track_phi", taskJetQA.Data())));
-  h3dataGenJetRjetPtLeadingTrackPt = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_leadingtrack_pt", taskJetQA.Data())));
+  if (doChJetQA) {
+    h3dataGenJetRjetPtjetEta = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_eta", taskJetQA.Data())));
+    h3dataGenJetRjetPtjetPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_phi", taskJetQA.Data())));
+    h3dataGenJetRjetEtajetPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_eta_jet_phi", taskJetQA.Data())));
+    h3dataGenJetRjetPtjetNTracks = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_ntracks", taskJetQA.Data())));
+    h3dataGenJetRjetPtjetArea = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_area", taskJetQA.Data())));
+    h3dataGenJetRjetPtTrackPt = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_track_pt", taskJetQA.Data())));
+    h3dataGenJetRjetPtTrackEta = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_track_eta", taskJetQA.Data())));
+    h3dataGenJetRjetPtTrackPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_track_phi", taskJetQA.Data())));
+    h3dataGenJetRjetPtLeadingTrackPt = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_leadingtrack_pt", taskJetQA.Data())));
+  }
 
   std::cout << "Load completed General Jet QA Data" << std::endl;
   return 1;
@@ -409,15 +410,15 @@ int JetAnalysis::loadSimGeneralQA(TString rootSim, bool doMCP = false) {
   fin = TFile::Open(rootSim.Data(), "READ");
   TString taskJetQA = "jet-finder-charged-qa";
 
-  h3simGenJetRjetPtjetEta = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_eta", taskJetQA.Data())));
-  h3simGenJetRjetPtjetPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_phi", taskJetQA.Data())));
-  h3simGenJetRjetEtajetPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_eta_jet_phi", taskJetQA.Data())));
-  h3simGenJetRjetPtjetNTracks = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_ntracks", taskJetQA.Data())));
-  h3simGenJetRjetPtjetArea = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_area", taskJetQA.Data())));
-  h3simGenJetRjetPtTrackPt = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_track_pt", taskJetQA.Data())));
-  h3simGenJetRjetPtTrackEta = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_track_eta", taskJetQA.Data())));
-  h3simGenJetRjetPtTrackPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_track_phi", taskJetQA.Data())));
-  h3simGenJetRjetPtLeadingTrackPt = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_leadingtrack_pt", taskJetQA.Data())));
+    h3simGenJetRjetPtjetEta = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_eta", taskJetQA.Data())));
+    h3simGenJetRjetPtjetPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_phi", taskJetQA.Data())));
+    h3simGenJetRjetEtajetPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_eta_jet_phi", taskJetQA.Data())));
+    h3simGenJetRjetPtjetNTracks = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_ntracks", taskJetQA.Data())));
+    h3simGenJetRjetPtjetArea = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_jet_area", taskJetQA.Data())));
+    h3simGenJetRjetPtTrackPt = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_track_pt", taskJetQA.Data())));
+    h3simGenJetRjetPtTrackEta = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_track_eta", taskJetQA.Data())));
+    h3simGenJetRjetPtTrackPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_track_phi", taskJetQA.Data())));
+    h3simGenJetRjetPtLeadingTrackPt = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_jet_pt_leadingtrack_pt", taskJetQA.Data())));
 
   if (doMCP) {
     h3simGenPartJetRjetPtjetEta = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_r_part_jet_pt_part_jet_eta_part", taskJetQA.Data())));

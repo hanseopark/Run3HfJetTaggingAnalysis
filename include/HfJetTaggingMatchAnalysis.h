@@ -1,5 +1,5 @@
-#ifndef HFJETTAGGINGSVANALYSIS_H
-#define HFJETTAGGINGSVANALYSIS_H
+#ifndef HFJETTAGGINGMATCHANALYSIS_H
+#define HFJETTAGGINGMATCHANALYSIS_H
 
 #include <TH1D.h>
 #include <TString.h>
@@ -32,73 +32,13 @@ class HfJetTaggingSVAnalysis : public HfJetTaggingAnalysis{
     void saveHistogramSVQA(TString rootFile, bool doData, bool doMC, bool dopartLevel);
 
     // Set
-    void setFill2Prong(bool fill2Prong);
-    void setFill3Prong(bool fill3Prong);
-    void setFillN1(bool fillN1);
     void setFillEffi(bool fillEffi);
 
     // Draw
     //int nc = 30000;
     CanvasHandler* canHan;
-    // Data 2-prongs
-    void drawData2ProngLxy(bool doLog, int binJetPt);
-    void drawData2ProngLxyz(bool doLog, int binJetPt);
-    void drawData2ProngSxy(bool doLog, int binJetPt);
-    void drawData2ProngSxyz(bool doLog, int binJetPt);
-    void drawData2ProngsigmaLxy(bool doLog, int binJetPt);
-    void drawData2ProngsigmaLxyz(bool doLog, int binJetPt);
-    void drawData2ProngRawLxy(bool doLog, int binJetPt);
-    void drawData2ProngRawLxyz(bool doLog, int binJetPt);
-    void drawData2ProngRawSxy(bool doLog, int binJetPt);
-    void drawData2ProngRawSxyz(bool doLog, int binJetPt);
-    void drawData2ProngRawsigmaLxy(bool doLog, int binJetPt);
-    void drawData2ProngRawsigmaLxyz(bool doLog, int binJetPt);
-
-    // Data 3-prongs
-    void drawData3ProngLxy(bool doLog, int binJetPt);
-    void drawData3ProngLxyz(bool doLog, int binJetPt);
-    void drawData3ProngSxy(bool doLog, int binJetPt);
-    void drawData3ProngSxyz(bool doLog, int binJetPt);
-    void drawData3ProngsigmaLxy(bool doLog, int binJetPt);
-    void drawData3ProngsigmaLxyz(bool doLog, int binJetPt);
-    void drawData3ProngRawLxy(bool doLog, int binJetPt);
-    void drawData3ProngRawLxyz(bool doLog, int binJetPt);
-    void drawData3ProngRawSxy(bool doLog, int binJetPt);
-    void drawData3ProngRawSxyz(bool doLog, int binJetPt);
-    void drawData3ProngRawsigmaLxy(bool doLog, int binJetPt);
-    void drawData3ProngRawsigmaLxyz(bool doLog, int binJetPt);
 
     // MC 2-prongs
-    void drawSim2ProngRawLxy(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngRawLxyz(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngRawSxy(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngRawSxyz(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngRawsigmaLxy(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngRawsigmaLxyz(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngRawSxyN1(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngRawSxyzN1(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngRawMassN1(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngLxy(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngLxyz(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngSxy(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngSxyz(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngsigmaLxy(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngsigmaLxyz(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngSxyN1(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngSxyzN1(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngMassN1(bool withInc, bool doLog, int binJetPt);
-    void drawSim2ProngEffiSxy(const float cutSxy);
-    void drawSim2ProngEffiSxyz(const float cutSxyz);
-    void drawSim2ProngEffiSxyN1(const float cutSxy);
-    void drawSim2ProngEffiSxyzN1(const float cutSxyz);
-    void drawSim2ProngEffiSxyN1Tagger(int binJetPt);
-    void drawSim2ProngPuritySxyN1Tagger(int binJetPt);
-    void drawSim2ProngPuritySxy(const float cutSxy);
-    void drawSim2ProngPuritySxyz(const float cutSxyz);
-    void drawSim2ProngPuritySxyN1(const float cutSxy);
-    void drawSim2ProngPuritySxyzN1(const float cutSxyz);
-    void drawSim2ProngEffiAndPuritySxyN1(const float custSxy);
-    void drawSim2ProngChi2(bool withInc, bool doLog, int binJetPt);
 
     // MC 3-prongs
 
@@ -183,9 +123,7 @@ class HfJetTaggingSVAnalysis : public HfJetTaggingAnalysis{
     
     void drawTemplateFitMC();
     void drawTemplateFitMCN1();
-    void drawTemplateFitMCN1Run2Def();
     void drawTemplateFitMCtaggedjetN1();
-    void drawTemplateFitMCtaggedjetN1Run2Def();
 
   protected:
     TH1F* hsimSVEffi2ProngSxy[HfJetTagging::nFlavour+1];
@@ -2175,13 +2113,13 @@ void HfJetTaggingSVAnalysis::drawSim3ProngSxyN1(bool withInc = false, bool doLog
   normHist.push_back({hsimjetNormalized3ProngSxyN1[3][binJetPt], HfJetTagging::LFJET});
 
   canHan = new CanvasHandler();
-  canHan->createCanvas(nc, 0, 0, 800, 600, 0.12, 0.04);
+  canHan->createCanvas(nc);
   if (doLog) gPad->SetLogy();
   canHan->drawRefHistogram(nc, HfJetTagging::REFHIST::SXY[0], HfJetTagging::REFHIST::SXY[1], HfJetTagging::REFHIST::SXY[2], HfJetTagging::REFHIST::SXY[3], HfJetTagging::X_AXIS_SXY, HfJetTagging::AXIS_PROB);
-  canHan->drawCombined(normHist.size(), normHist, withInc, true, 0.22-0.02, 0.70, HfJetTagging::LEG[2], HfJetTagging::LEG[3], 0.065);
+  canHan->drawCombined(normHist.size(), normHist, withInc, true, 0.22, 0.70, HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   latexSimSet();
-  latexSimJetInfo(0.5, 0.89, binJetPt, TRIGGERNAME.Data());
-  latex.DrawLatex(0.5, 0.89-0.055*5, "3-prongs candidate (largest S#it{L}_{XY})");
+  latexSimJetInfo(0.5, 0.9, binJetPt, TRIGGERNAME.Data());
+  latex.DrawLatex(0.5, 0.9-0.045*7, "3-prongs candidate (1^{st} S#it{L}_{XY})");
   gROOT->ProcessLine(Form("cc%d->Print(\"%s/3ProngSxyN1_%d.pdf\")", nc++, dirSim.Data(), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
 }
 
@@ -2317,31 +2255,26 @@ void HfJetTaggingSVAnalysis::drawSim3ProngEffiSxyz(const float cutSxyz) {
 void HfJetTaggingSVAnalysis::drawSim3ProngEffiSxyN1(const float cutSxy) {
   std::cout << "Efficiency of SV for 3-prong" << std::endl;
 	std::vector<HistogramData> histList;
-	histList.push_back({hsimSVEffi3ProngSxyN1[0], HfJetTagging::FLAVOURJET[0]});
   for (int flavour = 1; flavour < HfJetTagging::nFlavour+1; flavour++) {
-    std::cout << "flavour: " << HfJetTagging::FLAVOURJET[flavour] << std::endl;
     for (int binJetPt = HfJetTagging::startJetPt+1; binJetPt <= HfJetTagging::nBinsJetPt; binJetPt++) {
       if (binJetPt < 1) continue; // 0 is inclusive jet pt
-      //float effi = taggingutilities::getEfficiencyDirect(hsimjetPt[flavour], hsimjet3ProngSxyN1[flavour][binJetPt], binJetPt, cutSxy);
+      float effi = taggingutilities::getEfficiencyDirect(hsimjetPt[flavour], hsimjet3ProngSxyN1[flavour][binJetPt], binJetPt, cutSxy);
       //float effi = taggingutilities::getEfficiencyDirect(hsim3ProngjetPt[flavour], hsimjet3ProngSxyN1[flavour][binJetPt], binJetPt, cutSxy);
-      float effi = hsimjet3ProngSxyN1[flavour][binJetPt]->Integral(hsimjet3ProngSxyN1[flavour][binJetPt]->FindBin(cutSxy), -1);
-      if (effi <0.001) continue;
-      effi = effi / hsimjet3ProngSxyN1[flavour][binJetPt]->Integral(1, -1);
-      std::cout << "jet pt: " << HfJetTagging::binsJetPt[binJetPt] << " before #: " << hsimjet3ProngSxyN1[flavour][binJetPt]->Integral(1, -1) << " after #: " << hsimjet3ProngSxyN1[flavour][binJetPt]->Integral(hsimjet3ProngSxyN1[flavour][binJetPt]->FindBin(cutSxy), -1)<< " effi: " << effi << std::endl;
+      //float effi = hsimjet3ProngSxyN1[flavour][binJetPt]->Integral(1, hsimjet3ProngSxyN1[flavour][binJetPt]->FindBin(cutSxy)) / hsimjet3ProngSxyN1[0][binJetPt]->Integral();
+      std::cout << "jet pt: " << HfJetTagging::binsJetPt[binJetPt] << " effi: " << effi << std::endl;
       if (effi < 0) continue;
       hsimSVEffi3ProngSxyN1[flavour]->SetBinContent(binJetPt, effi);
     }
 	  histList.push_back({hsimSVEffi3ProngSxyN1[flavour], HfJetTagging::FLAVOURJET[flavour]});
   }
   canHan = new CanvasHandler();
-  //canHan->createCanvas(nc);
-  canHan->createCanvas(nc, 0, 0, 800, 600, 0.11, 0.04, 0.05, 0.13);
+  canHan->createCanvas(nc);
   canHan->drawRefHistogram(nc, HfJetTagging::REFHIST::EFFI[0], HfJetTagging::REFHIST::EFFI[1], HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], HfJetTagging::X_AXIS_JETPT, HfJetTagging::AXIS_EFFI);
-  canHan->drawCombined(histList.size(), histList, false, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  canHan->drawCombined(histList.size(), histList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   //latex.DrawLatex(0.2, 0.9-0.04, Form("tagger point (sIPs)=%0.1f", cutSxy));
   //latex.DrawLatex(0.2, 0.9-0.04, Form("tagger point (#it{S}_{XY})=%0.1f", cutSxy));
-  latexSimJetInfoForEffi(0.17, 0.89, "PYTHIA 8 + Geant 4", "anti-#it{k}_{T}", "Charged", 0.4, "ALICE Performance");
-  latex.DrawLatex(0.17, 0.89-0.055*4, Form("3-prongs candidate (largest S#it{L}_{XY} > %0.1f)", cutSxy));
+  latexSimJetInfo(0.5, 0.9, 0, "PYTHIA 8 + Geant 4", "anti-#it{k}_{T}", "Charged", 0.4, "ALICE Performance");
+  latex.DrawLatex(0.5, 0.9-0.055*6, "3-prongs candidate (1^{st}#it{ S}_{XY} > 30)");
   gROOT->ProcessLine(Form("cc%d->Print(\"%s/3ProngEffiSxyN1.pdf\")", nc++, dirSim.Data()));
 }
 
@@ -2540,6 +2473,7 @@ void HfJetTaggingSVAnalysis::drawSim3ProngSxyN1Run2Def(bool withInc = false, boo
   canHan->drawRefHistogram(nc, HfJetTagging::REFHIST::SXY[0], HfJetTagging::REFHIST::SXY[1], HfJetTagging::REFHIST::SXY[2], HfJetTagging::REFHIST::SXY[3], HfJetTagging::X_AXIS_SXY, HfJetTagging::AXIS_PROB);
   canHan->drawCombined(normHist.size(), normHist, withInc, true, 0.22-0.02, 0.70, HfJetTagging::LEG[2], HfJetTagging::LEG[3], 0.065);
   //latexSimSet();
+  //latexSimJetInfo(0.5, 0.9, binJetPt, TRIGGERNAME.Data());
   latexSimJetInfo(0.5, 0.89, binJetPt, "PYTHIA 8 + Geant 4", "anti-#it{k}_{T}", "Charged", 0.4, "ALICE Performance");
   latex.DrawLatex(0.5, 0.89-0.055*5, "3-prongs candidate (largest S#it{L}_{XY})");
   gROOT->ProcessLine(Form("cc%d->Print(\"%s/3ProngSxyN1Run2Def_%d.pdf\")", nc++, dirSim.Data(), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
@@ -2793,7 +2727,7 @@ void HfJetTaggingSVAnalysis::drawSimtaggedjet3ProngEffiSxyN1(const float cutSxy)
   //latex.DrawLatex(0.2, 0.9-0.04, Form("tagger point (sIPs)=%0.1f", cutSxy));
   //latex.DrawLatex(0.2, 0.9-0.04, Form("tagger point (#it{S}_{XY})=%0.1f", cutSxy));
   latexSimJetInfoForEffi(0.17, 0.89, "PYTHIA 8 + Geant 4", "anti-#it{k}_{T}", "Charged", 0.4, "ALICE Performance");
-  latex.DrawLatex(0.17, 0.89-0.055*4, "3-prongs candidate (largest S#it{L}_{XY} > 40)");
+  latex.DrawLatex(0.17, 0.89-0.055*4, "3-prongs candidate (largest S#it{L}_{XY} > 30)");
   gROOT->ProcessLine(Form("cc%d->Print(\"%s/taggedjet/3ProngEffiSxyN1.pdf\")", nc++, dirSim.Data()));
 }
 
@@ -2828,14 +2762,10 @@ void HfJetTaggingSVAnalysis::drawSimtaggedjet3ProngPuritySxyN1(const float cutSx
   for (int flavour = 1; flavour < HfJetTagging::nFlavour+1; flavour++) {
     for (int binJetPt = HfJetTagging::startJetPt+1; binJetPt <= HfJetTagging::nBinsJetPt; binJetPt++) {
       if (binJetPt < 1) continue; // 0 is inclusive jet pt
-      //float purity = taggingutilities::getPurity(hsimtaggedjet3ProngSxyN1[flavour][binJetPt], hsimjet3ProngSxyN1[0][binJetPt]);
-      float purity = taggingutilities::getPurity(hsimtaggedjet3ProngMassN1[flavour][binJetPt], hsimjet3ProngMassN1[0][binJetPt]);
-      //float errorPurity = taggingutilities::getErrorPurity(hsimtaggedjet3ProngSxyN1[flavour][binJetPt], hsimjet3ProngSxyN1[0][binJetPt]);
-      float errorPurity = taggingutilities::getErrorPurity(hsimtaggedjet3ProngMassN1[flavour][binJetPt], hsimjet3ProngMassN1[0][binJetPt]);
+      float purity = taggingutilities::getPurity(hsimtaggedjet3ProngSxyN1[flavour][binJetPt], hsimjet3ProngSxyN1[0][binJetPt]);
       if (purity < 0) continue;
       //purity3ProngTopo[binJetPt] = purity;
       hsimtaggedjetSVPurity3ProngSxyN1[flavour]->SetBinContent(binJetPt, purity);
-      hsimtaggedjetSVPurity3ProngSxyN1[flavour]->SetBinError(binJetPt, errorPurity);
     }
 	  normHist.push_back({hsimtaggedjetSVPurity3ProngSxyN1[flavour], HfJetTagging::FLAVOURJET[flavour]});
   }
@@ -3216,90 +3146,6 @@ void HfJetTaggingSVAnalysis::drawTemplateFitMCN1() {
 
   for (int binJetPt=0; binJetPt<HfJetTagging::nBinsJetPt+1; binJetPt++) {
     if (binJetPt==1) continue;
-    TH1F* hsimincjet3ProngMass = (TH1F*) hsimjet3ProngMassN1[0][binJetPt]->Clone();
-    TH1F* hsimcjet3ProngMass = (TH1F*) hsimjet3ProngMassN1[1][binJetPt]->Clone();
-    TH1F* hsimbjet3ProngMass = (TH1F*) hsimjet3ProngMassN1[2][binJetPt]->Clone();
-    TH1F* hsimlfjet3ProngMass = (TH1F*) hsimjet3ProngMassN1[3][binJetPt]->Clone();
-    RooDataHist mcincjetMass("mcincjetMass", "inclusive jet (MC)", mass, RooFit::Import(*hsimincjet3ProngMass)); 
-    RooDataHist mccjetMass("mccjetMass", "charm jet (MC)", mass, RooFit::Import(*hsimcjet3ProngMass)); 
-    RooDataHist mcbjetMass("mcbjetMass", "charm jet (MC)", mass, RooFit::Import(*hsimbjet3ProngMass)); 
-    RooDataHist mclfjetMass("mclfjetMass", "charm jet (MC)", mass, RooFit::Import(*hsimlfjet3ProngMass)); 
-
-    // Create a histogram PDF using the data histogram
-    RooHistPdf histPdfcjetMass("histPdfcjetMass", "Histogram PDF", mass, mccjetMass);
-    RooHistPdf histPdfbjetMass("histPdfbjetMass", "Histogram PDF", mass, mcbjetMass);
-    RooHistPdf histPdflfjetMass("histPdflfjetMass", "Histogram PDF", mass, mclfjetMass);
-
-    int incjetMassYield = mccjetMass.sumEntries()+mcbjetMass.sumEntries()+mclfjetMass.sumEntries();
-    RooRealVar cjetMassYield("cjetMassYield", "cjet Yield", hsimjet3ProngMassN1[1][0]->Integral(1, hsimcjet3ProngMass->GetNbinsX()), 0, incjetMassYield);
-    RooRealVar bjetMassYield("bjetMassYield", "bjet Yield", hsimjet3ProngMassN1[2][0]->Integral(1, hsimbjet3ProngMass->GetNbinsX()), 0, incjetMassYield);
-    RooRealVar lfjetMassYield("lfjetMassYield", "lfjet Yield", hsimjet3ProngMassN1[3][0]->Integral(1, hsimlfjet3ProngMass->GetNbinsX()), 0, incjetMassYield);
-
-    RooAddPdf modelFitMC("modelFitMC", "Total PDF", RooArgList(histPdfcjetMass, histPdfbjetMass, histPdflfjetMass), RooArgList(cjetMassYield, bjetMassYield, lfjetMassYield));
-    std::cout << "START MC FITTING" << std::endl;
-    std::cout << "cjet yield before: " << cjetMassYield.getVal() << std::endl;
-    std::cout << "bjet yield before: " << bjetMassYield.getVal() << std::endl;
-    std::cout << "lfjet yield before: " << lfjetMassYield.getVal() << std::endl;
-    if (lfjetMassYield.getVal()<1) {
-      std::cout<< "Fit failed" << std::endl;
-      continue;
-    }
-    RooFitResult* fitMC = nullptr;
-    fitMC = modelFitMC.fitTo(mcincjetMass, RooFit::Minos(kTRUE), RooFit::Save(true));
-    std::cout << "END MC FITTING" << std::endl;
-    std::cout<<"fit MC: " << std::endl;
-    fitMC->Print();
-
-    RooPlot* frameMC = mass.frame();
-    mcincjetMass.plotOn(frameMC, RooFit::DrawOption(""), RooFit::Name("InclusiveJet"));
-    //modelFitMC.plotOn(frameMC, RooFit::LineStyle(kDashed), RooFit::LineColor(kGray), RooFit::DrawOption(""), RooFit::Name("TotalFit"));
-    modelFitMC.plotOn(frameMC, RooFit::Components("histPdfcjetMass"), RooFit::DrawOption(""), RooFit::LineColor(kGreen+3), RooFit::Name("CharmJetComponent"));
-    modelFitMC.plotOn(frameMC, RooFit::Components("histPdfbjetMass"), RooFit::DrawOption(""), RooFit::LineColor(kRed+1), RooFit::Name("BottomJetComponent"));
-    modelFitMC.plotOn(frameMC, RooFit::Components("histPdflfjetMass"), RooFit::DrawOption(""), RooFit::LineColor(kBlue+1), RooFit::Name("LightFlavorJetComponent"));
-
-    frameMC->GetXaxis()->SetTitle(HfJetTagging::X_AXIS_MASS);  // X-axis title
-    frameMC->GetXaxis()->SetLabelSize(0.045);                   // X-axis label size
-    frameMC->GetXaxis()->SetTitleOffset(1.1);                  // X-axis title offset
-    frameMC->GetXaxis()->SetTitleSize(0.05);                   // X-axis title size
-
-    frameMC->GetYaxis()->SetTitle("Counts");    // Y-axis title
-    frameMC->GetYaxis()->SetLabelSize(0.045);                   // Y-axis label size
-    frameMC->GetYaxis()->SetTitleOffset(1.15);                 // Y-axis title offset
-    frameMC->GetYaxis()->SetTitleSize(0.05);                   // Y-axis title size
-    frameMC->GetYaxis()->SetRangeUser(1.01, incjetMassYield);
-    frameMC->GetXaxis()->SetRangeUser(0.25, 5);
-
-    TLegend* legend = new TLegend(0.17, 0.2, 0.4, 0.4);  // (x1, y1, x2, y2) for legend position
-    legend->SetBorderSize(0);  // No border
-    legend->SetFillColor(0);   // Transparent background
-    legend->SetTextSize(0.045); // Text size
-
-    legend->AddEntry(frameMC->findObject("InclusiveJet"), HfJetTagging::INCJET, "lep");
-    //legend->AddEntry(frameMC->findObject("TotalFit"), "Fit", "l");
-    legend->AddEntry(frameMC->findObject("CharmJetComponent"), HfJetTagging::CJET, "l");
-    legend->AddEntry(frameMC->findObject("BottomJetComponent"), HfJetTagging::BJET, "l");
-    legend->AddEntry(frameMC->findObject("LightFlavorJetComponent"), HfJetTagging::LFJET, "l");
-
-
-
-    canHan = new CanvasHandler();
-    canHan->createCanvas(nc, 0, 0, 800, 600, 0.11, 0.02);
-    gPad->SetLogy();
-    //canHan->drawRefHistogram(nc, HfJetTagging::REFHIST::MASS[0], HfJetTagging::REFHIST::MASS[1], HfJetTagging::REFHIST::MASS[2], HfJetTagging::REFHIST::MASS[3], HfJetTagging::X_AXIS_MASS, HfJetTagging::AXIS_PROB);
-    //gROOT->ProcessLine(Form("cc%d->cd()", nc));
-    frameMC->Draw();
-    legend->Draw();
-    latexSimJetInfoForSV(0.49, 0.89, binJetPt, "PYTHIA 8 + Geant 4", "anti-#it{k}_{T}", "Charged", 0.4, "ALICE Performance");
-    latex.DrawLatex(0.49, 0.89-0.055*5, "untagged jet (largest S#it{L}_{XY})");
-    gROOT->ProcessLine(Form("cc%d->Print(\"%s/template3ProngMassN1_%d.pdf\")", nc++, dirSim.Data(), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
-  }
-}
-
-void HfJetTaggingSVAnalysis::drawTemplateFitMCN1Run2Def() {
-  RooRealVar mass("mass", HfJetTagging::X_AXIS_MASS, 0.1, 5);
-
-  for (int binJetPt=0; binJetPt<HfJetTagging::nBinsJetPt+1; binJetPt++) {
-    if (binJetPt==1) continue;
     TH1F* hsimincjet3ProngMass = (TH1F*) hsimjet3ProngMassN1Run2Def[0][binJetPt]->Clone();
     TH1F* hsimcjet3ProngMass = (TH1F*) hsimjet3ProngMassN1Run2Def[1][binJetPt]->Clone();
     TH1F* hsimbjet3ProngMass = (TH1F*) hsimjet3ProngMassN1Run2Def[2][binJetPt]->Clone();
@@ -3379,92 +3225,7 @@ void HfJetTaggingSVAnalysis::drawTemplateFitMCN1Run2Def() {
   }
 }
 
-
 void HfJetTaggingSVAnalysis::drawTemplateFitMCtaggedjetN1() {
-  RooRealVar mass("mass", HfJetTagging::X_AXIS_MASS, 0.1, 5);
-
-  for (int binJetPt=0; binJetPt<HfJetTagging::nBinsJetPt+1; binJetPt++) {
-    if (binJetPt==1) continue;
-    TH1F* hsimincjet3ProngMass = (TH1F*) hsimtaggedjet3ProngMassN1[0][binJetPt]->Clone();
-    TH1F* hsimcjet3ProngMass = (TH1F*) hsimtaggedjet3ProngMassN1[1][binJetPt]->Clone();
-    TH1F* hsimbjet3ProngMass = (TH1F*) hsimtaggedjet3ProngMassN1[2][binJetPt]->Clone();
-    TH1F* hsimlfjet3ProngMass = (TH1F*) hsimtaggedjet3ProngMassN1[3][binJetPt]->Clone();
-    RooDataHist mcincjetMass("mcincjetMass", "inclusive jet (MC)", mass, RooFit::Import(*hsimincjet3ProngMass)); 
-    RooDataHist mccjetMass("mccjetMass", "charm jet (MC)", mass, RooFit::Import(*hsimcjet3ProngMass)); 
-    RooDataHist mcbjetMass("mcbjetMass", "charm jet (MC)", mass, RooFit::Import(*hsimbjet3ProngMass)); 
-    RooDataHist mclfjetMass("mclfjetMass", "charm jet (MC)", mass, RooFit::Import(*hsimlfjet3ProngMass)); 
-
-    // Create a histogram PDF using the data histogram
-    RooHistPdf histPdfcjetMass("histPdfcjetMass", "Histogram PDF", mass, mccjetMass);
-    RooHistPdf histPdfbjetMass("histPdfbjetMass", "Histogram PDF", mass, mcbjetMass);
-    RooHistPdf histPdflfjetMass("histPdflfjetMass", "Histogram PDF", mass, mclfjetMass);
-
-    int incjetMassYield = mccjetMass.sumEntries()+mcbjetMass.sumEntries()+mclfjetMass.sumEntries();
-    RooRealVar cjetMassYield("cjetMassYield", "cjet Yield", hsimtaggedjet3ProngMassN1[1][0]->Integral(1, hsimcjet3ProngMass->GetNbinsX()), 0, incjetMassYield);
-    RooRealVar bjetMassYield("bjetMassYield", "bjet Yield", hsimtaggedjet3ProngMassN1[2][0]->Integral(1, hsimbjet3ProngMass->GetNbinsX()), 0, incjetMassYield);
-    RooRealVar lfjetMassYield("lfjetMassYield", "lfjet Yield", hsimtaggedjet3ProngMassN1[3][0]->Integral(1, hsimlfjet3ProngMass->GetNbinsX()), 0, incjetMassYield);
-
-    RooAddPdf modelFitMC("modelFitMC", "Total PDF", RooArgList(histPdfcjetMass, histPdfbjetMass, histPdflfjetMass), RooArgList(cjetMassYield, bjetMassYield, lfjetMassYield));
-    std::cout << "START MC FITTING" << std::endl;
-    std::cout << "cjet yield before: " << cjetMassYield.getVal() << std::endl;
-    std::cout << "bjet yield before: " << bjetMassYield.getVal() << std::endl;
-    std::cout << "lfjet yield before: " << lfjetMassYield.getVal() << std::endl;
-    if (lfjetMassYield.getVal()<1) {
-      std::cout<< "Fit failed" << std::endl;
-      continue;
-    }
-    RooFitResult* fitMC = nullptr;
-    fitMC = modelFitMC.fitTo(mcincjetMass, RooFit::Minos(kTRUE), RooFit::Save(true));
-    std::cout << "END MC FITTING" << std::endl;
-    std::cout<<"fit MC: " << std::endl;
-    fitMC->Print();
-
-    RooPlot* frameMC = mass.frame();
-    mcincjetMass.plotOn(frameMC, RooFit::DrawOption(""), RooFit::Name("InclusiveJet"));
-    //modelFitMC.plotOn(frameMC, RooFit::LineStyle(kDashed), RooFit::LineColor(kGray), RooFit::DrawOption(""), RooFit::Name("TotalFit"));
-    modelFitMC.plotOn(frameMC, RooFit::Components("histPdfcjetMass"), RooFit::DrawOption(""), RooFit::LineColor(kGreen+3), RooFit::Name("CharmJetComponent"));
-    modelFitMC.plotOn(frameMC, RooFit::Components("histPdfbjetMass"), RooFit::DrawOption(""), RooFit::LineColor(kRed+1), RooFit::Name("BottomJetComponent"));
-    modelFitMC.plotOn(frameMC, RooFit::Components("histPdflfjetMass"), RooFit::DrawOption(""), RooFit::LineColor(kBlue+1), RooFit::Name("LightFlavorJetComponent"));
-
-    frameMC->GetXaxis()->SetTitle(HfJetTagging::X_AXIS_MASS);  // X-axis title
-    frameMC->GetXaxis()->SetLabelSize(0.045);                   // X-axis label size
-    frameMC->GetXaxis()->SetTitleOffset(1.1);                  // X-axis title offset
-    frameMC->GetXaxis()->SetTitleSize(0.05);                   // X-axis title size
-
-    frameMC->GetYaxis()->SetTitle("Counts");    // Y-axis title
-    frameMC->GetYaxis()->SetLabelSize(0.045);                   // Y-axis label size
-    frameMC->GetYaxis()->SetTitleOffset(1.15);                 // Y-axis title offset
-    frameMC->GetYaxis()->SetTitleSize(0.05);                   // Y-axis title size
-    frameMC->GetYaxis()->SetRangeUser(1.01, incjetMassYield);
-    frameMC->GetXaxis()->SetRangeUser(0.25, 5);
-
-    TLegend* legend = new TLegend(0.17, 0.2, 0.4, 0.4);  // (x1, y1, x2, y2) for legend position
-    legend->SetBorderSize(0);  // No border
-    legend->SetFillColor(0);   // Transparent background
-    legend->SetTextSize(0.045); // Text size
-
-    legend->AddEntry(frameMC->findObject("InclusiveJet"), HfJetTagging::INCJET, "lep");
-    //legend->AddEntry(frameMC->findObject("TotalFit"), "Fit", "l");
-    legend->AddEntry(frameMC->findObject("CharmJetComponent"), HfJetTagging::CJET, "l");
-    legend->AddEntry(frameMC->findObject("BottomJetComponent"), HfJetTagging::BJET, "l");
-    legend->AddEntry(frameMC->findObject("LightFlavorJetComponent"), HfJetTagging::LFJET, "l");
-
-
-
-    canHan = new CanvasHandler();
-    canHan->createCanvas(nc, 0, 0, 800, 600, 0.11, 0.02);
-    gPad->SetLogy();
-    //canHan->drawRefHistogram(nc, HfJetTagging::REFHIST::MASS[0], HfJetTagging::REFHIST::MASS[1], HfJetTagging::REFHIST::MASS[2], HfJetTagging::REFHIST::MASS[3], HfJetTagging::X_AXIS_MASS, HfJetTagging::AXIS_PROB);
-    //gROOT->ProcessLine(Form("cc%d->cd()", nc));
-    frameMC->Draw();
-    legend->Draw();
-    latexSimJetInfoForSV(0.47, 0.89, binJetPt, "PYTHIA 8 + Geant 4", "anti-#it{k}_{T}", "Charged", 0.4, "ALICE Performance");
-    latex.DrawLatex(0.47, 0.89-0.055*5, "tagged jet (largest S#it{L}_{XY} > 30)");
-    gROOT->ProcessLine(Form("cc%d->Print(\"%s/templatetaggedjet3ProngMassN1_%d.pdf\")", nc++, dirSim.Data(), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
-  }
-}
-
-void HfJetTaggingSVAnalysis::drawTemplateFitMCtaggedjetN1Run2Def() {
   RooRealVar mass("mass", HfJetTagging::X_AXIS_MASS, 0.1, 5);
 
   for (int binJetPt=0; binJetPt<HfJetTagging::nBinsJetPt+1; binJetPt++) {
@@ -3548,7 +3309,6 @@ void HfJetTaggingSVAnalysis::drawTemplateFitMCtaggedjetN1Run2Def() {
   }
 }
 
-
 //void HfJetTaggingSVAnalysis::drawDataVsSim3ProngSxyN1(bool doLog = true, int binJetPt=0) {
 //  std::vector<HistogramData> normHist;
 //  normHist.push_back({hdataTagjetNormalized3ProngSxyN1[binJetPt], Form("Data (%s)", DATASET.Data())});
@@ -3573,5 +3333,5 @@ void HfJetTaggingSVAnalysis::drawTemplateFitMCtaggedjetN1Run2Def() {
 
 
 
-#endif // HFJETTAGGINGSVANALYSIS_H 
+#endif // HFJETTAGGINGMATCHANALYSIS_H 
 

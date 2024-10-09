@@ -17,34 +17,32 @@ class HfJetTaggingSysRadiusAnalysis {
 //        LoadDataRadius(rootSimRadius);
 //      }
       if (doMC) {
-        if(!LoadSimRadius(rootSimRadius)) {
+        if(!loadSimRadius(rootSimRadius)) {
           return;
         }
-        InitHistogram();
-        //ProjectionHist();
-        //NormalizedHistogram();
+        initHistogram();
+        //projectionHist();
+        //normalizedHistogram();
       }
     }
     ~HfJetTaggingSysRadiusAnalysis();
 
     //// FUNCTION ////
     // int LoadDataRadius(TString rootFile);
-    int LoadSimRadius(const std::vector<TString> &rootFiles);
-    void InitHistogram();
-    void ProjectionHist();
-    void NormalizedHistogram();
+    int loadSimRadius(const std::vector<TString> &rootFiles);
+    void initHistogram();
+    void projectionHist();
+    void normalizedHistogram();
 
     /// Draw ///
-    void HistColorStyle(TH1F* h1, int mc, int ms, double mS, int lc, int ls);
-    void DrawCombined(int num, const std::vector<HistogramData>& histList, double legendxmin, double ymin, double xmax, double ymax);
-    void DrawIncJetTrackPtRadius(bool doLog, int radius);
-    void DrawCharmJetTrackPtRadius(bool doLog, int radius);
-    void DrawBeautyJetTrackPtRadius(bool doLog, int radius);
-    void DrawLfJetTrackPtRadius(bool doLog, int radius);
-    void DrawIncJetSignImpXYSignificanceRadius(bool doLog, int radius);
-    void DrawCharmJetSignImpXYSignificanceRadius(bool doLog, int radius);
-    void DrawBeautyJetSignImpXYSignificanceRadius(bool doLog, int radius);
-    void DrawLfJetSignImpXYSignificanceRadius(bool doLog, int radius);
+    void drawIncJetTrackPtRadius(bool doLog, int radius);
+    void drawCharmJetTrackPtRadius(bool doLog, int radius);
+    void drawBeautyJetTrackPtRadius(bool doLog, int radius);
+    void drawLfJetTrackPtRadius(bool doLog, int radius);
+    void drawIncJetSignImpXYSignificanceRadius(bool doLog, int radius);
+    void drawCharmJetSignImpXYSignificanceRadius(bool doLog, int radius);
+    void drawBeautyJetSignImpXYSignificanceRadius(bool doLog, int radius);
+    void drawLfJetSignImpXYSignificanceRadius(bool doLog, int radius);
     
     /// Histogram
     TH3F* h3simjetPtTrackPtFlavour[HfJetTagging::MaxRadius];
@@ -57,8 +55,8 @@ class HfJetTaggingSysRadiusAnalysis {
     //rangeRadius
   
   protected:
-    CanvasHandler* canvasHandler;
-    int canvasNum=0;
+    CanvasHandler* canHan;
+    int cn=0;
 
   private:
 
@@ -68,7 +66,7 @@ class HfJetTaggingSysRadiusAnalysis {
 //  return 0;
 //}
 
-int HfJetTaggingSysRadiusAnalysis::LoadSimRadius(const std::vector<TString> &rootFiles) {
+int HfJetTaggingSysRadiusAnalysis::loadSimRadius(const std::vector<TString> &rootFiles) {
   const TString &taskName = "jet-taggerhf-qa-charged";
   int maxRadius=0;
   for (const auto& rootFile : rootFiles) {
@@ -85,7 +83,7 @@ int HfJetTaggingSysRadiusAnalysis::LoadSimRadius(const std::vector<TString> &roo
   return 1;
 }
 
-void HfJetTaggingSysRadiusAnalysis::InitHistogram() {
+void HfJetTaggingSysRadiusAnalysis::initHistogram() {
   for (int flavour = 0; flavour < HfJetTagging::nFlavour+1; flavour++) {
     for (int radius =0; radius < HfJetTagging::MaxRadius; radius++) {
       hsimjetTrackPt[flavour][radius] = new TH1F(Form("hsimjetTrackPt_%d_%d", flavour, radius), "", h3simjetPtTrackPtFlavour[radius]->GetNbinsY(), h3simjetPtTrackPtFlavour[radius]->GetYaxis()->GetBinLowEdge(1), h3simjetPtTrackPtFlavour[radius]->GetYaxis()->GetBinUpEdge(h3simjetPtTrackPtFlavour[radius]->GetNbinsY()));
@@ -94,7 +92,7 @@ void HfJetTaggingSysRadiusAnalysis::InitHistogram() {
   }
 }
 
-void HfJetTaggingSysRadiusAnalysis::ProjectionHist() {
+void HfJetTaggingSysRadiusAnalysis::projectionHist() {
   HfJetTagging::JetFlavour jetFlavours[] = {HfJetTagging::None, HfJetTagging::Charm, HfJetTagging::Beauty, HfJetTagging::LightFlavour};
   TH1F* projTrackPt[HfJetTagging::MaxRadius];
   TH1F* projSignImpXYSig[HfJetTagging::MaxRadius];
@@ -116,7 +114,7 @@ void HfJetTaggingSysRadiusAnalysis::ProjectionHist() {
   }
 }
 
-void HfJetTaggingSysRadiusAnalysis::NormalizedHistogram() {
+void HfJetTaggingSysRadiusAnalysis::normalizedHistogram() {
   for (int flavour = 0; flavour < HfJetTagging::nFlavour+1; flavour++) {
     for (int radius =0; radius < HfJetTagging::MaxRadius; radius++) {
       hsimjetNormalizedTrackPt[flavour][radius] = (TH1F*) hsimjetTrackPt[flavour][radius]->Clone(Form("hsimjetNormalizedTrackPt_%d_%d", flavour, radius));
@@ -128,139 +126,116 @@ void HfJetTaggingSysRadiusAnalysis::NormalizedHistogram() {
 }
 
 // Draw function
-void HfJetTaggingSysRadiusAnalysis::HistColorStyle(TH1F* h1, int markercolor = 1, int markerstyle = 20,
-    double markersize = 1, int linecolor = 1,
-    int linestyle = 1)
-{
-  h1->SetMarkerStyle(markerstyle);
-  h1->SetMarkerColor(markercolor);
-  h1->SetMarkerSize(markersize);
-  h1->SetLineStyle(linestyle);
-  h1->SetLineColor(linecolor);
-}
-
-void HfJetTaggingSysRadiusAnalysis::DrawCombined(int num, const std::vector<HistogramData>& histograms, double xmin, double ymin, double xmax, double ymax) {
-  TLegend *leg = new TLegend(xmin, ymin, xmax, ymax);
-  for (int i=0; i<num; i++){
-    TH1F *hist = histograms[i].hist;
-    this->HistColorStyle(hist, i+1, i+20, HfJetTagging::MARKERSIZE, i+1, 1);
-    TString clfi = histograms[i].classification;
-    leg->AddEntry(hist, clfi.Data(), "lep");
-    hist->Draw("same");
-  }
-  leg->Draw();
-}
-
-void HfJetTaggingSysRadiusAnalysis::DrawIncJetTrackPtRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
-  std::vector<HistogramData> NormHistList;
+void HfJetTaggingSysRadiusAnalysis::drawIncJetTrackPtRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
+  std::vector<HistogramData> normHistList;
   for (int radius =0; radius<HfJetTagging::MaxRadius; radius++) {
-    NormHistList.push_back({hsimjetNormalizedTrackPt[0][radius], HfJetTagging::SYS::RADIUS[radius]}); // 0: inclusive
+    normHistList.push_back({hsimjetNormalizedTrackPt[0][radius], HfJetTagging::SYS::RADIUS[radius]}); // 0: inclusive
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/radius/trackmomentum.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+  canHan->drawCombined(normHistList.size(), normHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/radius/trackmomentum.pdf\")", cn++));
 
 }
 
-void HfJetTaggingSysRadiusAnalysis::DrawCharmJetTrackPtRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
-  std::vector<HistogramData> NormHistList;
+void HfJetTaggingSysRadiusAnalysis::drawCharmJetTrackPtRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
+  std::vector<HistogramData> normHistList;
   for (int radius =0; radius<HfJetTagging::MaxRadius; radius++) {
-    NormHistList.push_back({hsimjetNormalizedTrackPt[1][radius], HfJetTagging::SYS::RADIUS[radius]}); // 1: charm
+    normHistList.push_back({hsimjetNormalizedTrackPt[1][radius], HfJetTagging::SYS::RADIUS[radius]}); // 1: charm
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/cjet/radius/trackmomentum.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+  canHan->drawCombined(normHistList.size(), normHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/cjet/radius/trackmomentum.pdf\")", cn++));
 
 }
 
-void HfJetTaggingSysRadiusAnalysis::DrawBeautyJetTrackPtRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
-  std::vector<HistogramData> NormHistList;
+void HfJetTaggingSysRadiusAnalysis::drawBeautyJetTrackPtRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
+  std::vector<HistogramData> normHistList;
   for (int radius =0; radius<HfJetTagging::MaxRadius; radius++) {
-    NormHistList.push_back({hsimjetNormalizedTrackPt[2][radius], HfJetTagging::SYS::RADIUS[radius]}); // 2: beauty
+    normHistList.push_back({hsimjetNormalizedTrackPt[2][radius], HfJetTagging::SYS::RADIUS[radius]}); // 2: beauty
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/bjet/radius/trackmomentum.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+  canHan->drawCombined(normHistList.size(), normHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/bjet/radius/trackmomentum.pdf\")", cn++));
 
 }
 
-void HfJetTaggingSysRadiusAnalysis::DrawLfJetTrackPtRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
-  std::vector<HistogramData> NormHistList;
+void HfJetTaggingSysRadiusAnalysis::drawLfJetTrackPtRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
+  std::vector<HistogramData> normHistList;
   for (int radius =0; radius<HfJetTagging::MaxRadius; radius++) {
-    NormHistList.push_back({hsimjetNormalizedTrackPt[2][radius], HfJetTagging::SYS::RADIUS[radius]}); // 2: beauty
+    normHistList.push_back({hsimjetNormalizedTrackPt[2][radius], HfJetTagging::SYS::RADIUS[radius]}); // 2: beauty
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/radius/trackmomentum.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+  canHan->drawCombined(normHistList.size(), normHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/radius/trackmomentum.pdf\")", cn++));
 
 }
 
-void HfJetTaggingSysRadiusAnalysis::DrawIncJetSignImpXYSignificanceRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
-  std::vector<HistogramData> NormHistList;
+void HfJetTaggingSysRadiusAnalysis::drawIncJetSignImpXYSignificanceRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
+  std::vector<HistogramData> normHistList;
   for (int radius =0; radius<HfJetTagging::MaxRadius; radius++) {
-    NormHistList.push_back({hsimjetNormalizedSignImpXYSig[0][radius], HfJetTagging::SYS::RADIUS[radius]}); // 0: inclusive
+    normHistList.push_back({hsimjetNormalizedSignImpXYSig[0][radius], HfJetTagging::SYS::RADIUS[radius]}); // 0: inclusive
   }
 
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/radius/SignImpXYSignificance.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  canHan->drawCombined(normHistList.size(), normHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/radius/SignImpXYSignificance.pdf\")", cn++));
 }
 
-void HfJetTaggingSysRadiusAnalysis::DrawCharmJetSignImpXYSignificanceRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
-  std::vector<HistogramData> NormHistList;
+void HfJetTaggingSysRadiusAnalysis::drawCharmJetSignImpXYSignificanceRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
+  std::vector<HistogramData> normHistList;
   for (int radius =0; radius<HfJetTagging::MaxRadius; radius++) {
-    NormHistList.push_back({hsimjetNormalizedSignImpXYSig[1][radius], HfJetTagging::SYS::RADIUS[radius]}); // 1: charm
+    normHistList.push_back({hsimjetNormalizedSignImpXYSig[1][radius], HfJetTagging::SYS::RADIUS[radius]}); // 1: charm
   }
 
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/cjet/radius/SignImpXYSignificance.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  canHan->drawCombined(normHistList.size(), normHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/cjet/radius/SignImpXYSignificance.pdf\")", cn++));
 }
 
-void HfJetTaggingSysRadiusAnalysis::DrawBeautyJetSignImpXYSignificanceRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
-  std::vector<HistogramData> NormHistList;
+void HfJetTaggingSysRadiusAnalysis::drawBeautyJetSignImpXYSignificanceRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
+  std::vector<HistogramData> normHistList;
   for (int radius =0; radius<HfJetTagging::MaxRadius; radius++) {
-    NormHistList.push_back({hsimjetNormalizedSignImpXYSig[2][radius], HfJetTagging::SYS::RADIUS[radius]}); // 2: beauty
+    normHistList.push_back({hsimjetNormalizedSignImpXYSig[2][radius], HfJetTagging::SYS::RADIUS[radius]}); // 2: beauty
   }
 
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/bjet/radius/SignImpXYSignificance.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  canHan->drawCombined(normHistList.size(), normHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/bjet/radius/SignImpXYSignificance.pdf\")", cn++));
 }
 
-void HfJetTaggingSysRadiusAnalysis::DrawLfJetSignImpXYSignificanceRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
-  std::vector<HistogramData> NormHistList;
+void HfJetTaggingSysRadiusAnalysis::drawLfJetSignImpXYSignificanceRadius(bool doLog = true, int Num = HfJetTagging::MaxRadius) {
+  std::vector<HistogramData> normHistList;
   for (int radius =0; radius<HfJetTagging::MaxRadius; radius++) {
-    NormHistList.push_back({hsimjetNormalizedSignImpXYSig[3][radius], HfJetTagging::SYS::RADIUS[radius]}); // 3: lf
+    normHistList.push_back({hsimjetNormalizedSignImpXYSig[3][radius], HfJetTagging::SYS::RADIUS[radius]}); // 3: lf
   }
 
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/radius/SignImpXYSignificance.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  canHan->drawCombined(normHistList.size(), normHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/radius/SignImpXYSignificance.pdf\")", cn++));
 }
 
 #endif // HFJETTAGGINGSYSRADIUSANALYSIS_H

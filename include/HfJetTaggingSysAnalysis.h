@@ -5,96 +5,97 @@
 #include <TString.h>
 #include "CanvasHandler.h"
 #include "DataPoint.h"
+#include "HfJetTaggingUtilities.h"
 
 class HfJetTaggingSysAnalysis {
   public:
-    HfJetTaggingSysAnalysis(const std::vector<TString> &rootSim, bool doData, bool doMC, bool dopartLevel) {
-///      if (doData) {
-///        LoadData(rootSim);
-///      }
-      if (doMC) {
-        if(!LoadSim(rootSim)) {
-          return;
-        }
-        InitHistogram();
-        ProjectionHist();
-        NormalizedHistogram();
-      }
-
+    HfJetTaggingSysAnalysis() {
+      initConfig();
     }
     ~HfJetTaggingSysAnalysis();
 
-    //// FUNCTION ////
-    int LoadSim(const std::vector<TString> &rootFiles);
-    void InitHistogram();
-    void ProjectionHist();
-    void NormalizedHistogram();
+    void initConfig();
+    
+    // Set
+    void setFillData(bool fillData);
+    void setFillMCD(bool fillMCD);
+    void setFillMCP(bool fillMCP);
+
+    // Get
+    const int* getErrorShower() const {
+      return errorShower;
+    }
+    const int* getErrorRadius() const {
+      return errorRadius;
+    }
+    const int* getErrorTS() const {
+      return errorTS;
+    }
 
     // fucntion
-    void HistColorStyle(TH1F* h1, int mc, int ms, double mS, int lc, int ls);
-    void DrawCombined(int num, const std::vector<HistogramData>& histList, bool doLeg, double legendxmin, double ymin, double xmax, double ymax);
 
   protected:
-    CanvasHandler* canvasHandler;
-    int canvasNum=0;
+    CanvasHandler* canHan;
+    int nc=0;
+    bool fillData = false;
+    bool fillMCD = false;
+    bool fillMCP = false;
+    TString dirFig = false;
+    int errorShower[HfJetTagging::nBinsJetPt];
+    int errorRadius[HfJetTagging::nBinsJetPt];
+    int errorTS[HfJetTagging::nBinsJetPt];
+    /// ... ///
+    
 
   private:
+    TLatex latex;
+    TString dirData;
+    TString dirSim;
+    TString dirDataVsSim;
 
 };
 
 HfJetTaggingSysAnalysis::~HfJetTaggingSysAnalysis() {
-  std::cout<< " " << std::endl;
 }
 
-//int HfJetTaggingSysAnalysis::LoadData(TString rootFile) { // TODO
-//  return 0;
-//}
+void HfJetTaggingSysAnalysis::initConfig() {
+  latex.SetNDC(); // Use normalized coordinates
+  latex.SetTextSize(0.03); // Set text size
+  latex.SetTextFont(42);
 
-int HfJetTaggingSysAnalysis::LoadSim(const std::vector<TString> &rootFiles) {
-  const TString &taskName = "jet-taggerhf-qa-charged";
-  for (const auto& rootFile : rootFiles) {
-    if (gSystem->AccessPathName(rootFile.Data())) {
-      std::cout << "Input file (MC) not found!" << std::endl;
-      return 0;
-    }
+  dirFig = "fig";
+  if (!(SUFFIXSET.CompareTo("")==0)) {
+    dirFig = Form("fig_%s", SUFFIXSET.Data());
+  } 
+  dirData = Form("%s/%s/data/%s/sys", dirFig.Data(), SOURCESET.Data(), DATASET.Data());
+  dirSim = Form("%s/%s/sim/%s/sys", dirFig.Data(), SOURCESET.Data(), SIMSET.Data());
+  //dirDataVsSim = Form("fig/%s/dataVSsim/%s_%s/sys", SOURCESET.Data(), DATASET.Data(), SIMSET.Data());
+  gSystem->mkdir(dirData, kTRUE);
+  gSystem->mkdir(dirSim, kTRUE);
+  //gSystem->mkdir(dirDataVsSim, kTRUE);
+}
+
+// Set function
+void HfJetTaggingSysAnalysis::setFillData(bool mfillData) {
+  fillData = mfillData;
+  if (fillData) {
+    std::cout << "Fill Data ON " << std::endl;
   }
-
-  return 1;
 }
 
-void HfJetTaggingSysAnalysis::InitHistogram() {
-
-}
-
-void HfJetTaggingSysAnalysis::ProjectionHist() {
-
-}
-
-void HfJetTaggingSysAnalysis::NormalizedHistogram() {
-
-}
-
-void HfJetTaggingSysAnalysis::HistColorStyle(TH1F* h1, int markercolor = 1, int markerstyle = 20,
-    double markersize = 1, int linecolor = 1,
-    int linestyle = 1)
-{
-  h1->SetMarkerStyle(markerstyle);
-  h1->SetMarkerColor(markercolor);
-  h1->SetMarkerSize(markersize);
-  h1->SetLineStyle(linestyle);
-  h1->SetLineColor(linecolor);
-}
-
-void HfJetTaggingSysAnalysis::DrawCombined(int num, const std::vector<HistogramData>& histograms, bool doLeg, double xmin, double ymin, double xmax, double ymax) {
-  TLegend *leg = new TLegend(xmin, ymin, xmax, ymax);
-  for (int i=0; i<num; i++){
-    TH1F *hist = histograms[i].hist;
-    this->HistColorStyle(hist, i+1, i+20, HfJetTagging::MARKERSIZE, i+1, 1);
-    TString clfi = histograms[i].classification;
-    leg->AddEntry(hist, clfi.Data(), "lep");
-    hist->Draw("same");
+void HfJetTaggingSysAnalysis::setFillMCD(bool mfillMCD) {
+  fillMCD = mfillMCD;
+  if (fillMCD) {
+    std::cout << "Fill MCD ON" << std::endl;
   }
-  if(doLog) leg->Draw();
 }
+
+void HfJetTaggingSysAnalysis::setFillMCP(bool mfillMCP) {
+  fillMCP = mfillMCP;
+  if (fillMCP) {
+    std::cout << "Fill MCP ON" << std::endl;
+  }
+}
+
 
 #endif // HFJETTAGGINGSYSANALYSIS_H

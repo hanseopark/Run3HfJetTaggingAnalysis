@@ -14,50 +14,48 @@ class HfJetTaggingSysPassAnalysis {
 ///      }
       initConfig();
       if (doMC) {
-        if(!LoadSimPass(rootSim)) {
+        if(!loadSimPass(rootSim)) {
           return;
         }
-        InitHistogramPass();
-        ProjectionHistPass();
-        NormalizedHistogramPass();
+        initHistogramPass();
+        projectionHistPass();
+        normalizedHistogramPass();
       }
-      //SaveHistogram("sysPass.root", doData, doMC, dopartLevel);
+      //saveHistogram("sysPass.root", doData, doMC, dopartLevel);
 
     }
     ~HfJetTaggingSysPassAnalysis();
 
     //// FUNCTION ////
     void initConfig();
-    int LoadSimPass(const std::vector<TString> &rootFiles);
-    void InitHistogramPass();
-    void ProjectionHistPass();
-    void NormalizedHistogramPass();
-    void SaveHistogram(TString rootFile, bool doData, bool doMC, bool dopartLevel);
+    int loadSimPass(const std::vector<TString> &rootFiles);
+    void initHistogramPass();
+    void projectionHistPass();
+    void normalizedHistogramPass();
+    void saveHistogram(TString rootFile, bool doData, bool doMC, bool dopartLevel);
 
     // fucntion
-    void HistColorStyle(TH1F* h1, int mc, int ms, double mS, int lc, int ls);
-    void DrawCombined(int num, const std::vector<HistogramData>& histList, bool doLeg, double legendxmin, double ymin, double xmax, double ymax);
-    void DrawIncJetTrackPtPass(bool doLog, int numPass);
-    void DrawIncJetTrackEtaPass(bool doLog, int numPass);
-    void DrawIncJetTrackPhiPass(bool doLog, int numPass);
-    void DrawIncJetSignImpXYSigPass(bool doLog, int numPass);
-    void DrawIncJet2ProngLxyPass(bool doLog, int numPass);
-    void DrawIncJet2ProngLxyzPass(bool doLog, int numPass);
-    void DrawIncJet2ProngsigmaLxyPass(bool doLog, int numPass);
-    void DrawIncJet2ProngsigmaLxyzPass(bool doLog, int numPass);
-    void DrawIncJet2ProngSxyPass(bool doLog, int numPass);
-    void DrawIncJet2ProngSxyzPass(bool doLog, int numPass);
-    void DrawCharmJetSignImpXYSigPass(bool doLog, int numPass);
-    void DrawBeautyJetSignImpXYSigPass(bool doLog, int numPass);
-    void DrawLfJetSignImpXYSigPass(bool doLog, int numPass);
-    void DrawTagJetEntriesPass(int numPass);
-    void DrawTagJetNormEntriesPass(int numPass);
-    void DrawTagJetTrackEntriesPass(int numPass);
-    void DrawTagJetNormTrackEntriesPass(int numPass);
+    void drawIncJetTrackPtPass(bool doLog, int numPass);
+    void drawIncJetTrackEtaPass(bool doLog, int numPass);
+    void drawIncJetTrackPhiPass(bool doLog, int numPass);
+    void drawIncJetSignImpXYSigPass(bool doLog, int numPass);
+    void drawIncJet2ProngLxyPass(bool doLog, int numPass);
+    void drawIncJet2ProngLxyzPass(bool doLog, int numPass);
+    void drawIncJet2ProngsigmaLxyPass(bool doLog, int numPass);
+    void drawIncJet2ProngsigmaLxyzPass(bool doLog, int numPass);
+    void drawIncJet2ProngSxyPass(bool doLog, int numPass);
+    void drawIncJet2ProngSxyzPass(bool doLog, int numPass);
+    void drawCharmJetSignImpXYSigPass(bool doLog, int numPass);
+    void drawBeautyJetSignImpXYSigPass(bool doLog, int numPass);
+    void drawLfJetSignImpXYSigPass(bool doLog, int numPass);
+    void drawTagJetEntriesPass(int numPass);
+    void drawTagJetNormEntriesPass(int numPass);
+    void drawTagJetTrackEntriesPass(int numPass);
+    void drawTagJetNormTrackEntriesPass(int numPass);
 
   protected:
-    CanvasHandler* canvasHandler;
-    int canvasNum=0;
+    CanvasHandler* canHan;
+    int cn=0;
     TH3F* h3datajetPtTrackPtFlavour[HfJetTagging::numPass];
     TH3F* h3datajetPtTrackEtaFlavour[HfJetTagging::numPass];
     TH3F* h3datajetPtTrackPhiFlavour[HfJetTagging::numPass];
@@ -121,7 +119,7 @@ void HfJetTaggingSysPassAnalysis::initConfig() {
 
 }
 
-int HfJetTaggingSysPassAnalysis::LoadSimPass(const std::vector<TString> &rootFiles) {
+int HfJetTaggingSysPassAnalysis::loadSimPass(const std::vector<TString> &rootFiles) {
   const TString &taskName = "jet-taggerhf-qa-charged";
   int maxPass = 0;
   for (const auto& rootFile : rootFiles) {
@@ -171,7 +169,7 @@ int HfJetTaggingSysPassAnalysis::LoadSimPass(const std::vector<TString> &rootFil
   return 1;
 }
 
-void HfJetTaggingSysPassAnalysis::InitHistogramPass() {
+void HfJetTaggingSysPassAnalysis::initHistogramPass() {
   for (int flavour = 0; flavour < HfJetTagging::nFlavour+1; flavour++) {
     for (int pass =0; pass < HfJetTagging::numPass; pass++) {
       hsimTagjetTrackPt[flavour][pass] = new TH1F(Form("hsimTagjetTrackPt_%d_%d", flavour, pass), "", h3simTagjetPtTrackPtFlavour[pass]->GetNbinsY(), h3simTagjetPtTrackPtFlavour[pass]->GetYaxis()->GetBinLowEdge(1), h3simTagjetPtTrackPtFlavour[pass]->GetYaxis()->GetBinUpEdge(h3simTagjetPtTrackPtFlavour[pass]->GetNbinsY()));
@@ -192,7 +190,7 @@ void HfJetTaggingSysPassAnalysis::InitHistogramPass() {
   }
 }
 
-void HfJetTaggingSysPassAnalysis::ProjectionHistPass() {
+void HfJetTaggingSysPassAnalysis::projectionHistPass() {
   HfJetTagging::JetFlavour jetFlavours[] = {HfJetTagging::None, HfJetTagging::Charm, HfJetTagging::Beauty, HfJetTagging::LightFlavour};
   TH1F* projJetPt[HfJetTagging::numPass];
   TH1F* projTrackPt[HfJetTagging::numPass];
@@ -249,7 +247,7 @@ void HfJetTaggingSysPassAnalysis::ProjectionHistPass() {
   }
 }
 
-void HfJetTaggingSysPassAnalysis::NormalizedHistogramPass() {
+void HfJetTaggingSysPassAnalysis::normalizedHistogramPass() {
   for (int flavour = 0; flavour < HfJetTagging::nFlavour+1; flavour++) {
     for (int pass =0; pass < HfJetTagging::numPass; pass++) {
       hsimTagjetNormalizedTrackPt[flavour][pass] = (TH1F*) hsimTagjetTrackPt[flavour][pass]->Clone(Form("hsimTagjetNormalizedTrackPt_%d_%d", flavour, pass));
@@ -283,7 +281,7 @@ void HfJetTaggingSysPassAnalysis::NormalizedHistogramPass() {
   }
 }
 
-void HfJetTaggingSysPassAnalysis::SaveHistogram(TString rootFile, bool doData, bool doMC, bool dopartLevel) {
+void HfJetTaggingSysPassAnalysis::saveHistogram(TString rootFile, bool doData, bool doMC, bool dopartLevel) {
   TFile* fout = new TFile(rootFile.Data(), "RECREATE");
 
   // Check if the file is open successfully
@@ -308,230 +306,206 @@ void HfJetTaggingSysPassAnalysis::SaveHistogram(TString rootFile, bool doData, b
 
 }
 
-void HfJetTaggingSysPassAnalysis::HistColorStyle(TH1F* h1, int markercolor = 1, int markerstyle = 20,
-    double markersize = 1, int linecolor = 1,
-    int linestyle = 1)
-{
-  h1->SetMarkerStyle(markerstyle);
-  h1->SetMarkerColor(markercolor);
-  h1->SetMarkerSize(markersize);
-  h1->SetLineStyle(linestyle);
-  h1->SetLineColor(linecolor);
-}
-
-void HfJetTaggingSysPassAnalysis::DrawCombined(int num, const std::vector<HistogramData>& histograms, bool doLeg, double xmin, double ymin, double xmax, double ymax) {
-  TLegend *leg = new TLegend(xmin, ymin, xmax, ymax);
-  for (int i=0; i<num; i++){
-    TH1F *hist = histograms[i].hist;
-    this->HistColorStyle(hist, i+1, i+20, HfJetTagging::MARKERSIZE, i+1, 1);
-    TString clfi = histograms[i].classification;
-    leg->AddEntry(hist, clfi.Data(), "lep");
-    //hist->Draw("same HIST");
-    hist->Draw("same");
-  }
-  if(doLeg) leg->Draw();
-}
-
-void HfJetTaggingSysPassAnalysis::DrawIncJetTrackPtPass(bool doLog = true, int Num = HfJetTagging::numPass) {
+void HfJetTaggingSysPassAnalysis::drawIncJetTrackPtPass(bool doLog = true, int Num = HfJetTagging::numPass) {
   std::vector<HistogramData> NormHistList;
   for (int pass =0; pass<HfJetTagging::numPass; pass++) {
     NormHistList.push_back({hsimTagjetNormalizedTrackPt[0][pass], HfJetTagging::SYS::PASS[pass]}); // 0: inclusive
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/trackmomentum.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/trackmomentum.pdf\")", cn++));
 
 }
 
-void HfJetTaggingSysPassAnalysis::DrawIncJetTrackEtaPass(bool doLog = true, int Num = HfJetTagging::numPass) {
+void HfJetTaggingSysPassAnalysis::drawIncJetTrackEtaPass(bool doLog = true, int Num = HfJetTagging::numPass) {
   std::vector<HistogramData> NormHistList;
   for (int pass =0; pass<HfJetTagging::numPass; pass++) {
     NormHistList.push_back({hsimTagjetNormalizedTrackEta[0][pass], HfJetTagging::SYS::PASS[pass]}); // 0: inclusive
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKETA[0], HfJetTagging::REFHIST::TRACKETA[1], HfJetTagging::REFHIST::TRACKETA[2], HfJetTagging::REFHIST::TRACKETA[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/tracketa.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::TRACKETA[0], HfJetTagging::REFHIST::TRACKETA[1], HfJetTagging::REFHIST::TRACKETA[2], HfJetTagging::REFHIST::TRACKETA[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/tracketa.pdf\")", cn++));
 
 }
 
-void HfJetTaggingSysPassAnalysis::DrawIncJetTrackPhiPass(bool doLog = true, int Num = HfJetTagging::numPass) {
+void HfJetTaggingSysPassAnalysis::drawIncJetTrackPhiPass(bool doLog = true, int Num = HfJetTagging::numPass) {
   std::vector<HistogramData> NormHistList;
   for (int pass =0; pass<HfJetTagging::numPass; pass++) {
     NormHistList.push_back({hsimTagjetNormalizedTrackPhi[0][pass], HfJetTagging::SYS::PASS[pass]}); // 0: inclusive
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPHI[0], HfJetTagging::REFHIST::TRACKPHI[1], HfJetTagging::REFHIST::TRACKPHI[2], HfJetTagging::REFHIST::TRACKPHI[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/trackphi.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::TRACKPHI[0], HfJetTagging::REFHIST::TRACKPHI[1], HfJetTagging::REFHIST::TRACKPHI[2], HfJetTagging::REFHIST::TRACKPHI[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/trackphi.pdf\")", cn++));
 
 }
 
-void HfJetTaggingSysPassAnalysis::DrawIncJetSignImpXYSigPass(bool doLog = true, int Num = HfJetTagging::numPass) {
+void HfJetTaggingSysPassAnalysis::drawIncJetSignImpXYSigPass(bool doLog = true, int Num = HfJetTagging::numPass) {
   std::vector<HistogramData> NormHistList;
   for (int pass =0; pass<HfJetTagging::numPass; pass++) {
     NormHistList.push_back({hsimTagjetNormalizedSignImpXYSig[0][pass], HfJetTagging::SYS::PASS[pass]}); // 0: inclusive
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   latex.DrawLatex(0.3, 0.90, "Inclusive jet (MC)");
   latex.DrawLatex(0.3, 0.85, "Charged jet");
   latex.DrawLatex(0.3, 0.80, "p_{T}^{jet} > 10 GeV/c");
   latex.DrawLatex(0.3, 0.75, "R=0.4");
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/signImpXYSig.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/signImpXYSig.pdf\")", cn++));
 }
 
-//void HfJetTaggingSysPassAnalysis::DrawIncJet2ProngLxyPass(bool doLog = true, int Num = HfJetTagging::numPass) {
+//void HfJetTaggingSysPassAnalysis::drawIncJet2ProngLxyPass(bool doLog = true, int Num = HfJetTagging::numPass) {
 //  std::vector<HistogramData> NormHistList;
 //  for (int pass =0; pass<HfJetTagging::numPass; pass++) {
 //    NormHistList.push_back({hsimTagjetNormalized2ProngLxy[0][pass], HfJetTagging::SYS::PASS[pass]}); // 0: inclusive
 //  }
-//  canvasHandler = new CanvasHandler();
-//  canvasHandler->createCanvas(canvasNum++);
+//  canHan = new CanvasHandler();
+//  canHan->createCanvas(cn);
 //  if (doLog) gPad->SetLogy();
-//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::LXY[0], HfJetTagging::REFHIST::LXY[1], HfJetTagging::REFHIST::LXY[2], HfJetTagging::REFHIST::LXY[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-//  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/2ProngLxy.pdf\")", canvasNum - 1));
+//  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::LXY[0], HfJetTagging::REFHIST::LXY[1], HfJetTagging::REFHIST::LXY[2], HfJetTagging::REFHIST::LXY[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+//  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/2ProngLxy.pdf\")", cn++));
 //
 //}
 //
-//void HfJetTaggingSysPassAnalysis::DrawIncJet2ProngLxyzPass(bool doLog = true, int Num = HfJetTagging::numPass) {
+//void HfJetTaggingSysPassAnalysis::drawIncJet2ProngLxyzPass(bool doLog = true, int Num = HfJetTagging::numPass) {
 //  std::vector<HistogramData> NormHistList;
 //  for (int pass =0; pass<HfJetTagging::numPass; pass++) {
 //    NormHistList.push_back({hsimTagjetNormalized2ProngLxyz[0][pass], HfJetTagging::SYS::PASS[pass]}); // 0: inclusive
 //  }
-//  canvasHandler = new CanvasHandler();
-//  canvasHandler->createCanvas(canvasNum++);
+//  canHan = new CanvasHandler();
+//  canHan->createCanvas(cn);
 //  if (doLog) gPad->SetLogy();
-//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::LXYZ[0], HfJetTagging::REFHIST::LXYZ[1], HfJetTagging::REFHIST::LXYZ[2], HfJetTagging::REFHIST::LXYZ[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-//  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/2ProngLxyz.pdf\")", canvasNum - 1));
+//  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::LXYZ[0], HfJetTagging::REFHIST::LXYZ[1], HfJetTagging::REFHIST::LXYZ[2], HfJetTagging::REFHIST::LXYZ[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+//  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/2ProngLxyz.pdf\")", cn++));
 //
 //}
 //
-//void HfJetTaggingSysPassAnalysis::DrawIncJet2ProngsigmaLxyPass(bool doLog = true, int Num = HfJetTagging::numPass) {
+//void HfJetTaggingSysPassAnalysis::drawIncJet2ProngsigmaLxyPass(bool doLog = true, int Num = HfJetTagging::numPass) {
 //  std::vector<HistogramData> NormHistList;
 //  for (int pass =0; pass<HfJetTagging::numPass; pass++) {
 //    NormHistList.push_back({hsimTagjetNormalized2ProngsigmaLxy[0][pass], HfJetTagging::SYS::PASS[pass]}); // 0: inclusive
 //  }
-//  canvasHandler = new CanvasHandler();
-//  canvasHandler->createCanvas(canvasNum++);
+//  canHan = new CanvasHandler();
+//  canHan->createCanvas(cn);
 //  if (doLog) gPad->SetLogy();
-//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::sigmaLXY[0], HfJetTagging::REFHIST::sigmaLXY[1], HfJetTagging::REFHIST::sigmaLXY[2], HfJetTagging::REFHIST::sigmaLXY[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-//  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/2ProngsigmaLxy.pdf\")", canvasNum - 1));
+//  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::sigmaLXY[0], HfJetTagging::REFHIST::sigmaLXY[1], HfJetTagging::REFHIST::sigmaLXY[2], HfJetTagging::REFHIST::sigmaLXY[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+//  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/2ProngsigmaLxy.pdf\")", cn++));
 //
 //}
 //
-//void HfJetTaggingSysPassAnalysis::DrawIncJet2ProngsigmaLxyzPass(bool doLog = true, int Num = HfJetTagging::numPass) {
+//void HfJetTaggingSysPassAnalysis::drawIncJet2ProngsigmaLxyzPass(bool doLog = true, int Num = HfJetTagging::numPass) {
 //  std::vector<HistogramData> NormHistList;
 //  for (int pass =0; pass<HfJetTagging::numPass; pass++) {
 //    NormHistList.push_back({hsimTagjetNormalized2ProngsigmaLxyz[0][pass], HfJetTagging::SYS::PASS[pass]}); // 0: inclusive
 //  }
-//  canvasHandler = new CanvasHandler();
-//  canvasHandler->createCanvas(canvasNum++);
+//  canHan = new CanvasHandler();
+//  canHan->createCanvas(cn);
 //  if (doLog) gPad->SetLogy();
-//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::sigmaLXYZ[0], HfJetTagging::REFHIST::sigmaLXYZ[1], HfJetTagging::REFHIST::sigmaLXYZ[2], HfJetTagging::REFHIST::sigmaLXYZ[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-//  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/2ProngsigmaLxyz.pdf\")", canvasNum - 1));
+//  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::sigmaLXYZ[0], HfJetTagging::REFHIST::sigmaLXYZ[1], HfJetTagging::REFHIST::sigmaLXYZ[2], HfJetTagging::REFHIST::sigmaLXYZ[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+//  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/2ProngsigmaLxyz.pdf\")", cn++));
 //
 //}
 //
-//void HfJetTaggingSysPassAnalysis::DrawIncJet2ProngSxyPass(bool doLog = true, int Num = HfJetTagging::numPass) {
+//void HfJetTaggingSysPassAnalysis::drawIncJet2ProngSxyPass(bool doLog = true, int Num = HfJetTagging::numPass) {
 //  std::vector<HistogramData> NormHistList;
 //  for (int pass =0; pass<HfJetTagging::numPass; pass++) {
 //    NormHistList.push_back({hsimTagjetNormalized2ProngSxy[0][pass], HfJetTagging::SYS::PASS[pass]}); // 0: inclusive
 //  }
-//  canvasHandler = new CanvasHandler();
-//  canvasHandler->createCanvas(canvasNum++);
+//  canHan = new CanvasHandler();
+//  canHan->createCanvas(cn);
 //  if (doLog) gPad->SetLogy();
-//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::SXY[0], HfJetTagging::REFHIST::SXY[1], HfJetTagging::REFHIST::SXY[2], HfJetTagging::REFHIST::SXY[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-//  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/2ProngSxy.pdf\")", canvasNum - 1));
+//  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::SXY[0], HfJetTagging::REFHIST::SXY[1], HfJetTagging::REFHIST::SXY[2], HfJetTagging::REFHIST::SXY[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+//  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/2ProngSxy.pdf\")", cn++));
 //
 //}
 //
-//void HfJetTaggingSysPassAnalysis::DrawIncJet2ProngSxyzPass(bool doLog = true, int Num = HfJetTagging::numPass) {
+//void HfJetTaggingSysPassAnalysis::drawIncJet2ProngSxyzPass(bool doLog = true, int Num = HfJetTagging::numPass) {
 //  std::vector<HistogramData> NormHistList;
 //  for (int pass =0; pass<HfJetTagging::numPass; pass++) {
 //    NormHistList.push_back({hsimTagjetNormalized2ProngSxyz[0][pass], HfJetTagging::SYS::PASS[pass]}); // 0: inclusive
 //  }
-//  canvasHandler = new CanvasHandler();
-//  canvasHandler->createCanvas(canvasNum++);
+//  canHan = new CanvasHandler();
+//  canHan->createCanvas(cn);
 //  if (doLog) gPad->SetLogy();
-//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::SXYZ[0], HfJetTagging::REFHIST::SXYZ[1], HfJetTagging::REFHIST::SXYZ[2], HfJetTagging::REFHIST::SXYZ[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-//  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/2ProngSxyz.pdf\")", canvasNum - 1));
+//  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::SXYZ[0], HfJetTagging::REFHIST::SXYZ[1], HfJetTagging::REFHIST::SXYZ[2], HfJetTagging::REFHIST::SXYZ[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+//  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/pass/2ProngSxyz.pdf\")", cn++));
 //
 //}
 
-void HfJetTaggingSysPassAnalysis::DrawCharmJetSignImpXYSigPass(bool doLog = true, int Num = HfJetTagging::numPass) {
+void HfJetTaggingSysPassAnalysis::drawCharmJetSignImpXYSigPass(bool doLog = true, int Num = HfJetTagging::numPass) {
   std::vector<HistogramData> NormHistList;
   for (int pass =0; pass<HfJetTagging::numPass; pass++) {
     NormHistList.push_back({hsimTagjetNormalizedSignImpXYSig[1][pass], HfJetTagging::SYS::PASS[pass]}); // 1: charm
   }
   int num = hsimTagjetNormalizedSignImpXYSig[1][1]->GetEntries();
   std::cout << "charm jet entri: " << num << std::endl;
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   latex.DrawLatex(0.3, 0.90, "Charm jet (MC)");
   latex.DrawLatex(0.3, 0.85, "Charged jet");
   latex.DrawLatex(0.3, 0.80, "p_{T}^{jet} > 10 GeV/c");
   latex.DrawLatex(0.3, 0.75, "R=0.4");
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/cjet/pass/signImpXYSig.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/cjet/pass/signImpXYSig.pdf\")", cn++));
 }
 
-void HfJetTaggingSysPassAnalysis::DrawBeautyJetSignImpXYSigPass(bool doLog = true, int Num = HfJetTagging::numPass) {
+void HfJetTaggingSysPassAnalysis::drawBeautyJetSignImpXYSigPass(bool doLog = true, int Num = HfJetTagging::numPass) {
   std::vector<HistogramData> NormHistList;
   for (int pass =0; pass<HfJetTagging::numPass; pass++) {
     NormHistList.push_back({hsimTagjetNormalizedSignImpXYSig[2][pass], HfJetTagging::SYS::PASS[pass]}); // 2: Beauty
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   latex.DrawLatex(0.3, 0.90, "Beauty jet (MC)");
   latex.DrawLatex(0.3, 0.85, "Charged jet");
   latex.DrawLatex(0.3, 0.80, "p_{T}^{jet} > 10 GeV/c");
   latex.DrawLatex(0.3, 0.75, "R=0.4");
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/bjet/pass/signImpXYSig.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/bjet/pass/signImpXYSig.pdf\")", cn++));
 }
 
-void HfJetTaggingSysPassAnalysis::DrawLfJetSignImpXYSigPass(bool doLog = true, int Num = HfJetTagging::numPass) {
+void HfJetTaggingSysPassAnalysis::drawLfJetSignImpXYSigPass(bool doLog = true, int Num = HfJetTagging::numPass) {
   std::vector<HistogramData> NormHistList;
   for (int pass =0; pass<HfJetTagging::numPass; pass++) {
     NormHistList.push_back({hsimTagjetNormalizedSignImpXYSig[2][pass], HfJetTagging::SYS::PASS[pass]}); // 2: Lf
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   latex.DrawLatex(0.3, 0.90, "light flavour jet (MC)");
   latex.DrawLatex(0.3, 0.85, "Charged jet");
   latex.DrawLatex(0.3, 0.80, "p_{T}^{jet} > 10 GeV/c");
   latex.DrawLatex(0.3, 0.75, "R=0.4");
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/pass/signImpXYSig.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/pass/signImpXYSig.pdf\")", cn++));
 }
 
-void HfJetTaggingSysPassAnalysis::DrawTagJetEntriesPass(int Num = HfJetTagging::numPass) {
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
-  canvasHandler->DrawRefHistogram(canvasNum, 0, 5, 1e+1, 1e+10, "flavour", "Entries");
+void HfJetTaggingSysPassAnalysis::drawTagJetEntriesPass(int Num = HfJetTagging::numPass) {
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
+  canHan->drawRefHistogram(cn, 0, 5, 1e+1, 1e+10, "flavour", "Entries");
   THStack *hs = new THStack("hs","Stacked histograms");
   TLegend *legend = new TLegend(HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   // Assuming hsimTagjetEntries is an array/vector of TH1F*
@@ -545,13 +519,13 @@ void HfJetTaggingSysPassAnalysis::DrawTagJetEntriesPass(int Num = HfJetTagging::
   gPad->SetLogy();
   gPad->Modified();
   gPad->Update();
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/pass/jetentries.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/pass/jetentries.pdf\")", cn++));
 }
 
-void HfJetTaggingSysPassAnalysis::DrawTagJetNormEntriesPass(int Num = HfJetTagging::numPass) {
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
-  canvasHandler->DrawRefHistogram(canvasNum, 0, 5, 1e-2, 1.0, "flavour", "Entries");
+void HfJetTaggingSysPassAnalysis::drawTagJetNormEntriesPass(int Num = HfJetTagging::numPass) {
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
+  canHan->drawRefHistogram(cn, 0, 5, 1e-2, 1.0, "flavour", "Entries");
   THStack *hs = new THStack("hs","Stacked histograms");
   TLegend *legend = new TLegend(HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   // Assuming hsimTagjetEntries is an array/vector of TH1F*
@@ -565,13 +539,13 @@ void HfJetTaggingSysPassAnalysis::DrawTagJetNormEntriesPass(int Num = HfJetTaggi
   gPad->SetLogy();
   gPad->Modified();
   gPad->Update();
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/pass/normJetentries.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/pass/normJetentries.pdf\")", cn++));
 }
 
-void HfJetTaggingSysPassAnalysis::DrawTagJetTrackEntriesPass(int Num = HfJetTagging::numPass) {
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
-  canvasHandler->DrawRefHistogram(canvasNum, 0, 5, 1e+1, 1e+10, "flavour", "Entries");
+void HfJetTaggingSysPassAnalysis::drawTagJetTrackEntriesPass(int Num = HfJetTagging::numPass) {
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
+  canHan->drawRefHistogram(cn, 0, 5, 1e+1, 1e+10, "flavour", "Entries");
   THStack *hs = new THStack("hs","Stacked histograms");
   TLegend *legend = new TLegend(HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   // Assuming hsimTagjetEntries is an array/vector of TH1F*
@@ -585,13 +559,13 @@ void HfJetTaggingSysPassAnalysis::DrawTagJetTrackEntriesPass(int Num = HfJetTagg
   gPad->SetLogy();
   gPad->Modified();
   gPad->Update();
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/pass/trackentries.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/pass/trackentries.pdf\")", cn++));
 }
 
-void HfJetTaggingSysPassAnalysis::DrawTagJetNormTrackEntriesPass(int Num = HfJetTagging::numPass) {
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
-  canvasHandler->DrawRefHistogram(canvasNum, 0, 5, 1e-2, 1.0, "flavour", "Entries");
+void HfJetTaggingSysPassAnalysis::drawTagJetNormTrackEntriesPass(int Num = HfJetTagging::numPass) {
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
+  canHan->drawRefHistogram(cn, 0, 5, 1e-2, 1.0, "flavour", "Entries");
   THStack *hs = new THStack("hs","Stacked histograms");
   TLegend *legend = new TLegend(HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   // Assuming hsimTagjetEntries is an array/vector of TH1F*
@@ -605,7 +579,7 @@ void HfJetTaggingSysPassAnalysis::DrawTagJetNormTrackEntriesPass(int Num = HfJet
   gPad->SetLogy();
   gPad->Modified();
   gPad->Update();
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/pass/normTrackentries.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/pass/normTrackentries.pdf\")", cn++));
 }
 
 #endif // HFJETTAGGINGSYSPASSANALYSIS_H

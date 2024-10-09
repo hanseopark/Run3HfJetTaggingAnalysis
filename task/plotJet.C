@@ -4,7 +4,7 @@
 #include "../include/JetMatchedAnalysis.h"
 #include <TString.h>
 
-void PlotJetAnalysisGeneralQA(TString rootdata="", TString rootsim="", bool doData=true, bool doMCD=false, bool doMCP=false, TString triggerName="", bool withInc=true, bool doLog=true) {
+void plotJetGeneralQA(TString rootdata="", TString rootsim="", bool doData=true, bool doMCD=false, bool doMCP=false, TString triggerName="", bool withInc=true, bool doLog=true) {
 
   JetAnalysis *jetObj = new JetAnalysis(rootdata.Data(), rootsim.Data(), doData, doMCD, doMCP, triggerName.Data());
   if (doData) {
@@ -47,7 +47,7 @@ void PlotJetAnalysisGeneralQA(TString rootdata="", TString rootsim="", bool doDa
   }
 }
 
-void PlotJetAnalysisRhoAreaSub(TString rootdata="", TString rootsim="", bool doData=true, bool doMC=false, bool doDataRhoAreaSub=false, bool doRho=false, TString triggerName="", bool withInc=true, bool doLog=true) {
+void plotJetRhoAreaSub(TString rootdata="", TString rootsim="", bool doData=true, bool doMC=false, bool doDataRhoAreaSub=false, bool doRho=false, TString triggerName="", bool withInc=true, bool doLog=true) {
   JetRhoAreaSubAnalysis *jetBkgObj = new JetRhoAreaSubAnalysis(rootdata.Data(), rootsim.Data(), doData, doMC, doDataRhoAreaSub, doRho, triggerName.Data());
   if (doData && (doDataRhoAreaSub || doRho)) {
     if (doRho) {
@@ -76,7 +76,7 @@ void PlotJetAnalysisRhoAreaSub(TString rootdata="", TString rootsim="", bool doD
   }
 }
 
-void PlotJetAnalysisMatched(TString rootsim="", TString triggerName="", bool withInc=true, bool doLog=true) {
+void plotJetMatched(TString rootsim="", TString triggerName="", bool withInc=true, bool doLog=true) {
   doLog=false;
   JetMatchedAnalysis *jetMatchedObj = new JetMatchedAnalysis(rootsim.Data(), triggerName.Data());
   jetMatchedObj->drawSimMatchedGeoPartJetPtJetPt(doLog, 0); // only binJetR=0;
@@ -104,31 +104,31 @@ void PlotJetAnalysisMatched(TString rootsim="", TString triggerName="", bool wit
 
 }
 
-void PlotJetAnalysisEvtWiseConstSub(TString rootdata="", TString rootsim="", bool doDataEvtWiseConstSub=false, TString triggerName="", bool withInc=true, bool doLog=true) {
+void plotJetEvtWiseConstSub(TString rootdata="", TString rootsim="", bool doDataEvtWiseConstSub=false, TString triggerName="", bool withInc=true, bool doLog=true) {
 }
 
-void PlotJetAnalysisSubMatched(TString rootdata="", TString rootsim="", bool doDataSubMatched=false, TString triggerName="", bool withInc=true, bool doLog=true) {
+void plotJetSubMatched(TString rootdata="", TString rootsim="", bool doDataSubMatched=false, TString triggerName="", bool withInc=true, bool doLog=true) {
 }
 
-void PlotJetAnalysisWeighted(TString rootdata="", TString rootsim="", bool doMCDWeighted=false, bool doMCPWeighted=false, bool doMCPMCDMatchedWeighted=false, TString triggerName="", bool withInc=true, bool doLog=true) {
+void plotJetWeighted(TString rootdata="", TString rootsim="", bool doMCDWeighted=false, bool doMCPWeighted=false, bool doMCPMCDMatchedWeighted=false, TString triggerName="", bool withInc=true, bool doLog=true) {
 }
 
-void PlotJetAnalysisTrigger(TString rootdata="", TString rootsim="", bool doDataTrigger=false, TString triggerName="", bool withInc=true, bool doLog=true) {
+void plotJetTrigger(TString rootdata="", TString rootsim="", bool doDataTrigger=false, TString triggerName="", bool withInc=true, bool doLog=true) {
 }
 
-void PlotJetAnalysisTracks(TString rootdata="", TString rootsim="", bool doTracks=false, TString triggerName="", bool withInc=true, bool doLog=true) {
+void plotJetTracks(TString rootdata="", TString rootsim="", bool doTracks=false, TString triggerName="", bool withInc=true, bool doLog=true) {
 }
 
-void PlotJetAnalysisTracksWeighted(TString rootdata="", TString rootsim="", bool doTracks=false, TString triggerName="", bool withInc=true, bool doLog=true) {
+void plotJetTracksWeighted(TString rootdata="", TString rootsim="", bool doTracks=false, TString triggerName="", bool withInc=true, bool doLog=true) {
 }
 
-void PlotJetAnalysisTracksSub(TString rootdata="", TString rootsim="", bool doTracksSub=false, TString triggerName="", bool withInc=true, bool doLog=true) {
+void plotJetTracksSub(TString rootdata="", TString rootsim="", bool doTracksSub=false, TString triggerName="", bool withInc=true, bool doLog=true) {
 }
 
-void PlotJetAnalysisRandomCone(TString rootdata="", TString rootsim="", bool doRandomCone=false, TString triggerName="", bool withInc=true, bool doLog=true) {
+void plotJetRandomCone(TString rootdata="", TString rootsim="", bool doRandomCone=false, TString triggerName="", bool withInc=true, bool doLog=true) {
 }
 
-void PlotJetAnalysisTask (
+void plotJet (
     TString rootdata = "",
     TString rootsim = "",
     bool doData = false,
@@ -152,14 +152,14 @@ void PlotJetAnalysisTask (
     bool doLog = false
     ) 
 {
-  //PlotJetAnalysisGeneralQA(rootdata.Data(), rootsim.Data(), doData, doMCD, doMCP, triggerName.Data(), withInc, doLog);
+  //plotJetGeneralQA(rootdata.Data(), rootsim.Data(), doData, doMCD, doMCP, triggerName.Data(), withInc, doLog);
 
   if (doDataRhoAreaSub || doRho) {
     std::cout<<__LINE__<<std::endl;
-    PlotJetAnalysisRhoAreaSub(rootdata.Data(), rootsim.Data(), doData, doMCD, doDataRhoAreaSub, doRho, triggerName.Data(), withInc, doLog);
+    plotJetRhoAreaSub(rootdata.Data(), rootsim.Data(), doData, doMCD, doDataRhoAreaSub, doRho, triggerName.Data(), withInc, doLog);
   }
   if (doMCD && doMCP && doMCPMCDMatched) {
-    PlotJetAnalysisMatched(rootsim.Data(), triggerName.Data(), withInc, doLog);
+    plotJetMatched(rootsim.Data(), triggerName.Data(), withInc, doLog);
   }
 
   // Add additional conditions for other functions as needed

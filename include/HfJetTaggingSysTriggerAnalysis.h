@@ -16,46 +16,44 @@ class HfJetTaggingSysTriggerAnalysis {
         if(!LoadSimTrigger(rootSim)) {
           return;
         }
-        InitHistogramTrigger();
-        ProjectionHistTrigger();
-        NormalizedHistogramTrigger();
+        initHistogramTrigger();
+        projectionHistTrigger();
+        normalizedHistogramTrigger();
       }
-      SaveHistogram("sysTrigger.root", doData, doMC, dopartLevel);
+      saveHistogram("sysTrigger.root", doData, doMC, dopartLevel);
 
     }
     ~HfJetTaggingSysTriggerAnalysis();
 
     //// FUNCTION ////
     int LoadSimTrigger(const std::vector<TString> &rootFiles);
-    void InitHistogramTrigger();
-    void ProjectionHistTrigger();
-    void NormalizedHistogramTrigger();
-    void SaveHistogram(TString rootFile, bool doData, bool doMC, bool dopartLevel);
+    void initHistogramTrigger();
+    void projectionHistTrigger();
+    void normalizedHistogramTrigger();
+    void saveHistogram(TString rootFile, bool doData, bool doMC, bool dopartLevel);
 
     // fucntion
-    void HistColorStyle(TH1F* h1, int mc, int ms, double mS, int lc, int ls);
-    void DrawCombined(int num, const std::vector<HistogramData>& histList, bool doLeg, double legendxmin, double ymin, double xmax, double ymax);
-    void DrawIncJetTrackPtTrigger(bool doLog, int numTrigger);
-    void DrawIncJetTrackEtaTrigger(bool doLog, int numTrigger);
-    void DrawIncJetTrackPhiTrigger(bool doLog, int numTrigger);
-    void DrawIncJetSignImpXYSigTrigger(bool doLog, int numTrigger);
-    void DrawIncJet2ProngLxyTrigger(bool doLog, int numTrigger);
-    void DrawIncJet2ProngLxyzTrigger(bool doLog, int numTrigger);
-    void DrawIncJet2ProngsigmaLxyTrigger(bool doLog, int numTrigger);
-    void DrawIncJet2ProngsigmaLxyzTrigger(bool doLog, int numTrigger);
-    void DrawIncJet2ProngSxyTrigger(bool doLog, int numTrigger);
-    void DrawIncJet2ProngSxyzTrigger(bool doLog, int numTrigger);
-    void DrawCharmJetSignImpXYSigTrigger(bool doLog, int numTrigger);
-    void DrawBeautyJetSignImpXYSigTrigger(bool doLog, int numTrigger);
-    void DrawLfJetSignImpXYSigTrigger(bool doLog, int numTrigger);
-    void DrawTagJetEntriesTrigger(int numTrigger);
-    void DrawTagJetNormEntriesTrigger(int numTrigger);
-    void DrawTagJetTrackEntriesTrigger(int numTrigger);
-    void DrawTagJetNormTrackEntriesTrigger(int numTrigger);
+    void drawIncJetTrackPtTrigger(bool doLog, int numTrigger);
+    void drawIncJetTrackEtaTrigger(bool doLog, int numTrigger);
+    void drawIncJetTrackPhiTrigger(bool doLog, int numTrigger);
+    void drawIncJetSignImpXYSigTrigger(bool doLog, int numTrigger);
+    void drawIncJet2ProngLxyTrigger(bool doLog, int numTrigger);
+    void drawIncJet2ProngLxyzTrigger(bool doLog, int numTrigger);
+    void drawIncJet2ProngsigmaLxyTrigger(bool doLog, int numTrigger);
+    void drawIncJet2ProngsigmaLxyzTrigger(bool doLog, int numTrigger);
+    void drawIncJet2ProngSxyTrigger(bool doLog, int numTrigger);
+    void drawIncJet2ProngSxyzTrigger(bool doLog, int numTrigger);
+    void drawCharmJetSignImpXYSigTrigger(bool doLog, int numTrigger);
+    void drawBeautyJetSignImpXYSigTrigger(bool doLog, int numTrigger);
+    void drawLfJetSignImpXYSigTrigger(bool doLog, int numTrigger);
+    void drawTagJetEntriesTrigger(int numTrigger);
+    void drawTagJetNormEntriesTrigger(int numTrigger);
+    void drawTagJetTrackEntriesTrigger(int numTrigger);
+    void drawTagJetNormTrackEntriesTrigger(int numTrigger);
 
   protected:
-    CanvasHandler* canvasHandler;
-    int canvasNum=0;
+    CanvasHandler* canHan;
+    int cn=0;
     TH3F* h3datajetPtTrackPtFlavour[HfJetTagging::numTrigger];
     TH3F* h3datajetPtTrackEtaFlavour[HfJetTagging::numTrigger];
     TH3F* h3datajetPtTrackPhiFlavour[HfJetTagging::numTrigger];
@@ -142,7 +140,7 @@ int HfJetTaggingSysTriggerAnalysis::LoadSimTrigger(const std::vector<TString> &r
   return 1;
 }
 
-void HfJetTaggingSysTriggerAnalysis::InitHistogramTrigger() {
+void HfJetTaggingSysTriggerAnalysis::initHistogramTrigger() {
   for (int flavour = 0; flavour < HfJetTagging::nFlavour+1; flavour++) {
     for (int trigger =0; trigger < HfJetTagging::numTrigger; trigger++) {
       hsimTagjetTrackPt[flavour][trigger] = new TH1F(Form("hsimTagjetTrackPt_%d_%d", flavour, trigger), "", h3simTagjetPtTrackPtFlavour[trigger]->GetNbinsY(), h3simTagjetPtTrackPtFlavour[trigger]->GetYaxis()->GetBinLowEdge(1), h3simTagjetPtTrackPtFlavour[trigger]->GetYaxis()->GetBinUpEdge(h3simTagjetPtTrackPtFlavour[trigger]->GetNbinsY()));
@@ -163,7 +161,7 @@ void HfJetTaggingSysTriggerAnalysis::InitHistogramTrigger() {
   }
 }
 
-void HfJetTaggingSysTriggerAnalysis::ProjectionHistTrigger() {
+void HfJetTaggingSysTriggerAnalysis::projectionHistTrigger() {
   HfJetTagging::JetFlavour jetFlavours[] = {HfJetTagging::None, HfJetTagging::Charm, HfJetTagging::Beauty, HfJetTagging::LightFlavour};
   TH1F* projJetPt[HfJetTagging::numTrigger];
   TH1F* projTrackPt[HfJetTagging::numTrigger];
@@ -225,7 +223,7 @@ void HfJetTaggingSysTriggerAnalysis::ProjectionHistTrigger() {
   }
 }
 
-void HfJetTaggingSysTriggerAnalysis::NormalizedHistogramTrigger() {
+void HfJetTaggingSysTriggerAnalysis::normalizedHistogramTrigger() {
   for (int flavour = 0; flavour < HfJetTagging::nFlavour+1; flavour++) {
     for (int trigger =0; trigger < HfJetTagging::numTrigger; trigger++) {
       hsimTagjetNormalizedTrackPt[flavour][trigger] = (TH1F*) hsimTagjetTrackPt[flavour][trigger]->Clone(Form("hsimTagjetNormalizedTrackPt_%d_%d", flavour, trigger));
@@ -259,7 +257,7 @@ void HfJetTaggingSysTriggerAnalysis::NormalizedHistogramTrigger() {
   }
 }
 
-void HfJetTaggingSysTriggerAnalysis::SaveHistogram(TString rootFile, bool doData, bool doMC, bool dopartLevel) {
+void HfJetTaggingSysTriggerAnalysis::saveHistogram(TString rootFile, bool doData, bool doMC, bool dopartLevel) {
   TFile* fout = new TFile(rootFile.Data(), "RECREATE");
 
   // Check if the file is open successfully
@@ -284,212 +282,188 @@ void HfJetTaggingSysTriggerAnalysis::SaveHistogram(TString rootFile, bool doData
 
 }
 
-void HfJetTaggingSysTriggerAnalysis::HistColorStyle(TH1F* h1, int markercolor = 1, int markerstyle = 20,
-    double markersize = 1, int linecolor = 1,
-    int linestyle = 1)
-{
-  h1->SetMarkerStyle(markerstyle);
-  h1->SetMarkerColor(markercolor);
-  h1->SetMarkerSize(markersize);
-  h1->SetLineStyle(linestyle);
-  h1->SetLineColor(linecolor);
-}
-
-void HfJetTaggingSysTriggerAnalysis::DrawCombined(int num, const std::vector<HistogramData>& histograms, bool doLeg, double xmin, double ymin, double xmax, double ymax) {
-  TLegend *leg = new TLegend(xmin, ymin, xmax, ymax);
-  for (int i=0; i<num; i++){
-    TH1F *hist = histograms[i].hist;
-    this->HistColorStyle(hist, i+1, i+20, HfJetTagging::MARKERSIZE, i+1, 1);
-    TString clfi = histograms[i].classification;
-    leg->AddEntry(hist, clfi.Data(), "lep");
-    //hist->Draw("same HIST");
-    hist->Draw("same");
-  }
-  if(doLeg) leg->Draw();
-}
-
-void HfJetTaggingSysTriggerAnalysis::DrawIncJetTrackPtTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
+void HfJetTaggingSysTriggerAnalysis::drawIncJetTrackPtTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
   std::vector<HistogramData> NormHistList;
   for (int trigger =0; trigger<HfJetTagging::numTrigger; trigger++) {
     NormHistList.push_back({hsimTagjetNormalizedTrackPt[0][trigger], HfJetTagging::SYS::TRIGGER[trigger]}); // 0: inclusive
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/trackmomentum.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/trackmomentum.pdf\")", cn++));
 
 }
 
-void HfJetTaggingSysTriggerAnalysis::DrawIncJetTrackEtaTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
+void HfJetTaggingSysTriggerAnalysis::drawIncJetTrackEtaTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
   std::vector<HistogramData> NormHistList;
   for (int trigger =0; trigger<HfJetTagging::numTrigger; trigger++) {
     NormHistList.push_back({hsimTagjetNormalizedTrackEta[0][trigger], HfJetTagging::SYS::TRIGGER[trigger]}); // 0: inclusive
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKETA[0], HfJetTagging::REFHIST::TRACKETA[1], HfJetTagging::REFHIST::TRACKETA[2], HfJetTagging::REFHIST::TRACKETA[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/tracketa.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::TRACKETA[0], HfJetTagging::REFHIST::TRACKETA[1], HfJetTagging::REFHIST::TRACKETA[2], HfJetTagging::REFHIST::TRACKETA[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/tracketa.pdf\")", cn++));
 
 }
 
-void HfJetTaggingSysTriggerAnalysis::DrawIncJetTrackPhiTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
+void HfJetTaggingSysTriggerAnalysis::drawIncJetTrackPhiTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
   std::vector<HistogramData> NormHistList;
   for (int trigger =0; trigger<HfJetTagging::numTrigger; trigger++) {
     NormHistList.push_back({hsimTagjetNormalizedTrackPhi[0][trigger], HfJetTagging::SYS::TRIGGER[trigger]}); // 0: inclusive
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPHI[0], HfJetTagging::REFHIST::TRACKPHI[1], HfJetTagging::REFHIST::TRACKPHI[2], HfJetTagging::REFHIST::TRACKPHI[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/trackphi.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::TRACKPHI[0], HfJetTagging::REFHIST::TRACKPHI[1], HfJetTagging::REFHIST::TRACKPHI[2], HfJetTagging::REFHIST::TRACKPHI[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/trackphi.pdf\")", cn++));
 
 }
 
-void HfJetTaggingSysTriggerAnalysis::DrawIncJetSignImpXYSigTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
+void HfJetTaggingSysTriggerAnalysis::drawIncJetSignImpXYSigTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
   std::vector<HistogramData> NormHistList;
   for (int trigger =0; trigger<HfJetTagging::numTrigger; trigger++) {
     NormHistList.push_back({hsimTagjetNormalizedSignImpXYSig[0][trigger], HfJetTagging::SYS::TRIGGER[trigger]}); // 0: inclusive
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/signImpXYSig.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/signImpXYSig.pdf\")", cn++));
 }
 
-void HfJetTaggingSysTriggerAnalysis::DrawIncJet2ProngLxyTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
+void HfJetTaggingSysTriggerAnalysis::drawIncJet2ProngLxyTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
   std::vector<HistogramData> NormHistList;
   for (int trigger =0; trigger<HfJetTagging::numTrigger; trigger++) {
     NormHistList.push_back({hsimTagjetNormalized2ProngLxy[0][trigger], HfJetTagging::SYS::TRIGGER[trigger]}); // 0: inclusive
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::LXY[0], HfJetTagging::REFHIST::LXY[1], HfJetTagging::REFHIST::LXY[2], HfJetTagging::REFHIST::LXY[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/2ProngLxy.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::LXY[0], HfJetTagging::REFHIST::LXY[1], HfJetTagging::REFHIST::LXY[2], HfJetTagging::REFHIST::LXY[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/2ProngLxy.pdf\")", cn++));
 
 }
 
-void HfJetTaggingSysTriggerAnalysis::DrawIncJet2ProngLxyzTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
+void HfJetTaggingSysTriggerAnalysis::drawIncJet2ProngLxyzTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
   std::vector<HistogramData> NormHistList;
   for (int trigger =0; trigger<HfJetTagging::numTrigger; trigger++) {
     NormHistList.push_back({hsimTagjetNormalized2ProngLxyz[0][trigger], HfJetTagging::SYS::TRIGGER[trigger]}); // 0: inclusive
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::LXYZ[0], HfJetTagging::REFHIST::LXYZ[1], HfJetTagging::REFHIST::LXYZ[2], HfJetTagging::REFHIST::LXYZ[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/2ProngLxyz.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::LXYZ[0], HfJetTagging::REFHIST::LXYZ[1], HfJetTagging::REFHIST::LXYZ[2], HfJetTagging::REFHIST::LXYZ[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/2ProngLxyz.pdf\")", cn++));
 
 }
 
-void HfJetTaggingSysTriggerAnalysis::DrawIncJet2ProngsigmaLxyTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
+void HfJetTaggingSysTriggerAnalysis::drawIncJet2ProngsigmaLxyTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
   std::vector<HistogramData> NormHistList;
   for (int trigger =0; trigger<HfJetTagging::numTrigger; trigger++) {
     NormHistList.push_back({hsimTagjetNormalized2ProngsigmaLxy[0][trigger], HfJetTagging::SYS::TRIGGER[trigger]}); // 0: inclusive
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::sigmaLXY[0], HfJetTagging::REFHIST::sigmaLXY[1], HfJetTagging::REFHIST::sigmaLXY[2], HfJetTagging::REFHIST::sigmaLXY[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/2ProngsigmaLxy.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::SIGMALXY[0], HfJetTagging::REFHIST::SIGMALXY[1], HfJetTagging::REFHIST::SIGMALXY[2], HfJetTagging::REFHIST::SIGMALXY[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/2ProngsigmaLxy.pdf\")", cn++));
 
 }
 
-void HfJetTaggingSysTriggerAnalysis::DrawIncJet2ProngsigmaLxyzTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
+void HfJetTaggingSysTriggerAnalysis::drawIncJet2ProngsigmaLxyzTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
   std::vector<HistogramData> NormHistList;
   for (int trigger =0; trigger<HfJetTagging::numTrigger; trigger++) {
     NormHistList.push_back({hsimTagjetNormalized2ProngsigmaLxyz[0][trigger], HfJetTagging::SYS::TRIGGER[trigger]}); // 0: inclusive
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::sigmaLXYZ[0], HfJetTagging::REFHIST::sigmaLXYZ[1], HfJetTagging::REFHIST::sigmaLXYZ[2], HfJetTagging::REFHIST::sigmaLXYZ[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/2ProngsigmaLxyz.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::SIGMALXYZ[0], HfJetTagging::REFHIST::SIGMALXYZ[1], HfJetTagging::REFHIST::SIGMALXYZ[2], HfJetTagging::REFHIST::SIGMALXYZ[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/2ProngsigmaLxyz.pdf\")", cn++));
 
 }
 
-void HfJetTaggingSysTriggerAnalysis::DrawIncJet2ProngSxyTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
+void HfJetTaggingSysTriggerAnalysis::drawIncJet2ProngSxyTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
   std::vector<HistogramData> NormHistList;
   for (int trigger =0; trigger<HfJetTagging::numTrigger; trigger++) {
     NormHistList.push_back({hsimTagjetNormalized2ProngSxy[0][trigger], HfJetTagging::SYS::TRIGGER[trigger]}); // 0: inclusive
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::SXY[0], HfJetTagging::REFHIST::SXY[1], HfJetTagging::REFHIST::SXY[2], HfJetTagging::REFHIST::SXY[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/2ProngSxy.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::SXY[0], HfJetTagging::REFHIST::SXY[1], HfJetTagging::REFHIST::SXY[2], HfJetTagging::REFHIST::SXY[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/2ProngSxy.pdf\")", cn++));
 
 }
 
-void HfJetTaggingSysTriggerAnalysis::DrawIncJet2ProngSxyzTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
+void HfJetTaggingSysTriggerAnalysis::drawIncJet2ProngSxyzTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
   std::vector<HistogramData> NormHistList;
   for (int trigger =0; trigger<HfJetTagging::numTrigger; trigger++) {
     NormHistList.push_back({hsimTagjetNormalized2ProngSxyz[0][trigger], HfJetTagging::SYS::TRIGGER[trigger]}); // 0: inclusive
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::SXYZ[0], HfJetTagging::REFHIST::SXYZ[1], HfJetTagging::REFHIST::SXYZ[2], HfJetTagging::REFHIST::SXYZ[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/2ProngSxyz.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::SXYZ[0], HfJetTagging::REFHIST::SXYZ[1], HfJetTagging::REFHIST::SXYZ[2], HfJetTagging::REFHIST::SXYZ[3], "#it{p}_{T}^{track}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{p_{T}^{track}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/incjet/trigger/2ProngSxyz.pdf\")", cn++));
 
 }
 
-void HfJetTaggingSysTriggerAnalysis::DrawCharmJetSignImpXYSigTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
+void HfJetTaggingSysTriggerAnalysis::drawCharmJetSignImpXYSigTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
   std::vector<HistogramData> NormHistList;
   for (int trigger =0; trigger<HfJetTagging::numTrigger; trigger++) {
     NormHistList.push_back({hsimTagjetNormalizedSignImpXYSig[1][trigger], HfJetTagging::SYS::TRIGGER[trigger]}); // 1: charm
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/cjet/trigger/signImpXYSig.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/cjet/trigger/signImpXYSig.pdf\")", cn++));
 }
 
-void HfJetTaggingSysTriggerAnalysis::DrawBeautyJetSignImpXYSigTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
+void HfJetTaggingSysTriggerAnalysis::drawBeautyJetSignImpXYSigTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
   std::vector<HistogramData> NormHistList;
   for (int trigger =0; trigger<HfJetTagging::numTrigger; trigger++) {
     NormHistList.push_back({hsimTagjetNormalizedSignImpXYSig[2][trigger], HfJetTagging::SYS::TRIGGER[trigger]}); // 2: Beauty
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/bjet/trigger/signImpXYSig.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/bjet/trigger/signImpXYSig.pdf\")", cn++));
 }
 
-void HfJetTaggingSysTriggerAnalysis::DrawLfJetSignImpXYSigTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
+void HfJetTaggingSysTriggerAnalysis::drawLfJetSignImpXYSigTrigger(bool doLog = true, int Num = HfJetTagging::numTrigger) {
   std::vector<HistogramData> NormHistList;
   for (int trigger =0; trigger<HfJetTagging::numTrigger; trigger++) {
     NormHistList.push_back({hsimTagjetNormalizedSignImpXYSig[2][trigger], HfJetTagging::SYS::TRIGGER[trigger]}); // 2: Lf
   }
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
   if (doLog) gPad->SetLogy();
-  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
-  this->DrawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/trigger/signImpXYSig.pdf\")", canvasNum - 1));
+  canHan->drawRefHistogram(cn, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "#frac{1}{#it{N_{track}}} #frac{d#it{N_{track}}}{d#it{sIPs_{XY}}}");
+  canHan->drawCombined(NormHistList.size(), NormHistList, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/trigger/signImpXYSig.pdf\")", cn++));
 }
 
-void HfJetTaggingSysTriggerAnalysis::DrawTagJetEntriesTrigger(int Num = HfJetTagging::numTrigger) {
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
-  canvasHandler->DrawRefHistogram(canvasNum, 0, 5, 1e+1, 1e+10, "flavour", "Entries");
+void HfJetTaggingSysTriggerAnalysis::drawTagJetEntriesTrigger(int Num = HfJetTagging::numTrigger) {
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
+  canHan->drawRefHistogram(cn, 0, 5, 1e+1, 1e+10, "flavour", "Entries");
   THStack *hs = new THStack("hs","Stacked histograms");
   TLegend *legend = new TLegend(HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   // Assuming hsimTagjetEntries is an array/vector of TH1F*
@@ -503,13 +477,13 @@ void HfJetTaggingSysTriggerAnalysis::DrawTagJetEntriesTrigger(int Num = HfJetTag
   gPad->SetLogy();
   gPad->Modified();
   gPad->Update();
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/trigger/jetentries.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/trigger/jetentries.pdf\")", cn++));
 }
 
-void HfJetTaggingSysTriggerAnalysis::DrawTagJetNormEntriesTrigger(int Num = HfJetTagging::numTrigger) {
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
-  canvasHandler->DrawRefHistogram(canvasNum, 0, 5, 1e-2, 1.0, "flavour", "Entries");
+void HfJetTaggingSysTriggerAnalysis::drawTagJetNormEntriesTrigger(int Num = HfJetTagging::numTrigger) {
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
+  canHan->drawRefHistogram(cn, 0, 5, 1e-2, 1.0, "flavour", "Entries");
   THStack *hs = new THStack("hs","Stacked histograms");
   TLegend *legend = new TLegend(HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   // Assuming hsimTagjetEntries is an array/vector of TH1F*
@@ -523,13 +497,13 @@ void HfJetTaggingSysTriggerAnalysis::DrawTagJetNormEntriesTrigger(int Num = HfJe
   gPad->SetLogy();
   gPad->Modified();
   gPad->Update();
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/trigger/normJetentries.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/trigger/normJetentries.pdf\")", cn++));
 }
 
-void HfJetTaggingSysTriggerAnalysis::DrawTagJetTrackEntriesTrigger(int Num = HfJetTagging::numTrigger) {
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
-  canvasHandler->DrawRefHistogram(canvasNum, 0, 5, 1e+1, 1e+10, "flavour", "Entries");
+void HfJetTaggingSysTriggerAnalysis::drawTagJetTrackEntriesTrigger(int Num = HfJetTagging::numTrigger) {
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
+  canHan->drawRefHistogram(cn, 0, 5, 1e+1, 1e+10, "flavour", "Entries");
   THStack *hs = new THStack("hs","Stacked histograms");
   TLegend *legend = new TLegend(HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   // Assuming hsimTagjetEntries is an array/vector of TH1F*
@@ -543,13 +517,13 @@ void HfJetTaggingSysTriggerAnalysis::DrawTagJetTrackEntriesTrigger(int Num = HfJ
   gPad->SetLogy();
   gPad->Modified();
   gPad->Update();
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/trigger/trackentries.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/trigger/trackentries.pdf\")", cn++));
 }
 
-void HfJetTaggingSysTriggerAnalysis::DrawTagJetNormTrackEntriesTrigger(int Num = HfJetTagging::numTrigger) {
-  canvasHandler = new CanvasHandler();
-  canvasHandler->createCanvas(canvasNum++);
-  canvasHandler->DrawRefHistogram(canvasNum, 0, 5, 1e-2, 1.0, "flavour", "Entries");
+void HfJetTaggingSysTriggerAnalysis::drawTagJetNormTrackEntriesTrigger(int Num = HfJetTagging::numTrigger) {
+  canHan = new CanvasHandler();
+  canHan->createCanvas(cn);
+  canHan->drawRefHistogram(cn, 0, 5, 1e-2, 1.0, "flavour", "Entries");
   THStack *hs = new THStack("hs","Stacked histograms");
   TLegend *legend = new TLegend(HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   // Assuming hsimTagjetEntries is an array/vector of TH1F*
@@ -563,7 +537,7 @@ void HfJetTaggingSysTriggerAnalysis::DrawTagJetNormTrackEntriesTrigger(int Num =
   gPad->SetLogy();
   gPad->Modified();
   gPad->Update();
-  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/trigger/normTrackentries.pdf\")", canvasNum - 1));
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/sys/lfjet/trigger/normTrackentries.pdf\")", cn++));
 }
 
 #endif // HFJETTAGGINGSYSTRIGGERANALYSIS_H

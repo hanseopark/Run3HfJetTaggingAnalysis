@@ -1,0 +1,1842 @@
+#ifndef HFJETTAGGINGTCANALYSIS_H
+#define HFJETTAGGINGTCANALYSIS_H
+
+#include <TH1D.h>
+#include <TString.h>
+#include "DataPoint.h"
+#include "JetAnalysis.h"
+
+/// Now it works itself withtout JetAnalysis.h(GeneralQA) seperatively
+/// If histograms were saved by same root file,
+/// In future, it should be merged by class HfJetTaggingTCAnalysis : public JetAnalysis
+/// So the functions have to be made by different name of funciton in JetAnalysis.h
+
+class HfJetTaggingTCAnalysis {
+  public:
+    //HfJetTaggingTCAnalysis(const TString rootFile, const TString taskName, bool doMC) {
+    HfJetTaggingTCAnalysis(TString rootData, TString rootSim, bool onlyMC, bool partLevel)
+      if (!onlyMC) LoadSimTCQA(rootData.Data());
+      else LoadDataTCQA(rootFileTC.Data(), taskTC.Data());
+      InitHistogram(doTC, doJP);
+      ProjectionHist(doTC, doJP);
+      CloneNormalizedHistogram(doTC, doJP);
+      DoTEMP(doTC, doJP);
+      NormalizedHistogram(doTC, doJP);
+    }
+//    HfJetTaggingTCAnalysis(const TString &rootFileTC, const TString &rootFileSV2Prong, const TString &rootFileSV3Prong, const TString &taskName, bool doMC, bool doTC, bool doJP, bool doSV2Prong, bool doSV3Prong, const TString &cutSelection) : JetAnalysis(rootFileTC, rootFileSV2Prong, rootFileSV3Prong, taskName, doMC, doTC, doJP, doSV2Prong, doSV3Prong, cutSelection){
+//      if (doMC) LoadSimTCQA(rootFileTC.Data(), taskName.Data(), doTC, doJP);
+//      else LoadDataTCQA(rootFileTC.Data(), taskName.Data());
+//    }
+    ~HfJetTaggingTCAnalysis();
+
+    int LoadSimTCQA(TString file, TString task, bool doTC, bool doJP);
+    void InitHistogram(bool doTC, bool doJP);
+    void ProjectionHist(bool doTC, bool doJP);
+    void CloneNormalizedHistogram(bool doTC, bool doJP);
+    void DoTEMP(bool doTC, bool doJP);
+    void NormalizedHistogram(bool doTC, bool doJP);
+    int LoadDataTCQA(TString file, TString task);
+    void SaveHistogram(TString file);
+
+    // Draw
+    void DrawCombined(int num, const std::vector<HistogramData>& histList, double legendxmin, double ymin, double xmax, double ymax);
+    void DrawTaggedJetTrackPt(bool withInc, bool doLog, int binJetPt);
+    void DrawTaggedFlavourJetTrackPt(bool doLog, int flavour, int startJetPt);
+    void DrawTaggedJetTrackEta(bool withInc, bool doLog);
+    void DrawTaggedFlavourJetTrackEta(bool doLog, int flavour, int startJetPt);
+    void DrawTaggedJetTrackPhi(bool withInc, bool doLog);
+    void DrawTaggedFlavourJetTrackPhi(bool doLog, int flavour, int startJetPt);
+    void DrawTaggedJetImpXY(bool withInc, bool doLog);
+    void DrawTaggedJetSignImpXY(bool withInc, bool doLog);
+    void DrawTaggedJetImpXYSignificance(bool withInc, bool doLog);
+    void DrawTaggedJetSignImpXYSignificance(bool withInc, bool doLog);
+    void DrawTaggedJetImpXYZ(bool withInc, bool doLog);
+    void DrawTaggedJetSignImpXYZ(bool withInc, bool doLog);
+    void DrawTaggedJetImpXYZSignificance(bool withInc, bool doLog);
+    void DrawTaggedJetSignImpXYZSignificance(bool withInc, bool doLog);
+
+//    // Track counting
+//    void DrawTaggedJetImpXYN1(bool doLog);
+//    void DrawTaggedJetSignImpXYN1(bool doLog);
+//    void DrawTaggedJetImpXYSignificanceN1(bool doLog);
+    void DrawTaggedJetSignImpXYSignificanceN1(bool withInc, bool doLog);
+//    void DrawTaggedJetImpXYN2(bool doLog);
+//    void DrawTaggedJetSignImpXYN2(bool doLog);
+//    void DrawTaggedJetImpXYSignificanceN2(bool doLog);
+    void DrawTaggedJetSignImpXYSignificanceN2(bool withInc, bool doLog);
+//    void DrawTaggedJetImpXYN3(bool doLog);
+//    void DrawTaggedJetSignImpXYN3(bool doLog);
+//    void DrawTaggedJetImpXYSignificanceN3(bool doLog);
+    void DrawTaggedJetSignImpXYSignificanceN3(bool withInc, bool doLog);
+//
+//    // JP
+//    void DrawTaggedJetProbability();
+//    void DrawTaggedJetProbabilityLog();
+
+    // Histogram
+    TH3F* h3datajetPtTrackPtTrackEta;
+    TH3F* h3datajetPtTrackPtTrackPhi;
+    TH3F* h3datajetPtTrackPtImpXY;
+    TH3F* h3datajetPtTrackPtSignImpXY;
+    TH3F* h3datajetPtTrackPtImpXYSig;
+    TH3F* h3datajetPtTrackPtSignImpXYSig;
+    TH3F* h3datajetPtTrackPtSignImpXYSigN1;
+    TH3F* h3datajetPtTrackPtSignImpXYSigN2;
+    TH3F* h3datajetPtTrackPtSignImpXYSigN3;
+    TH3F* h3simjetPtTrackPtFlavour;
+    TH3F* h3simjetPtTrackEtaFlavour;
+    TH3F* h3simjetPtTrackPhiFlavour;
+    TH3F* h3simjetPtImpXYFlavour;
+    TH3F* h3simjetPtSignImpXYFlavour;
+    TH3F* h3simjetPtImpXYSigFlavour;
+    TH3F* h3simjetPtSignImpXYSigFlavour;
+    TH3F* h3simjetPtImpZFlavour;
+    TH3F* h3simjetPtSignImpZFlavour;
+    TH3F* h3simjetPtImpZSigFlavour;
+    TH3F* h3simjetPtSignImpZSigFlavour;
+    TH3F* h3simjetPtImpXYZFlavour;
+    TH3F* h3simjetPtSignImpXYZFlavour;
+    TH3F* h3simjetPtImpXYZSigFlavour;
+    TH3F* h3simjetPtSignImpXYZSigFlavour;
+    TH3F* h3simjetPtSignImpXYSigFlavourN1;
+    TH3F* h3simjetPtSignImpXYSigFlavourN2;
+    TH3F* h3simjetPtSignImpXYSigFlavourN3;
+
+    TH3F* h3simImpXYTrackPtFlavour;
+    TH3F* h3simSignImpXYTrackPtFlavour;
+    TH3F* h3simImpXYSigTrackPtFlavour;
+    TH3F* h3simSignImpXYSigTrackPtFlavour;
+    TH3F* h3simImpZTrackPtFlavour;
+    TH3F* h3simSignImpZTrackPtFlavour;
+    TH3F* h3simImpZSigTrackPtFlavour;
+    TH3F* h3simSignImpZSigTrackPtFlavour;
+    TH3F* h3simImpXYZTrackPtFlavour;
+    TH3F* h3simSignImpXYZTrackPtFlavour;
+    TH3F* h3simImpXYZSigTrackPtFlavour;
+    TH3F* h3simSignImpXYZSigTrackPtFlavour;
+
+    // common
+    TH1F* hsimjetTrackPt[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetTrackEta[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetTrackPhi[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetImpXY[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetSignImpXY[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetImpXYSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetSignImpXYSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetImpZ[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetSignImpZ[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetImpZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetSignImpZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetImpXYZ[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetSignImpXYZ[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetImpXYZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetSignImpXYZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetSignImpXYSigN1[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetSignImpXYSigN2[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetSignImpXYSigN3[HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+
+    TH1F* hsimtrackPtImpXY[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackSignImpXY[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackImpXYSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackSignImpXYSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackImpZ[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackSignImpZ[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackImpZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackSignImpZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackImpXYZ[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackSignImpXYZ[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackImpXYZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+    TH1F* hsimtrackSignImpXYZSig[HfJetTagging::nFlavour+1][HfJetTagging::nBinsTrackPt+1];
+
+    TH1D* hsimlfjetTrackPt;
+    TH1D* hsimlfjetTrackPhi;
+    TH1D* hsimlfjetTrackEta;
+
+    TH1D* hsimcjetTrackPt;
+    TH1D* hsimcjetTrackPhi;
+    TH1D* hsimcjetTrackEta;
+
+    TH1D* hsimbjetTrackPt;
+    TH1D* hsimbjetTrackPhi;
+    TH1D* hsimbjetTrackEta;
+
+    // related Impact parameter
+
+    TH1D* hsimlfjetImpXY;
+    TH1D* hsimlfjetImpXYSignificance;
+    TH1D* hsimlfjetSignImpXY;
+    TH1D* hsimlfjetSignImpXYSignificance;
+    TH1D* hsimlfjetPtSignImpXYSignificance;
+    TH1D* hsimlfjetImpXYZ;
+    TH1D* hsimlfjetSignImpXYZ;
+    TH1D* hsimlfjetImpXYZSignificance;
+    TH1D* hsimlfjetSignImpXYZSignificance;
+
+    TH1D* hsimcjetImpXY;
+    TH1D* hsimcjetImpXYSignificance;
+    TH1D* hsimcjetSignImpXY;
+    TH1D* hsimcjetSignImpXYSignificance;
+    TH1D* hsimcjetPtSignImpXYSignificance;
+    TH1D* hsimcjetImpXYZ;
+    TH1D* hsimcjetImpXYZSignificance;
+    TH1D* hsimcjetSignImpXYZ;
+    TH1D* hsimcjetSignImpXYZSignificance;
+
+    TH1D* hsimbjetImpXY;
+    TH1D* hsimbjetImpXYSignificance;
+    TH1D* hsimbjetSignImpXY;
+    TH1D* hsimbjetSignImpXYSignificance;
+    TH1D* hsimbjetPtSignImpXYSignificance;
+    TH1D* hsimbjetImpXYZ;
+    TH1D* hsimbjetImpXYZSignificance;
+    TH1D* hsimbjetSignImpXYZ;
+    TH1D* hsimbjetSignImpXYZSignificance;
+
+    // related Track Counting
+    TH1D* hsimlfjetImpXYN1;
+    TH1D* hsimlfjetImpXYN2;
+    TH1D* hsimlfjetImpXYN3;
+    TH1D* hsimlfjetSignImpXYN1;
+    TH1D* hsimlfjetSignImpXYN2;
+    TH1D* hsimlfjetSignImpXYN3;
+    TH1D* hsimlfjetImpXYZN1;
+    TH1D* hsimlfjetImpXYZN2;
+    TH1D* hsimlfjetImpXYZN3;
+    TH1D* hsimlfjetImpXYZSignificanceN1;
+    TH1D* hsimlfjetImpXYZSignificanceN2;
+    TH1D* hsimlfjetImpXYZSignificanceN3;
+    TH1D* hsimcjetSignImpXYN1;
+    TH1D* hsimcjetSignImpXYN2;
+    TH1D* hsimcjetSignImpXYN3;
+
+    TH1D* hsimlfjetImpXYSignificanceN1;
+    TH1D* hsimlfjetImpXYSignificanceN2;
+    TH1D* hsimlfjetImpXYSignificanceN3;
+    TH1D* hsimlfjetPtSignImpXYSignificanceN1;
+    TH1D* hsimlfjetPtSignImpXYSignificanceN2;
+    TH1D* hsimlfjetPtSignImpXYSignificanceN3;
+    TH1D* hsimlfjetSignImpXYSignificanceN1;
+    TH1D* hsimlfjetSignImpXYSignificanceN2;
+    TH1D* hsimlfjetSignImpXYSignificanceN3;
+
+    TH1D* hsimcjetImpXYN1;
+    TH1D* hsimcjetImpXYN2;
+    TH1D* hsimcjetImpXYN3;
+    TH1D* hsimcjetImpXYSignificanceN1;
+    TH1D* hsimcjetImpXYSignificanceN2;
+    TH1D* hsimcjetImpXYSignificanceN3;
+    TH1D* hsimcjetSignImpXYSignificanceN1;
+    TH1D* hsimcjetSignImpXYSignificanceN2;
+    TH1D* hsimcjetSignImpXYSignificanceN3;
+    TH1D* hsimcjetPtSignImpXYSignificanceN1;
+    TH1D* hsimcjetPtSignImpXYSignificanceN2;
+    TH1D* hsimcjetPtSignImpXYSignificanceN3;
+    TH1D* hsimcjetImpXYZN1;
+    TH1D* hsimcjetImpXYZN2;
+    TH1D* hsimcjetImpXYZN3;
+    TH1D* hsimcjetImpXYZSignificanceN1;
+    TH1D* hsimcjetImpXYZSignificanceN2;
+    TH1D* hsimcjetImpXYZSignificanceN3;
+
+    TH1D* hsimbjetImpXYN1;
+    TH1D* hsimbjetImpXYN2;
+    TH1D* hsimbjetImpXYN3;
+    TH1D* hsimbjetImpXYSignificanceN1;
+    TH1D* hsimbjetImpXYSignificanceN2;
+    TH1D* hsimbjetImpXYSignificanceN3;
+    TH1D* hsimbjetSignImpXYN1;
+    TH1D* hsimbjetSignImpXYN2;
+    TH1D* hsimbjetSignImpXYN3;
+    TH1D* hsimbjetSignImpXYSignificanceN1;
+    TH1D* hsimbjetSignImpXYSignificanceN2;
+    TH1D* hsimbjetSignImpXYSignificanceN3;
+    TH1D* hsimbjetPtSignImpXYSignificanceN1;
+    TH1D* hsimbjetPtSignImpXYSignificanceN2;
+    TH1D* hsimbjetPtSignImpXYSignificanceN3;
+    TH1D* hsimbjetImpXYZN1;
+    TH1D* hsimbjetImpXYZN2;
+    TH1D* hsimbjetImpXYZN3;
+    TH1D* hsimbjetImpXYZSignificanceN1;
+    TH1D* hsimbjetImpXYZSignificanceN2;
+    TH1D* hsimbjetImpXYZSignificanceN3;
+
+    // related Resolution function
+    TH1D* hsimlfjetSignImpXYSignificanceClass1;
+    TH1D* hsimlfjetSignImpXYSignificanceClass2;
+    TH1D* hsimlfjetSignImpXYSignificanceClass3;
+    TH1D* hsimcjetSignImpXYSignificanceClass1;
+    TH1D* hsimcjetSignImpXYSignificanceClass2;
+    TH1D* hsimcjetSignImpXYSignificanceClass3;
+    TH1D* hsimbjetSignImpXYSignificanceClass1;
+    TH1D* hsimbjetSignImpXYSignificanceClass2;
+    TH1D* hsimbjetSignImpXYSignificanceClass3;
+
+    // related Jet Probability
+    TH1D* hsimlfjetJP;
+    TH1D* hsimlfjetJPLog;
+    TH2D* hsimlfjetPtJP;
+    TH2D* hsimlfjetPtJPLog;
+    TH1D* hsimcjetJP;
+    TH1D* hsimcjetJPLog;
+    TH2D* hsimcjetPtJP;
+    TH2D* hsimcjetPtJPLog;
+    TH1D* hsimbjetJP;
+    TH1D* hsimbjetJPLog;
+    TH2D* hsimbjetPtJP;
+    TH2D* hsimbjetPtJPLog;
+
+    TF1* fJP;
+    TF1* fJPtemplate;
+
+    // Normalized
+    TH1F* hsimjetNormalizedTrackPt[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedTrackEta[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedTrackPhi[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedImpXY[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedSignImpXY[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedImpXYSig[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedSignImpXYSig[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedImpZ[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedSignImpZ[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedImpZSig[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedSignImpZSig[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedImpXYZ[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedSignImpXYZ[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedImpXYZSig[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedSignImpXYZSig[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedSignImpXYSigN1[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedSignImpXYSigN2[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetNormalizedSignImpXYSigN3[HfJetTagging::nFlavour][HfJetTagging::nBinsJetPt+1];
+
+//    TH1F* hsimtrackPtImpXY[HfJetTagging::nFlavour][HfJetTagging::nBinsTrackPt+1];
+//    TH1F* hsimtrackSignImpXY[HfJetTagging::nFlavour][HfJetTagging::nBinsTrackPt+1];
+//    TH1F* hsimtrackImpXYSig[HfJetTagging::nFlavour][HfJetTagging::nBinsTrackPt+1];
+//    TH1F* hsimtrackSignImpXYSig[HfJetTagging::nFlavour][HfJetTagging::nBinsTrackPt+1];
+//    TH1F* hsimtrackImpZ[HfJetTagging::nFlavour][HfJetTagging::nBinsTrackPt+1];
+//    TH1F* hsimtrackSignImpZ[HfJetTagging::nFlavour][HfJetTagging::nBinsTrackPt+1];
+//    TH1F* hsimtrackImpZSig[HfJetTagging::nFlavour][HfJetTagging::nBinsTrackPt+1];
+//    TH1F* hsimtrackSignImpZSig[HfJetTagging::nFlavour][HfJetTagging::nBinsTrackPt+1];
+//    TH1F* hsimtrackImpXYZ[HfJetTagging::nFlavour][HfJetTagging::nBinsTrackPt+1];
+//    TH1F* hsimtrackSignImpXYZ[HfJetTagging::nFlavour][HfJetTagging::nBinsTrackPt+1];
+//    TH1F* hsimtrackImpXYZSig[HfJetTagging::nFlavour][HfJetTagging::nBinsTrackPt+1];
+//    TH1F* hsimtrackSignImpXYZSig[HfJetTagging::nFlavour][HfJetTagging::nBinsTrackPt+1];
+
+    TH1D* hsimlfjetNormalizedTrackPt;
+    TH1D* hsimlfjetNormalizedTrackPhi;
+    TH1D* hsimlfjetNormalizedTrackEta;
+
+    TH1D* hsimcjetNormalizedTrackPt;
+    TH1D* hsimcjetNormalizedTrackPhi;
+    TH1D* hsimcjetNormalizedTrackEta;
+
+    TH1D* hsimbjetNormalizedTrackPt;
+    TH1D* hsimbjetNormalizedTrackPhi;
+    TH1D* hsimbjetNormalizedTrackEta;
+
+    // related Impact parameter
+    TH1D* hsimlfjetNormalizedImpXY;
+    TH1D* hsimlfjetNormalizedImpXYSignificance;
+    TH1D* hsimlfjetNormalizedSignImpXY;
+    TH1D* hsimlfjetNormalizedSignImpXYSignificance;
+    TH1D* hsimlfjetNormalizedPtSignImpXYSignificance;
+    TH1D* hsimlfjetNormalizedImpXYZ;
+    TH1D* hsimlfjetNormalizedImpXYZSignificance;
+    TH1D* hsimlfjetNormalizedSignImpXYZ;
+    TH1D* hsimlfjetNormalizedSignImpXYZSignificance;
+
+    TH1D* hsimcjetNormalizedImpXY;
+    TH1D* hsimcjetNormalizedImpXYSignificance;
+    TH1D* hsimcjetNormalizedSignImpXY;
+    TH1D* hsimcjetNormalizedSignImpXYSignificance;
+    TH1D* hsimcjetNormalizedPtSignImpXYSignificance;
+    TH1D* hsimcjetNormalizedImpXYZ;
+    TH1D* hsimcjetNormalizedImpXYZSignificance;
+    TH1D* hsimcjetNormalizedSignImpXYZ;
+    TH1D* hsimcjetNormalizedSignImpXYZSignificance;
+
+    TH1D* hsimbjetNormalizedImpXY;
+    TH1D* hsimbjetNormalizedImpXYSignificance;
+    TH1D* hsimbjetNormalizedSignImpXY;
+    TH1D* hsimbjetNormalizedSignImpXYSignificance;
+    TH1D* hsimbjetNormalizedPtSignImpXYSignificance;
+    TH1D* hsimbjetNormalizedImpXYZ;
+    TH1D* hsimbjetNormalizedImpXYZSignificance;
+    TH1D* hsimbjetNormalizedSignImpXYZ;
+    TH1D* hsimbjetNormalizedSignImpXYZSignificance;
+
+    // related Track Counting
+    TH1D* hsimlfjetNormalizedImpXYN1;
+    TH1D* hsimlfjetNormalizedImpXYN2;
+    TH1D* hsimlfjetNormalizedImpXYN3;
+    TH1D* hsimlfjetNormalizedSignImpXYN1;
+    TH1D* hsimlfjetNormalizedSignImpXYN2;
+    TH1D* hsimlfjetNormalizedSignImpXYN3;
+    TH1D* hsimlfjetNormalizedImpXYZN1;
+    TH1D* hsimlfjetNormalizedImpXYZN2;
+    TH1D* hsimlfjetNormalizedImpXYZN3;
+    TH1D* hsimlfjetNormalizedImpXYZSignificanceN1;
+    TH1D* hsimlfjetNormalizedImpXYZSignificanceN2;
+    TH1D* hsimlfjetNormalizedImpXYZSignificanceN3;
+    TH1D* hsimcjetNormalizedSignImpXYN1;
+    TH1D* hsimcjetNormalizedSignImpXYN2;
+    TH1D* hsimcjetNormalizedSignImpXYN3;
+
+    TH1D* hsimlfjetNormalizedImpXYSignificanceN1;
+    TH1D* hsimlfjetNormalizedImpXYSignificanceN2;
+    TH1D* hsimlfjetNormalizedImpXYSignificanceN3;
+    TH1D* hsimlfjetNormalizedPtSignImpXYSignificanceN1;
+    TH1D* hsimlfjetNormalizedPtSignImpXYSignificanceN2;
+    TH1D* hsimlfjetNormalizedPtSignImpXYSignificanceN3;
+    TH1D* hsimlfjetNormalizedSignImpXYSignificanceN1;
+    TH1D* hsimlfjetNormalizedSignImpXYSignificanceN2;
+    TH1D* hsimlfjetNormalizedSignImpXYSignificanceN3;
+
+    TH1D* hsimcjetNormalizedImpXYN1;
+    TH1D* hsimcjetNormalizedImpXYN2;
+    TH1D* hsimcjetNormalizedImpXYN3;
+    TH1D* hsimcjetNormalizedImpXYSignificanceN1;
+    TH1D* hsimcjetNormalizedImpXYSignificanceN2;
+    TH1D* hsimcjetNormalizedImpXYSignificanceN3;
+    TH1D* hsimcjetNormalizedSignImpXYSignificanceN1;
+    TH1D* hsimcjetNormalizedSignImpXYSignificanceN2;
+    TH1D* hsimcjetNormalizedSignImpXYSignificanceN3;
+    TH1D* hsimcjetNormalizedPtSignImpXYSignificanceN1;
+    TH1D* hsimcjetNormalizedPtSignImpXYSignificanceN2;
+    TH1D* hsimcjetNormalizedPtSignImpXYSignificanceN3;
+    TH1D* hsimcjetNormalizedImpXYZN1;
+    TH1D* hsimcjetNormalizedImpXYZN2;
+    TH1D* hsimcjetNormalizedImpXYZN3;
+    TH1D* hsimcjetNormalizedImpXYZSignificanceN1;
+    TH1D* hsimcjetNormalizedImpXYZSignificanceN2;
+    TH1D* hsimcjetNormalizedImpXYZSignificanceN3;
+
+    TH1D* hsimbjetNormalizedImpXYN1;
+    TH1D* hsimbjetNormalizedImpXYN2;
+    TH1D* hsimbjetNormalizedImpXYN3;
+    TH1D* hsimbjetNormalizedImpXYSignificanceN1;
+    TH1D* hsimbjetNormalizedImpXYSignificanceN2;
+    TH1D* hsimbjetNormalizedImpXYSignificanceN3;
+    TH1D* hsimbjetNormalizedSignImpXYN1;
+    TH1D* hsimbjetNormalizedSignImpXYN2;
+    TH1D* hsimbjetNormalizedSignImpXYN3;
+    TH1D* hsimbjetNormalizedSignImpXYSignificanceN1;
+    TH1D* hsimbjetNormalizedSignImpXYSignificanceN2;
+    TH1D* hsimbjetNormalizedSignImpXYSignificanceN3;
+    TH1D* hsimbjetNormalizedPtSignImpXYSignificanceN1;
+    TH1D* hsimbjetNormalizedPtSignImpXYSignificanceN2;
+    TH1D* hsimbjetNormalizedPtSignImpXYSignificanceN3;
+    TH1D* hsimbjetNormalizedImpXYZN1;
+    TH1D* hsimbjetNormalizedImpXYZN2;
+    TH1D* hsimbjetNormalizedImpXYZN3;
+    TH1D* hsimbjetNormalizedImpXYZSignificanceN1;
+    TH1D* hsimbjetNormalizedImpXYZSignificanceN2;
+    TH1D* hsimbjetNormalizedImpXYZSignificanceN3;
+
+    // related Resolution function
+    TH1D* hsimlfjetNormalizedSignImpXYSignificanceClass1;
+    TH1D* hsimlfjetNormalizedSignImpXYSignificanceClass2;
+    TH1D* hsimlfjetNormalizedSignImpXYSignificanceClass3;
+    TH1D* hsimcjetNormalizedSignImpXYSignificanceClass1;
+    TH1D* hsimcjetNormalizedSignImpXYSignificanceClass2;
+    TH1D* hsimcjetNormalizedSignImpXYSignificanceClass3;
+    TH1D* hsimbjetNormalizedSignImpXYSignificanceClass1;
+    TH1D* hsimbjetNormalizedSignImpXYSignificanceClass2;
+    TH1D* hsimbjetNormalizedSignImpXYSignificanceClass3;
+
+    // related jetNormalized Probability
+    TH1D* hsimlfjetNormalizedJP;
+    TH1D* hsimlfjetNormalizedJPLog;
+    TH2D* hsimlfjetNormalizedPtJP;
+    TH2D* hsimlfjetNormalizedPtJPLog;
+    TH1D* hsimcjetNormalizedJP;
+    TH1D* hsimcjetNormalizedJPLog;
+    TH2D* hsimcjetNormalizedPtJP;
+    TH2D* hsimcjetNormalizedPtJPLog;
+    TH1D* hsimbjetNormalizedJP;
+    TH1D* hsimbjetNormalizedJPLog;
+    TH2D* hsimbjetNormalizedPtJP;
+    TH2D* hsimbjetNormalizedPtJPLog;
+
+  private:
+
+};
+
+HfJetTaggingTCAnalysis::~HfJetTaggingTCAnalysis() {
+
+  // common
+  if (hsimlfjetTrackPt) delete hsimlfjetTrackPt;
+  if (hsimlfjetTrackPhi) delete hsimlfjetTrackPhi;
+  if (hsimlfjetTrackEta) delete hsimlfjetTrackEta;
+  if (hsimcjetTrackPt) delete hsimcjetTrackPt;
+  if (hsimcjetTrackPhi) delete hsimcjetTrackPhi;
+  if (hsimcjetTrackEta) delete hsimcjetTrackEta;
+  if (hsimbjetTrackPt) delete hsimbjetTrackPt;
+  if (hsimbjetTrackPhi) delete hsimbjetTrackPhi;
+  if (hsimbjetTrackEta) delete hsimbjetTrackEta;
+
+  // related to Impact parameter
+  if (hsimlfjetImpXY) delete hsimlfjetImpXY;
+  if (hsimlfjetImpXYSignificance) delete hsimlfjetImpXYSignificance;
+  if (hsimlfjetSignImpXY) delete hsimlfjetSignImpXY;
+  if (hsimlfjetSignImpXYSignificance) delete hsimlfjetSignImpXYSignificance;
+  if (hsimlfjetPtSignImpXYSignificance) delete hsimlfjetPtSignImpXYSignificance;
+  if (hsimlfjetImpXYZ) delete hsimlfjetImpXYZ;
+  if (hsimlfjetImpXYZSignificance) delete hsimlfjetImpXYZSignificance;
+  if (hsimlfjetSignImpXYZ) delete hsimlfjetSignImpXYZ;
+  if (hsimlfjetSignImpXYZSignificance) delete hsimlfjetSignImpXYZSignificance;
+
+  if (hsimcjetImpXY) delete hsimcjetImpXY;
+  if (hsimcjetImpXYSignificance) delete hsimcjetImpXYSignificance;
+  if (hsimcjetSignImpXY) delete hsimcjetSignImpXY;
+  if (hsimcjetSignImpXYSignificance) delete hsimcjetSignImpXYSignificance;
+  if (hsimcjetPtSignImpXYSignificance) delete hsimcjetPtSignImpXYSignificance;
+  if (hsimcjetImpXYZ) delete hsimcjetImpXYZ;
+  if (hsimcjetSignImpXYZ) delete hsimcjetSignImpXYZ;
+  if (hsimcjetImpXYZSignificance) delete hsimcjetImpXYZSignificance;
+  if (hsimcjetSignImpXYZSignificance) delete hsimcjetSignImpXYZSignificance;
+
+  if (hsimbjetImpXY) delete hsimbjetImpXY;
+  if (hsimbjetImpXYSignificance) delete hsimbjetImpXYSignificance;
+  if (hsimbjetSignImpXY) delete hsimbjetSignImpXY;
+  if (hsimbjetSignImpXYSignificance) delete hsimbjetSignImpXYSignificance;
+  if (hsimbjetPtSignImpXYSignificance) delete hsimbjetPtSignImpXYSignificance;
+  if (hsimbjetImpXYZ) delete hsimbjetImpXYZ;
+  if (hsimbjetImpXYZSignificance) delete hsimbjetImpXYZSignificance;
+  if (hsimbjetSignImpXYZ) delete hsimbjetSignImpXYZ;
+  if (hsimbjetSignImpXYZSignificance) delete hsimbjetSignImpXYZSignificance;
+
+  // related to Track Counting
+
+  if (hsimlfjetImpXYN1) delete hsimlfjetImpXYN1;
+  if (hsimlfjetImpXYN2) delete hsimlfjetImpXYN2;
+  if (hsimlfjetImpXYN3) delete hsimlfjetImpXYN3;
+  if (hsimlfjetSignImpXYN1) delete hsimlfjetSignImpXYN1;
+  if (hsimlfjetSignImpXYN2) delete hsimlfjetSignImpXYN2;
+  if (hsimlfjetSignImpXYN3) delete hsimlfjetSignImpXYN3;
+  if (hsimlfjetImpXYZSignificanceN1) delete hsimlfjetImpXYZSignificanceN1;
+  if (hsimlfjetImpXYZSignificanceN2) delete hsimlfjetImpXYZSignificanceN2;
+  if (hsimlfjetImpXYZSignificanceN3) delete hsimlfjetImpXYZSignificanceN3;
+  if (hsimcjetSignImpXYN1) delete hsimcjetSignImpXYN1;
+  if (hsimcjetSignImpXYN2) delete hsimcjetSignImpXYN2;
+  if (hsimcjetSignImpXYN3) delete hsimcjetSignImpXYN3;
+  if (hsimlfjetImpXYZN1) delete hsimlfjetImpXYZN1;
+  if (hsimlfjetImpXYZN2) delete hsimlfjetImpXYZN2;
+  if (hsimlfjetImpXYZN3) delete hsimlfjetImpXYZN3;
+  if (hsimlfjetImpXYSignificanceN1) delete hsimlfjetImpXYSignificanceN1;
+  if (hsimlfjetImpXYSignificanceN2) delete hsimlfjetImpXYSignificanceN2;
+  if (hsimlfjetImpXYSignificanceN3) delete hsimlfjetImpXYSignificanceN3;
+  if (hsimlfjetPtSignImpXYSignificanceN1) delete hsimlfjetPtSignImpXYSignificanceN1;
+  if (hsimlfjetPtSignImpXYSignificanceN2) delete hsimlfjetPtSignImpXYSignificanceN2;
+  if (hsimlfjetPtSignImpXYSignificanceN3) delete hsimlfjetPtSignImpXYSignificanceN3;
+  if (hsimlfjetSignImpXYSignificanceN1) delete hsimlfjetSignImpXYSignificanceN1;
+  if (hsimlfjetSignImpXYSignificanceN2) delete hsimlfjetSignImpXYSignificanceN2;
+  if (hsimlfjetSignImpXYSignificanceN3) delete hsimlfjetSignImpXYSignificanceN3;
+  if (hsimcjetImpXYN1) delete hsimcjetImpXYN1;
+  if (hsimcjetImpXYN2) delete hsimcjetImpXYN2;
+  if (hsimcjetImpXYN3) delete hsimcjetImpXYN3;
+  if (hsimcjetImpXYSignificanceN1) delete hsimcjetImpXYSignificanceN1;
+  if (hsimcjetImpXYSignificanceN2) delete hsimcjetImpXYSignificanceN2;
+  if (hsimcjetImpXYSignificanceN3) delete hsimcjetImpXYSignificanceN3;
+  if (hsimcjetSignImpXYSignificanceN1) delete hsimcjetSignImpXYSignificanceN1;
+  if (hsimcjetSignImpXYSignificanceN2) delete hsimcjetSignImpXYSignificanceN2;
+  if (hsimcjetSignImpXYSignificanceN3) delete hsimcjetSignImpXYSignificanceN3;
+  if (hsimcjetPtSignImpXYSignificanceN1) delete hsimcjetPtSignImpXYSignificanceN1;
+  if (hsimcjetPtSignImpXYSignificanceN2) delete hsimcjetPtSignImpXYSignificanceN2;
+  if (hsimcjetPtSignImpXYSignificanceN3) delete hsimcjetPtSignImpXYSignificanceN3;
+  if (hsimbjetImpXYN1) delete hsimbjetImpXYN1;
+  if (hsimbjetImpXYN2) delete hsimbjetImpXYN2;
+  if (hsimbjetImpXYN3) delete hsimbjetImpXYN3;
+  if (hsimbjetImpXYSignificanceN1) delete hsimbjetImpXYSignificanceN1;
+  if (hsimbjetImpXYSignificanceN2) delete hsimbjetImpXYSignificanceN2;
+  if (hsimbjetImpXYSignificanceN3) delete hsimbjetImpXYSignificanceN3;
+  if (hsimbjetSignImpXYN1) delete hsimbjetSignImpXYN1;
+  if (hsimbjetSignImpXYN2) delete hsimbjetSignImpXYN2;
+  if (hsimbjetSignImpXYN3) delete hsimbjetSignImpXYN3;
+  if (hsimbjetSignImpXYSignificanceN1) delete hsimbjetSignImpXYSignificanceN1;
+  if (hsimbjetSignImpXYSignificanceN2) delete hsimbjetSignImpXYSignificanceN2;
+  if (hsimbjetSignImpXYSignificanceN3) delete hsimbjetSignImpXYSignificanceN3;
+  if (hsimbjetPtSignImpXYSignificanceN1) delete hsimbjetPtSignImpXYSignificanceN1;
+  if (hsimbjetPtSignImpXYSignificanceN2) delete hsimbjetPtSignImpXYSignificanceN2;
+  if (hsimbjetPtSignImpXYSignificanceN3) delete hsimbjetPtSignImpXYSignificanceN3;
+  if (hsimbjetImpXYZN1) delete hsimbjetImpXYZN1;
+  if (hsimbjetImpXYZN2) delete hsimbjetImpXYZN2;
+  if (hsimbjetImpXYZN3) delete hsimbjetImpXYZN3;
+  if (hsimbjetImpXYZSignificanceN1) delete hsimbjetImpXYZSignificanceN1;
+  if (hsimbjetImpXYZSignificanceN2) delete hsimbjetImpXYZSignificanceN2;
+  if (hsimbjetImpXYZSignificanceN3) delete hsimbjetImpXYZSignificanceN3;
+
+  // related to Resolution function
+  if (hsimlfjetSignImpXYSignificanceClass1) delete hsimlfjetSignImpXYSignificanceClass1;
+  if (hsimlfjetSignImpXYSignificanceClass2) delete hsimlfjetSignImpXYSignificanceClass2;
+  if (hsimlfjetSignImpXYSignificanceClass3) delete hsimlfjetSignImpXYSignificanceClass3;
+  if (hsimcjetSignImpXYSignificanceClass1) delete hsimcjetSignImpXYSignificanceClass1;
+  if (hsimcjetSignImpXYSignificanceClass2) delete hsimcjetSignImpXYSignificanceClass2;
+  if (hsimcjetSignImpXYSignificanceClass3) delete hsimcjetSignImpXYSignificanceClass3;
+  if (hsimbjetSignImpXYSignificanceClass1) delete hsimbjetSignImpXYSignificanceClass1;
+  if (hsimbjetSignImpXYSignificanceClass2) delete hsimbjetSignImpXYSignificanceClass2;
+  if (hsimbjetSignImpXYSignificanceClass3) delete hsimbjetSignImpXYSignificanceClass3;
+
+  // related to Jet probability
+  if (hsimlfjetJP) delete hsimlfjetJP;
+  if (hsimlfjetJPLog) delete hsimlfjetJPLog;
+  if (hsimlfjetPtJP) delete hsimlfjetPtJP;
+  if (hsimlfjetPtJPLog) delete hsimlfjetPtJPLog;
+  if (hsimcjetJP) delete hsimcjetJP;
+  if (hsimcjetJPLog) delete hsimcjetJPLog;
+  if (hsimcjetPtJP) delete hsimcjetPtJP;
+  if (hsimcjetPtJPLog) delete hsimcjetPtJPLog;
+  if (hsimbjetJP) delete hsimbjetJP;
+  if (hsimbjetJPLog) delete hsimbjetJPLog;
+  if (hsimbjetPtJP) delete hsimbjetPtJP;
+  if (hsimbjetPtJPLog) delete hsimbjetPtJPLog;
+
+  // Normalized
+  // Delete normalized histograms
+  if (hsimlfjetNormalizedTrackPt) delete hsimlfjetNormalizedTrackPt;
+  if (hsimlfjetNormalizedTrackPhi) delete hsimlfjetNormalizedTrackPhi;
+  if (hsimlfjetNormalizedTrackEta) delete hsimlfjetNormalizedTrackEta;
+
+  if (hsimcjetNormalizedTrackPt) delete hsimcjetNormalizedTrackPt;
+  if (hsimcjetNormalizedTrackPhi) delete hsimcjetNormalizedTrackPhi;
+  if (hsimcjetNormalizedTrackEta) delete hsimcjetNormalizedTrackEta;
+
+  if (hsimbjetNormalizedTrackPt) delete hsimbjetNormalizedTrackPt;
+  if (hsimbjetNormalizedTrackPhi) delete hsimbjetNormalizedTrackPhi;
+  if (hsimbjetNormalizedTrackEta) delete hsimbjetNormalizedTrackEta;
+
+  if (hsimlfjetNormalizedImpXY) delete hsimlfjetNormalizedImpXY;
+  if (hsimlfjetNormalizedImpXYSignificance) delete hsimlfjetNormalizedImpXYSignificance;
+  if (hsimlfjetNormalizedSignImpXY) delete hsimlfjetNormalizedSignImpXY;
+  if (hsimlfjetNormalizedSignImpXYSignificance) delete hsimlfjetNormalizedSignImpXYSignificance;
+  if (hsimlfjetNormalizedPtSignImpXYSignificance) delete hsimlfjetNormalizedPtSignImpXYSignificance;
+
+  if (hsimlfjetNormalizedImpXYZ) delete hsimlfjetNormalizedImpXYZ;
+  if (hsimlfjetNormalizedImpXYZSignificance) delete hsimlfjetNormalizedImpXYZSignificance;
+
+  if (hsimcjetNormalizedImpXY) delete hsimcjetNormalizedImpXY;
+  if (hsimcjetNormalizedImpXYSignificance) delete hsimcjetNormalizedImpXYSignificance;
+  if (hsimcjetNormalizedSignImpXY) delete hsimcjetNormalizedSignImpXY;
+  if (hsimcjetNormalizedSignImpXYSignificance) delete hsimcjetNormalizedSignImpXYSignificance;
+  if (hsimcjetNormalizedPtSignImpXYSignificance) delete hsimcjetNormalizedPtSignImpXYSignificance;
+
+  if (hsimcjetNormalizedImpXYZ) delete hsimcjetNormalizedImpXYZ;
+  if (hsimcjetNormalizedImpXYZSignificance) delete hsimcjetNormalizedImpXYZSignificance;
+
+  if (hsimbjetNormalizedImpXY) delete hsimbjetNormalizedImpXY;
+  if (hsimbjetNormalizedImpXYSignificance) delete hsimbjetNormalizedImpXYSignificance;
+  if (hsimbjetNormalizedSignImpXY) delete hsimbjetNormalizedSignImpXY;
+  if (hsimbjetNormalizedSignImpXYSignificance) delete hsimbjetNormalizedSignImpXYSignificance;
+  if (hsimbjetNormalizedPtSignImpXYSignificance) delete hsimbjetNormalizedPtSignImpXYSignificance;
+
+  if (hsimbjetNormalizedImpXYZ) delete hsimbjetNormalizedImpXYZ;
+  if (hsimbjetNormalizedImpXYZSignificance) delete hsimbjetNormalizedImpXYZSignificance;
+  if (hsimlfjetNormalizedImpXYN1) delete hsimlfjetNormalizedImpXYN1;
+  if (hsimlfjetNormalizedImpXYN2) delete hsimlfjetNormalizedImpXYN2;
+  if (hsimlfjetNormalizedImpXYN3) delete hsimlfjetNormalizedImpXYN3;
+  if (hsimlfjetNormalizedSignImpXYN1) delete hsimlfjetNormalizedSignImpXYN1;
+  if (hsimlfjetNormalizedSignImpXYN2) delete hsimlfjetNormalizedSignImpXYN2;
+  if (hsimlfjetNormalizedSignImpXYN3) delete hsimlfjetNormalizedSignImpXYN3;
+  if (hsimlfjetNormalizedImpXYZN1) delete hsimlfjetNormalizedImpXYZN1;
+  if (hsimlfjetNormalizedImpXYZN2) delete hsimlfjetNormalizedImpXYZN2;
+  if (hsimlfjetNormalizedImpXYZN3) delete hsimlfjetNormalizedImpXYZN3;
+  if (hsimlfjetNormalizedImpXYZSignificanceN1) delete hsimlfjetNormalizedImpXYZSignificanceN1;
+  if (hsimlfjetNormalizedImpXYZSignificanceN2) delete hsimlfjetNormalizedImpXYZSignificanceN2;
+  if (hsimlfjetNormalizedImpXYZSignificanceN3) delete hsimlfjetNormalizedImpXYZSignificanceN3;
+
+  if (hsimcjetNormalizedSignImpXYN1) delete hsimcjetNormalizedSignImpXYN1;
+  if (hsimcjetNormalizedSignImpXYN2) delete hsimcjetNormalizedSignImpXYN2;
+  if (hsimcjetNormalizedSignImpXYN3) delete hsimcjetNormalizedSignImpXYN3;
+  if (hsimcjetNormalizedImpXYN1) delete hsimcjetNormalizedImpXYN1;
+  if (hsimcjetNormalizedImpXYN2) delete hsimcjetNormalizedImpXYN2;
+  if (hsimcjetNormalizedImpXYN3) delete hsimcjetNormalizedImpXYN3;
+  if (hsimcjetNormalizedImpXYSignificanceN1) delete hsimcjetNormalizedImpXYSignificanceN1;
+  if (hsimcjetNormalizedImpXYSignificanceN2) delete hsimcjetNormalizedImpXYSignificanceN2;
+  if (hsimcjetNormalizedImpXYSignificanceN3) delete hsimcjetNormalizedImpXYSignificanceN3;
+  if (hsimcjetNormalizedSignImpXYSignificanceN1) delete hsimcjetNormalizedSignImpXYSignificanceN1;
+  if (hsimcjetNormalizedSignImpXYSignificanceN2) delete hsimcjetNormalizedSignImpXYSignificanceN2;
+  if (hsimcjetNormalizedSignImpXYSignificanceN3) delete hsimcjetNormalizedSignImpXYSignificanceN3;
+  if (hsimcjetNormalizedPtSignImpXYSignificanceN1) delete hsimcjetNormalizedPtSignImpXYSignificanceN1;
+  if (hsimcjetNormalizedPtSignImpXYSignificanceN2) delete hsimcjetNormalizedPtSignImpXYSignificanceN2;
+  if (hsimcjetNormalizedPtSignImpXYSignificanceN3) delete hsimcjetNormalizedPtSignImpXYSignificanceN3;
+
+  if (hsimbjetNormalizedImpXYN1) delete hsimbjetNormalizedImpXYN1;
+  if (hsimbjetNormalizedImpXYN2) delete hsimbjetNormalizedImpXYN2;
+  if (hsimbjetNormalizedImpXYN3) delete hsimbjetNormalizedImpXYN3;
+  if (hsimbjetNormalizedImpXYSignificanceN1) delete hsimbjetNormalizedImpXYSignificanceN1;
+  if (hsimbjetNormalizedImpXYSignificanceN2) delete hsimbjetNormalizedImpXYSignificanceN2;
+  if (hsimbjetNormalizedImpXYSignificanceN3) delete hsimbjetNormalizedImpXYSignificanceN3;
+  if (hsimbjetNormalizedSignImpXYN1) delete hsimbjetNormalizedSignImpXYN1;
+  if (hsimbjetNormalizedSignImpXYN2) delete hsimbjetNormalizedSignImpXYN2;
+  if (hsimbjetNormalizedSignImpXYN3) delete hsimbjetNormalizedSignImpXYN3;
+  if (hsimbjetNormalizedSignImpXYSignificanceN1) delete hsimbjetNormalizedSignImpXYSignificanceN1;
+  if (hsimbjetNormalizedSignImpXYSignificanceN2) delete hsimbjetNormalizedSignImpXYSignificanceN2;
+  if (hsimbjetNormalizedSignImpXYSignificanceN3) delete hsimbjetNormalizedSignImpXYSignificanceN3;
+  if (hsimbjetNormalizedPtSignImpXYSignificanceN1) delete hsimbjetNormalizedPtSignImpXYSignificanceN1;
+  if (hsimbjetNormalizedPtSignImpXYSignificanceN2) delete hsimbjetNormalizedPtSignImpXYSignificanceN2;
+  if (hsimbjetNormalizedPtSignImpXYSignificanceN3) delete hsimbjetNormalizedPtSignImpXYSignificanceN3;
+
+  if (hsimlfjetNormalizedSignImpXYSignificanceClass1) delete hsimlfjetNormalizedSignImpXYSignificanceClass1;
+  if (hsimlfjetNormalizedSignImpXYSignificanceClass2) delete hsimlfjetNormalizedSignImpXYSignificanceClass2;
+  if (hsimlfjetNormalizedSignImpXYSignificanceClass3) delete hsimlfjetNormalizedSignImpXYSignificanceClass3;
+
+  if (hsimcjetNormalizedSignImpXYSignificanceClass1) delete hsimcjetNormalizedSignImpXYSignificanceClass1;
+  if (hsimcjetNormalizedSignImpXYSignificanceClass2) delete hsimcjetNormalizedSignImpXYSignificanceClass2;
+  if (hsimcjetNormalizedSignImpXYSignificanceClass3) delete hsimcjetNormalizedSignImpXYSignificanceClass3;
+
+  if (hsimbjetNormalizedSignImpXYSignificanceClass1) delete hsimbjetNormalizedSignImpXYSignificanceClass1;
+  if (hsimbjetNormalizedSignImpXYSignificanceClass2) delete hsimbjetNormalizedSignImpXYSignificanceClass2;
+  if (hsimbjetNormalizedSignImpXYSignificanceClass3) delete hsimbjetNormalizedSignImpXYSignificanceClass3;
+  if (hsimlfjetNormalizedJP) delete hsimlfjetNormalizedJP;
+  if (hsimlfjetNormalizedJPLog) delete hsimlfjetNormalizedJPLog;
+  if (hsimlfjetNormalizedPtJP) delete hsimlfjetNormalizedPtJP;
+  if (hsimlfjetNormalizedPtJPLog) delete hsimlfjetNormalizedPtJPLog;
+
+  if (hsimcjetNormalizedJP) delete hsimcjetNormalizedJP;
+  if (hsimcjetNormalizedJPLog) delete hsimcjetNormalizedJPLog;
+  if (hsimcjetNormalizedPtJP) delete hsimcjetNormalizedPtJP;
+  if (hsimcjetNormalizedPtJPLog) delete hsimcjetNormalizedPtJPLog;
+
+  if (hsimbjetNormalizedJP) delete hsimbjetNormalizedJP;
+  if (hsimbjetNormalizedJPLog) delete hsimbjetNormalizedJPLog;
+  if (hsimbjetNormalizedPtJP) delete hsimbjetNormalizedPtJP;
+  if (hsimbjetNormalizedPtJPLog) delete hsimbjetNormalizedPtJPLog;
+
+}
+
+void HfJetTaggingTCAnalysis::InitHistogram(bool doTC, bool doJP) {
+  if (doTC){
+    for (int flavour = 0; flavour < HfJetTagging::nFlavour+1; flavour++) {
+      for (int jetPt = 0; jetPt < HfJetTagging::nBinsJetPt+1; jetPt++) {
+        hsimjetTrackPt[flavour][jetPt] = new TH1F(Form("hsimjetTrackPt_%d_%d", flavour, jetPt), "", h3simjetPtTrackPtFlavour->GetNbinsY(), h3simjetPtTrackPtFlavour->GetYaxis()->GetBinLowEdge(1), h3simjetPtTrackPtFlavour->GetYaxis()->GetBinUpEdge(h3simjetPtTrackPtFlavour->GetNbinsY()));
+        hsimjetTrackEta[flavour][jetPt] = new TH1F(Form("hsimjetTrackEta_%d_%d", flavour, jetPt), "", h3simjetPtTrackEtaFlavour->GetNbinsY(), h3simjetPtTrackEtaFlavour->GetYaxis()->GetBinLowEdge(1), h3simjetPtTrackEtaFlavour->GetYaxis()->GetBinUpEdge(h3simjetPtTrackEtaFlavour->GetNbinsY()));
+        hsimjetTrackPhi[flavour][jetPt] = new TH1F(Form("hsimjetTrackPhi_%d_%d", flavour, jetPt), "", h3simjetPtTrackPhiFlavour->GetNbinsY(), h3simjetPtTrackPhiFlavour->GetYaxis()->GetBinLowEdge(1), h3simjetPtTrackPhiFlavour->GetYaxis()->GetBinUpEdge(h3simjetPtTrackPhiFlavour->GetNbinsY()));
+        hsimjetImpXY[flavour][jetPt] = new TH1F(Form("hsimjetImpXY_%d_%d", flavour, jetPt), "", h3simjetPtImpXYFlavour->GetNbinsY(), h3simjetPtImpXYFlavour->GetYaxis()->GetBinLowEdge(1), h3simjetPtImpXYFlavour->GetYaxis()->GetBinUpEdge(h3simjetPtImpXYFlavour->GetNbinsY()));
+        hsimjetSignImpXY[flavour][jetPt] = new TH1F(Form("hsimjetSignImpXY_%d_%d", flavour, jetPt), "", h3simjetPtSignImpXYFlavour->GetNbinsY(), h3simjetPtSignImpXYFlavour->GetYaxis()->GetBinLowEdge(1), h3simjetPtSignImpXYFlavour->GetYaxis()->GetBinUpEdge(h3simjetPtSignImpXYFlavour->GetNbinsY()));
+        hsimjetImpXYSig[flavour][jetPt] = new TH1F(Form("hsimjetImpXYSig_%d_%d", flavour, jetPt), "", h3simjetPtImpXYSigFlavour->GetNbinsY(), h3simjetPtImpXYSigFlavour->GetYaxis()->GetBinLowEdge(1), h3simjetPtImpXYSigFlavour->GetYaxis()->GetBinUpEdge(h3simjetPtImpXYSigFlavour->GetNbinsY()));
+        hsimjetSignImpXYSig[flavour][jetPt] = new TH1F(Form("hsimjetSignImpXYSig_%d_%d", flavour, jetPt), "", h3simjetPtSignImpXYSigFlavour->GetNbinsY(), h3simjetPtSignImpXYSigFlavour->GetYaxis()->GetBinLowEdge(1), h3simjetPtSignImpXYSigFlavour->GetYaxis()->GetBinUpEdge(h3simjetPtSignImpXYSigFlavour->GetNbinsY()));
+        hsimjetImpZ[flavour][jetPt] = new TH1F(Form("hsimjetImpZ_%d_%d", flavour, jetPt), "", h3simjetPtImpZFlavour->GetNbinsY(), h3simjetPtImpZFlavour->GetYaxis()->GetBinLowEdge(1), h3simjetPtImpZFlavour->GetYaxis()->GetBinUpEdge(h3simjetPtImpZFlavour->GetNbinsY()));
+        hsimjetSignImpZ[flavour][jetPt] = new TH1F(Form("hsimjetSignImpZ_%d_%d", flavour, jetPt), "", h3simjetPtSignImpZFlavour->GetNbinsY(), h3simjetPtSignImpZFlavour->GetYaxis()->GetBinLowEdge(1), h3simjetPtSignImpZFlavour->GetYaxis()->GetBinUpEdge(h3simjetPtSignImpZFlavour->GetNbinsY()));
+        hsimjetImpZSig[flavour][jetPt] = new TH1F(Form("hsimjetImpZSig_%d_%d", flavour, jetPt), "", h3simjetPtImpZSigFlavour->GetNbinsY(), h3simjetPtImpZSigFlavour->GetYaxis()->GetBinLowEdge(1), h3simjetPtImpZSigFlavour->GetYaxis()->GetBinUpEdge(h3simjetPtImpZSigFlavour->GetNbinsY()));
+        hsimjetSignImpZSig[flavour][jetPt] = new TH1F(Form("hsimjetSignImpZSig_%d_%d", flavour, jetPt), "", h3simjetPtSignImpZSigFlavour->GetNbinsY(), h3simjetPtSignImpZSigFlavour->GetYaxis()->GetBinLowEdge(1), h3simjetPtSignImpZSigFlavour->GetYaxis()->GetBinUpEdge(h3simjetPtSignImpZSigFlavour->GetNbinsY()));
+        hsimjetImpXYZ[flavour][jetPt] = new TH1F(Form("hsimjetImpXYZ_%d_%d", flavour, jetPt), "", h3simjetPtImpXYZFlavour->GetNbinsY(), h3simjetPtImpXYZFlavour->GetYaxis()->GetBinLowEdge(1), h3simjetPtImpXYZFlavour->GetYaxis()->GetBinUpEdge(h3simjetPtImpXYZFlavour->GetNbinsY()));
+        hsimjetSignImpXYZ[flavour][jetPt] = new TH1F(Form("hsimjetSignImpXYZ_%d_%d", flavour, jetPt), "", h3simjetPtSignImpXYZFlavour->GetNbinsY(), h3simjetPtSignImpXYZFlavour->GetYaxis()->GetBinLowEdge(1), h3simjetPtSignImpXYZFlavour->GetYaxis()->GetBinUpEdge(h3simjetPtSignImpXYZFlavour->GetNbinsY()));
+        hsimjetImpXYZSig[flavour][jetPt] = new TH1F(Form("hsimjetImpXYZSig_%d_%d", flavour, jetPt), "", h3simjetPtImpXYZSigFlavour->GetNbinsY(), h3simjetPtImpXYZSigFlavour->GetYaxis()->GetBinLowEdge(1), h3simjetPtImpXYZSigFlavour->GetYaxis()->GetBinUpEdge(h3simjetPtImpXYZSigFlavour->GetNbinsY()));
+        hsimjetSignImpXYZSig[flavour][jetPt] = new TH1F(Form("hsimjetSignImpXYZSig_%d_%d", flavour, jetPt), "", h3simjetPtSignImpXYZSigFlavour->GetNbinsY(), h3simjetPtSignImpXYZSigFlavour->GetYaxis()->GetBinLowEdge(1), h3simjetPtSignImpXYZSigFlavour->GetYaxis()->GetBinUpEdge(h3simjetPtSignImpXYZSigFlavour->GetNbinsY()));
+        hsimjetSignImpXYSigN1[flavour][jetPt] = new TH1F(Form("hsimjetSignImpXYSigN1_%d_%d", flavour, jetPt), "", h3simjetPtSignImpXYSigFlavourN1->GetNbinsY(), h3simjetPtSignImpXYSigFlavourN1->GetYaxis()->GetBinLowEdge(1), h3simjetPtSignImpXYSigFlavourN1->GetYaxis()->GetBinUpEdge(h3simjetPtSignImpXYSigFlavourN1->GetNbinsY()));
+        hsimjetSignImpXYSigN2[flavour][jetPt] = new TH1F(Form("hsimjetSignImpXYSigN2_%d_%d", flavour, jetPt), "", h3simjetPtSignImpXYSigFlavourN2->GetNbinsY(), h3simjetPtSignImpXYSigFlavourN2->GetYaxis()->GetBinLowEdge(1), h3simjetPtSignImpXYSigFlavourN2->GetYaxis()->GetBinUpEdge(h3simjetPtSignImpXYSigFlavourN2->GetNbinsY()));
+        hsimjetSignImpXYSigN3[flavour][jetPt] = new TH1F(Form("hsimjetSignImpXYSigN3_%d_%d", flavour, jetPt), "", h3simjetPtSignImpXYSigFlavourN3->GetNbinsY(), h3simjetPtSignImpXYSigFlavourN3->GetYaxis()->GetBinLowEdge(1), h3simjetPtSignImpXYSigFlavourN3->GetYaxis()->GetBinUpEdge(h3simjetPtSignImpXYSigFlavourN3->GetNbinsY()));
+
+      }
+    }
+  }
+}
+
+void HfJetTaggingTCAnalysis::DoTEMP(bool doTC, bool doJP) {
+  if (doTC) {
+
+    //hsimincjetTrackPt = new TH1F("hsimincjetTrackPt", "", h3simjetPtTrackPtFlavour->GetNbinsY(), h3simjetPtTrackPtFlavour->GetYaxis()->GetBinLowEdge(1), h3simjetPtTrackPtFlavour->GetYaxis()->GetBinUpEdge(h3simjetPtTrackPtFlavour->GetNbinsY()));
+    hsimlfjetNormalizedTrackPt = (TH1D*) hsimlfjetTrackPt->Clone("hsimlfjetNormalizedTrackPt");
+    hsimlfjetNormalizedTrackPhi = (TH1D*)hsimlfjetTrackPhi->Clone("hsimlfjetNormalizedTrackPhi");
+    hsimlfjetNormalizedTrackEta = (TH1D*)hsimlfjetTrackEta->Clone("hsimlfjetNormalizedTrackEta");
+
+    hsimcjetNormalizedTrackPt = (TH1D*)hsimcjetTrackPt->Clone("hsimcjetNormalizedTrackPt");
+    hsimcjetNormalizedTrackPhi = (TH1D*)hsimcjetTrackPhi->Clone("hsimcjetNormalizedTrackPhi");
+    hsimcjetNormalizedTrackEta = (TH1D*)hsimcjetTrackEta->Clone("hsimcjetNormalizedTrackEta");
+
+    hsimbjetNormalizedTrackPt = (TH1D*)hsimbjetTrackPt->Clone("hsimbjetNormalizedTrackPt");
+    hsimbjetNormalizedTrackPhi = (TH1D*)hsimbjetTrackPhi->Clone("hsimbjetNormalizedTrackPhi");
+    hsimbjetNormalizedTrackEta = (TH1D*)hsimbjetTrackEta->Clone("hsimbjetNormalizedTrackEta");
+
+    // related Impact parameter
+    hsimlfjetNormalizedImpXY = (TH1D*)hsimlfjetImpXY->Clone("hsimlfjetNormalizedImpXY");
+    hsimlfjetNormalizedImpXYSignificance = (TH1D*)hsimlfjetImpXYSignificance->Clone("hsimlfjetNormalizedImpXYSignificance");
+    hsimlfjetNormalizedSignImpXY = (TH1D*)hsimlfjetSignImpXY->Clone("hsimlfjetNormalizedSignImpXY");
+    hsimlfjetNormalizedSignImpXYSignificance = (TH1D*)hsimlfjetSignImpXYSignificance->Clone("hsimlfjetNormalizedSignImpXYSignificance");
+    hsimlfjetNormalizedPtSignImpXYSignificance = (TH1D*)hsimlfjetPtSignImpXYSignificance->Clone("hsimlfjetNormalizedPtSignImpXYSignificance");
+    hsimlfjetNormalizedImpXYZ = (TH1D*)hsimlfjetImpXYZ->Clone("hsimlfjetNormalizedImpXYZ");
+    hsimlfjetNormalizedImpXYZSignificance = (TH1D*)hsimlfjetImpXYZSignificance->Clone("hsimlfjetNormalizedImpXYZSignificance");
+    hsimlfjetNormalizedSignImpXYZ = (TH1D*)hsimlfjetSignImpXYZ->Clone("hsimlfjetNormalizedSignImpXYZ");
+    hsimlfjetNormalizedSignImpXYZSignificance = (TH1D*)hsimlfjetSignImpXYZSignificance->Clone("hsimlfjetNormalizedSignImpXYZSignificance");
+
+    hsimcjetNormalizedImpXY = (TH1D*)hsimcjetImpXY->Clone("hsimcjetNormalizedImpXY");
+    hsimcjetNormalizedImpXYSignificance = (TH1D*)hsimcjetImpXYSignificance->Clone("hsimcjetNormalizedImpXYSignificance");
+    hsimcjetNormalizedSignImpXY = (TH1D*)hsimcjetSignImpXY->Clone("hsimcjetNormalizedSignImpXY");
+    hsimcjetNormalizedSignImpXYSignificance = (TH1D*)hsimcjetSignImpXYSignificance->Clone("hsimcjetNormalizedSignImpXYSignificance");
+    hsimcjetNormalizedPtSignImpXYSignificance = (TH1D*)hsimcjetPtSignImpXYSignificance->Clone("hsimcjetNormalizedPtSignImpXYSignificance");
+    hsimcjetNormalizedImpXYZ = (TH1D*)hsimcjetImpXYZ->Clone("hsimcjetNormalizedImpXYZ");
+    hsimcjetNormalizedImpXYZSignificance = (TH1D*)hsimcjetImpXYZSignificance->Clone("hsimcjetNormalizedImpXYZSignificance");
+    hsimcjetNormalizedSignImpXYZ = (TH1D*)hsimcjetSignImpXYZ->Clone("hsimcjetNormalizedSignImpXYZ");
+    hsimcjetNormalizedSignImpXYZSignificance = (TH1D*)hsimcjetSignImpXYZSignificance->Clone("hsimcjetNormalizedSignImpXYZSignificance");
+
+    hsimbjetNormalizedImpXY = (TH1D*)hsimbjetImpXY->Clone("hsimbjetNormalizedImpXY");
+    hsimbjetNormalizedImpXYSignificance = (TH1D*)hsimbjetImpXYSignificance->Clone("hsimbjetNormalizedImpXYSignificance");
+    hsimbjetNormalizedSignImpXY = (TH1D*)hsimbjetSignImpXY->Clone("hsimbjetNormalizedSignImpXY");
+    hsimbjetNormalizedSignImpXYSignificance = (TH1D*)hsimbjetSignImpXYSignificance->Clone("hsimbjetNormalizedSignImpXYSignificance");
+    hsimbjetNormalizedPtSignImpXYSignificance = (TH1D*)hsimbjetPtSignImpXYSignificance->Clone("hsimbjetNormalizedPtSignImpXYSignificance");
+    hsimbjetNormalizedImpXYZ = (TH1D*)hsimbjetImpXYZ->Clone("hsimbjetNormalizedImpXYZ");
+    hsimbjetNormalizedImpXYZSignificance = (TH1D*)hsimbjetImpXYZSignificance->Clone("hsimbjetNormalizedImpXYZSignificance");
+    hsimbjetNormalizedSignImpXYZ = (TH1D*)hsimbjetSignImpXYZ->Clone("hsimbjetNormalizedSignImpXYZ");
+    hsimbjetNormalizedSignImpXYZSignificance = (TH1D*)hsimbjetSignImpXYZSignificance->Clone("hsimbjetNormalizedSignImpXYZSignificance");
+
+    // related Track Counting
+    hsimlfjetNormalizedImpXYN1 = (TH1D*)hsimlfjetImpXYN1->Clone("hsimlfjetNormalizedImpXYN1");
+    hsimlfjetNormalizedImpXYN2 = (TH1D*)hsimlfjetImpXYN2->Clone("hsimlfjetNormalizedImpXYN2");
+    hsimlfjetNormalizedImpXYN3 = (TH1D*)hsimlfjetImpXYN3->Clone("hsimlfjetNormalizedImpXYN3");
+    hsimlfjetNormalizedSignImpXYN1 = (TH1D*)hsimlfjetSignImpXYN1->Clone("hsimlfjetNormalizedSignImpXYN1");
+    hsimlfjetNormalizedSignImpXYN2 = (TH1D*)hsimlfjetSignImpXYN2->Clone("hsimlfjetNormalizedSignImpXYN2");
+    hsimlfjetNormalizedSignImpXYN3 = (TH1D*)hsimlfjetSignImpXYN3->Clone("hsimlfjetNormalizedSignImpXYN3");
+    hsimlfjetNormalizedImpXYZN1 = (TH1D*)hsimlfjetImpXYZN1->Clone("hsimlfjetNormalizedImpXYZN1");
+    hsimlfjetNormalizedImpXYZN2 = (TH1D*)hsimlfjetImpXYZN2->Clone("hsimlfjetNormalizedImpXYZN2");
+    hsimlfjetNormalizedImpXYZN3 = (TH1D*)hsimlfjetImpXYZN3->Clone("hsimlfjetNormalizedImpXYZN3");
+    hsimlfjetNormalizedImpXYZSignificanceN1 = (TH1D*)hsimlfjetImpXYZSignificanceN1->Clone("hsimlfjetNormalizedImpXYZSignificanceN1");
+    hsimlfjetNormalizedImpXYZSignificanceN2 = (TH1D*)hsimlfjetImpXYZSignificanceN2->Clone("hsimlfjetNormalizedImpXYZSignificanceN2");
+    hsimlfjetNormalizedImpXYZSignificanceN3 = (TH1D*)hsimlfjetImpXYZSignificanceN3->Clone("hsimlfjetNormalizedImpXYZSignificanceN3");
+
+    hsimcjetNormalizedSignImpXYN1 = (TH1D*)hsimcjetSignImpXYN1->Clone("hsimcjetNormalizedSignImpXYN1");
+    hsimcjetNormalizedSignImpXYN2 = (TH1D*)hsimcjetSignImpXYN2->Clone("hsimcjetNormalizedSignImpXYN2");
+    hsimcjetNormalizedSignImpXYN3 = (TH1D*)hsimcjetSignImpXYN3->Clone("hsimcjetNormalizedSignImpXYN3");
+
+    hsimlfjetNormalizedImpXYSignificanceN1 = (TH1D*)hsimlfjetImpXYSignificanceN1->Clone("hsimlfjetNormalizedImpXYSignificanceN1");
+    hsimlfjetNormalizedImpXYSignificanceN2 = (TH1D*)hsimlfjetImpXYSignificanceN2->Clone("hsimlfjetNormalizedImpXYSignificanceN2");
+    hsimlfjetNormalizedImpXYSignificanceN3 = (TH1D*)hsimlfjetImpXYSignificanceN3->Clone("hsimlfjetNormalizedImpXYSignificanceN3");
+    //  hsimlfjetNormalizedPtSignImpXYSignificanceN1 = (TH1D*)hsimlfjetPtSignImpXYSignificanceN1->Clone("hsimlfjetNormalizedPtSignImpXYSignificanceN1");
+    //  hsimlfjetNormalizedPtSignImpXYSignificanceN2 = (TH1D*)hsimlfjetPtSignImpXYSignificanceN2->Clone("hsimlfjetNormalizedPtSignImpXYSignificanceN2");
+    //  hsimlfjetNormalizedPtSignImpXYSignificanceN3 = (TH1D*)hsimlfjetPtSignImpXYSignificanceN3->Clone("hsimlfjetNormalizedPtSignImpXYSignificanceN3");
+    hsimlfjetNormalizedSignImpXYSignificanceN1 = (TH1D*)hsimlfjetSignImpXYSignificanceN1->Clone("hsimlfjetNormalizedSignImpXYSignificanceN1");
+    hsimlfjetNormalizedSignImpXYSignificanceN2 = (TH1D*)hsimlfjetSignImpXYSignificanceN2->Clone("hsimlfjetNormalizedSignImpXYSignificanceN2");
+    hsimlfjetNormalizedSignImpXYSignificanceN3 = (TH1D*)hsimlfjetSignImpXYSignificanceN3->Clone("hsimlfjetNormalizedSignImpXYSignificanceN3");
+
+    hsimcjetNormalizedImpXYN1 = (TH1D*)hsimcjetImpXYN1->Clone("hsimcjetNormalizedImpXYN1");
+    hsimcjetNormalizedImpXYN2 = (TH1D*)hsimcjetImpXYN2->Clone("hsimcjetNormalizedImpXYN2");
+    hsimcjetNormalizedImpXYN3 = (TH1D*)hsimcjetImpXYN3->Clone("hsimcjetNormalizedImpXYN3");
+    hsimcjetNormalizedImpXYSignificanceN1 = (TH1D*)hsimcjetImpXYSignificanceN1->Clone("hsimcjetNormalizedImpXYSignificanceN1");
+    hsimcjetNormalizedImpXYSignificanceN2 = (TH1D*)hsimcjetImpXYSignificanceN2->Clone("hsimcjetNormalizedImpXYSignificanceN2");
+    hsimcjetNormalizedImpXYSignificanceN3 = (TH1D*)hsimcjetImpXYSignificanceN3->Clone("hsimcjetNormalizedImpXYSignificanceN3");
+    hsimcjetNormalizedSignImpXYSignificanceN1 = (TH1D*)hsimcjetSignImpXYSignificanceN1->Clone("hsimcjetNormalizedSignImpXYSignificanceN1");
+    hsimcjetNormalizedSignImpXYSignificanceN2 = (TH1D*)hsimcjetSignImpXYSignificanceN2->Clone("hsimcjetNormalizedSignImpXYSignificanceN2");
+    hsimcjetNormalizedSignImpXYSignificanceN3 = (TH1D*)hsimcjetSignImpXYSignificanceN3->Clone("hsimcjetNormalizedSignImpXYSignificanceN3");
+    //  hsimcjetNormalizedPtSignImpXYSignificanceN1 = (TH1D*)hsimcjetPtSignImpXYSignificanceN1->Clone("hsimcjetNormalizedPtSignImpXYSignificanceN1");
+    //  hsimcjetNormalizedPtSignImpXYSignificanceN2 = (TH1D*)hsimcjetPtSignImpXYSignificanceN2->Clone("hsimcjetNormalizedPtSignImpXYSignificanceN2");
+    //  hsimcjetNormalizedPtSignImpXYSignificanceN3 = (TH1D*)hsimcjetPtSignImpXYSignificanceN3->Clone("hsimcjetNormalizedPtSignImpXYSignificanceN3");
+
+    hsimbjetNormalizedImpXYN1 = (TH1D*)hsimbjetImpXYN1->Clone("hsimbjetNormalizedImpXYN1");
+    hsimbjetNormalizedImpXYN2 = (TH1D*)hsimbjetImpXYN2->Clone("hsimbjetNormalizedImpXYN2");
+    hsimbjetNormalizedImpXYN3 = (TH1D*)hsimbjetImpXYN3->Clone("hsimbjetNormalizedImpXYN3");
+    hsimbjetNormalizedImpXYSignificanceN1 = (TH1D*)hsimbjetImpXYSignificanceN1->Clone("hsimbjetNormalizedImpXYSignificanceN1");
+    hsimbjetNormalizedImpXYSignificanceN2 = (TH1D*)hsimbjetImpXYSignificanceN2->Clone("hsimbjetNormalizedImpXYSignificanceN2");
+    hsimbjetNormalizedImpXYSignificanceN3 = (TH1D*)hsimbjetImpXYSignificanceN3->Clone("hsimbjetNormalizedImpXYSignificanceN3");
+    hsimbjetNormalizedSignImpXYN1 = (TH1D*)hsimbjetSignImpXYN1->Clone("hsimbjetNormalizedSignImpXYN1");
+    hsimbjetNormalizedSignImpXYN2 = (TH1D*)hsimbjetSignImpXYN2->Clone("hsimbjetNormalizedSignImpXYN2");
+    hsimbjetNormalizedSignImpXYN3 = (TH1D*)hsimbjetSignImpXYN3->Clone("hsimbjetNormalizedSignImpXYN3");
+    hsimbjetNormalizedSignImpXYSignificanceN1 = (TH1D*)hsimbjetSignImpXYSignificanceN1->Clone("hsimbjetNormalizedSignImpXYSignificanceN1");
+    hsimbjetNormalizedSignImpXYSignificanceN2 = (TH1D*)hsimbjetSignImpXYSignificanceN2->Clone("hsimbjetNormalizedSignImpXYSignificanceN2");
+    hsimbjetNormalizedSignImpXYSignificanceN3 = (TH1D*)hsimbjetSignImpXYSignificanceN3->Clone("hsimbjetNormalizedSignImpXYSignificanceN3");
+    //  hsimbjetNormalizedPtSignImpXYSignificanceN1 = (TH1D*)hsimbjetPtSignImpXYSignificanceN1->Clone("hsimbjetNormalizedPtSignImpXYSignificanceN1");
+    //  hsimbjetNormalizedPtSignImpXYSignificanceN2 = (TH1D*)hsimbjetPtSignImpXYSignificanceN2->Clone("hsimbjetNormalizedPtSignImpXYSignificanceN2");
+    //  hsimbjetNormalizedPtSignImpXYSignificanceN3 = (TH1D*)hsimbjetPtSignImpXYSignificanceN3->Clone("hsimbjetNormalizedPtSignImpXYSignificanceN3");
+    //
+    //  // related Resolution function
+    //  hsimlfjetNormalizedSignImpXYSignificanceClass1 = (TH1D*)hsimlfjetSignImpXYSignificanceClass1->Clone("hsimlfjetNormalizedSignImpXYSignificanceClass1");
+    //  hsimlfjetNormalizedSignImpXYSignificanceClass2 = (TH1D*)hsimlfjetSignImpXYSignificanceClass2->Clone("hsimlfjetNormalizedSignImpXYSignificanceClass2");
+    //  hsimlfjetNormalizedSignImpXYSignificanceClass3 = (TH1D*)hsimlfjetSignImpXYSignificanceClass3->Clone("hsimlfjetNormalizedSignImpXYSignificanceClass3");
+    //
+    //  hsimcjetNormalizedSignImpXYSignificanceClass1 = (TH1D*)hsimcjetSignImpXYSignificanceClass1->Clone("hsimcjetNormalizedSignImpXYSignificanceClass1");
+    //  hsimcjetNormalizedSignImpXYSignificanceClass2 = (TH1D*)hsimcjetSignImpXYSignificanceClass2->Clone("hsimcjetNormalizedSignImpXYSignificanceClass2");
+    //  hsimcjetNormalizedSignImpXYSignificanceClass3 = (TH1D*)hsimcjetSignImpXYSignificanceClass3->Clone("hsimcjetNormalizedSignImpXYSignificanceClass3");
+    //
+    //  hsimbjetNormalizedSignImpXYSignificanceClass1 = (TH1D*)hsimbjetSignImpXYSignificanceClass1->Clone("hsimbjetNormalizedSignImpXYSignificanceClass1");
+    //  hsimbjetNormalizedSignImpXYSignificanceClass2 = (TH1D*)hsimbjetSignImpXYSignificanceClass2->Clone("hsimbjetNormalizedSignImpXYSignificanceClass2");
+    //  hsimbjetNormalizedSignImpXYSignificanceClass3 = (TH1D*)hsimbjetSignImpXYSignificanceClass3->Clone("hsimbjetNormalizedSignImpXYSignificanceClass3");
+
+    // related jetNormalized Probability
+    if (doJP) {
+      hsimlfjetNormalizedJP = (TH1D*)hsimlfjetJP->Clone("hsimlfjetNormalizedJP");
+      hsimlfjetNormalizedJPLog = (TH1D*)hsimlfjetJPLog->Clone("hsimlfjetNormalizedJPLog");
+      hsimlfjetNormalizedPtJP = (TH2D*)hsimlfjetPtJP->Clone("hsimlfjetNormalizedPtJP");
+      hsimlfjetNormalizedPtJPLog = (TH2D*)hsimlfjetPtJPLog->Clone("hsimlfjetNormalizedPtJPLog");
+
+      hsimcjetNormalizedJP = (TH1D*)hsimcjetJP->Clone("hsimcjetNormalizedJP");
+      hsimcjetNormalizedJPLog = (TH1D*)hsimcjetJPLog->Clone("hsimcjetNormalizedJPLog");
+      hsimcjetNormalizedPtJP = (TH2D*)hsimcjetPtJP->Clone("hsimcjetNormalizedPtJP");
+      hsimcjetNormalizedPtJPLog = (TH2D*)hsimcjetPtJPLog->Clone("hsimcjetNormalizedPtJPLog");
+
+      hsimbjetNormalizedJP = (TH1D*)hsimbjetJP->Clone("hsimbjetNormalizedJP");
+      hsimbjetNormalizedJPLog = (TH1D*)hsimbjetJPLog->Clone("hsimbjetNormalizedJPLog");
+      hsimbjetNormalizedPtJP = (TH2D*)hsimbjetPtJP->Clone("hsimbjetNormalizedPtJP");
+      hsimbjetNormalizedPtJPLog = (TH2D*)hsimbjetPtJPLog->Clone("hsimbjetNormalizedPtJPLog");
+    }
+  }
+}
+
+void HfJetTaggingTCAnalysis::ProjectionHist(bool doTC, bool doJP) {
+  if (doTC) {
+    int binsToFlavour[] = {1, 2, 3}; // 1: charm, 2: beauty, 3: light flavour
+    int numBinsToFlavour = sizeof(binsToFlavour) / sizeof(binsToFlavour[0]);
+    for (int i=0; i<numBinsToFlavour; i++) {
+      int binZ = binsToFlavour[i];
+      TH1F* projTrackPt = reinterpret_cast<TH1F*> (h3simjetPtTrackPtFlavour->ProjectionY(Form("projTrackPt_%d", binZ), 1, h3simjetPtTrackPtFlavour->GetNbinsX(), binZ, binZ));
+      TH1F* projTrackEta = reinterpret_cast<TH1F*> (h3simjetPtTrackEtaFlavour->ProjectionY(Form("projTrackEta_%d", binZ), 1, h3simjetPtTrackEtaFlavour->GetNbinsX(), binZ, binZ));
+      TH1F* projTrackPhi = reinterpret_cast<TH1F*> (h3simjetPtTrackPhiFlavour->ProjectionY(Form("projTrackPhi_%d", binZ), 1, h3simjetPtTrackPhiFlavour->GetNbinsX(), binZ, binZ));
+      TH1F* projImpXY = reinterpret_cast<TH1F*> (h3simjetPtImpXYFlavour->ProjectionY(Form("projImpXY_%d", binZ), 1, h3simjetPtImpXYFlavour->GetNbinsX(), binZ, binZ));
+      TH1F* projSignImpXY = reinterpret_cast<TH1F*> (h3simjetPtSignImpXYFlavour->ProjectionY(Form("projSignImpXY_%d", binZ), 1, h3simjetPtSignImpXYFlavour->GetNbinsX(), binZ, binZ));
+      TH1F* projImpXYSig = reinterpret_cast<TH1F*> (h3simjetPtImpXYSigFlavour->ProjectionY(Form("projImpXYSig_%d", binZ), 1, h3simjetPtImpXYSigFlavour->GetNbinsX(), binZ, binZ));
+      TH1F* projSignImpXYSig = reinterpret_cast<TH1F*> (h3simjetPtSignImpXYSigFlavour->ProjectionY(Form("projSignImpXYSig_%d", binZ), 1, h3simjetPtSignImpXYSigFlavour->GetNbinsX(), binZ, binZ));
+      TH1F* projImpZ = reinterpret_cast<TH1F*> (h3simjetPtImpZFlavour->ProjectionY(Form("projImpZ_%d", binZ), 1, h3simjetPtImpZFlavour->GetNbinsX(), binZ, binZ));
+      TH1F* projSignImpZ = reinterpret_cast<TH1F*> (h3simjetPtSignImpZFlavour->ProjectionY(Form("projSignImpZ_%d", binZ), 1, h3simjetPtSignImpZFlavour->GetNbinsX(), binZ, binZ));
+      TH1F* projImpZSig = reinterpret_cast<TH1F*> (h3simjetPtImpZSigFlavour->ProjectionY(Form("projImpZSig_%d", binZ), 1, h3simjetPtImpZSigFlavour->GetNbinsX(), binZ, binZ));
+      TH1F* projSignImpZSig = reinterpret_cast<TH1F*> (h3simjetPtSignImpZSigFlavour->ProjectionY(Form("projSignImpZSig_%d", binZ), 1, h3simjetPtSignImpZSigFlavour->GetNbinsX(), binZ, binZ));
+      TH1F* projImpXYZ = reinterpret_cast<TH1F*> (h3simjetPtImpXYZFlavour->ProjectionY(Form("projImpXYZ_%d", binZ), 1, h3simjetPtImpXYZFlavour->GetNbinsX(), binZ, binZ));
+      TH1F* projSignImpXYZ = reinterpret_cast<TH1F*> (h3simjetPtSignImpXYZFlavour->ProjectionY(Form("projSignImpXYZ_%d", binZ), 1, h3simjetPtSignImpXYZFlavour->GetNbinsX(), binZ, binZ));
+      TH1F* projImpXYZSig = reinterpret_cast<TH1F*> (h3simjetPtImpXYZSigFlavour->ProjectionY(Form("projImpXYZSig_%d", binZ), 1, h3simjetPtImpXYZSigFlavour->GetNbinsX(), binZ, binZ));
+      TH1F* projSignImpXYZSig = reinterpret_cast<TH1F*> (h3simjetPtSignImpXYZSigFlavour->ProjectionY(Form("projSignImpXYZSig_%d", binZ), 1, h3simjetPtSignImpXYZSigFlavour->GetNbinsX(), binZ, binZ));
+      TH1F* projSignImpXYSigN1 = reinterpret_cast<TH1F*> (h3simjetPtSignImpXYSigFlavourN1->ProjectionY(Form("projSignImpXYSigN1_%d", binZ), 1, h3simjetPtSignImpXYSigFlavourN1->GetNbinsX(), binZ, binZ));
+      TH1F* projSignImpXYSigN2 = reinterpret_cast<TH1F*> (h3simjetPtSignImpXYSigFlavourN2->ProjectionY(Form("projSignImpXYSigN2_%d", binZ), 1, h3simjetPtSignImpXYSigFlavourN2->GetNbinsX(), binZ, binZ));
+      TH1F* projSignImpXYSigN3 = reinterpret_cast<TH1F*> (h3simjetPtSignImpXYSigFlavourN3->ProjectionY(Form("projSignImpXYSigN3_%d", binZ), 1, h3simjetPtSignImpXYSigFlavourN3->GetNbinsX(), binZ, binZ));
+
+      // inclusive
+      hsimjetTrackPt[0][0]->Add(projTrackPt);
+      hsimjetTrackEta[0][0]->Add(projTrackEta);
+      hsimjetTrackPhi[0][0]->Add(projTrackPhi);
+      hsimjetImpXY[0][0]->Add(projImpXY);
+      hsimjetSignImpXY[0][0]->Add(projSignImpXY);
+      hsimjetImpXYSig[0][0]->Add(projImpXYSig);
+      hsimjetSignImpXYSig[0][0]->Add(projSignImpXYSig);
+      hsimjetImpZ[0][0]->Add(projImpZ);
+      hsimjetSignImpZ[0][0]->Add(projSignImpZ);
+      hsimjetImpZSig[0][0]->Add(projImpZSig);
+      hsimjetSignImpZSig[0][0]->Add(projSignImpZSig);
+      hsimjetImpXYZ[0][0]->Add(projImpXYZ);
+      hsimjetSignImpXYZ[0][0]->Add(projSignImpXYZ);
+      hsimjetImpXYZSig[0][0]->Add(projImpXYZSig);
+      hsimjetSignImpXYZSig[0][0]->Add(projSignImpXYZSig);
+      hsimjetSignImpXYSigN1[0][0]->Add(projSignImpXYSigN1);
+      hsimjetSignImpXYSigN2[0][0]->Add(projSignImpXYSigN2);
+      hsimjetSignImpXYSigN3[0][0]->Add(projSignImpXYSigN3);
+
+      // jet flavour
+      hsimjetTrackPt[i+1][0] = reinterpret_cast<TH1F*>(projTrackPt->Clone());
+      hsimjetTrackEta[i+1][0] = reinterpret_cast<TH1F*>(projTrackEta->Clone());
+      hsimjetTrackPhi[i+1][0] = reinterpret_cast<TH1F*>(projTrackPhi->Clone());
+      hsimjetImpXY[i+1][0] = reinterpret_cast<TH1F*>(projImpXY->Clone());
+      hsimjetSignImpXY[i+1][0] = reinterpret_cast<TH1F*>(projSignImpXY->Clone());
+      hsimjetImpXYSig[i+1][0] = reinterpret_cast<TH1F*>(projImpXYSig->Clone());
+      hsimjetSignImpXYSig[i+1][0] = reinterpret_cast<TH1F*>(projSignImpXYSig->Clone());
+      hsimjetImpZ[i+1][0] = reinterpret_cast<TH1F*>(projImpZ->Clone());
+      hsimjetSignImpZ[i+1][0] = reinterpret_cast<TH1F*>(projSignImpZ->Clone());
+      hsimjetImpZSig[i+1][0] = reinterpret_cast<TH1F*>(projImpZSig->Clone());
+      hsimjetSignImpZSig[i+1][0] = reinterpret_cast<TH1F*>(projSignImpZSig->Clone());
+      hsimjetImpXYZ[i+1][0] = reinterpret_cast<TH1F*>(projImpXYZ->Clone());
+      hsimjetSignImpXYZ[i+1][0] = reinterpret_cast<TH1F*>(projSignImpXYZ->Clone());
+      hsimjetImpXYZSig[i+1][0] = reinterpret_cast<TH1F*>(projImpXYZSig->Clone());
+      hsimjetSignImpXYZSig[i+1][0] = reinterpret_cast<TH1F*>(projSignImpXYZSig->Clone());
+      hsimjetSignImpXYSigN1[i+1][0] = reinterpret_cast<TH1F*>(projSignImpXYSigN1->Clone());
+      hsimjetSignImpXYSigN2[i+1][0] = reinterpret_cast<TH1F*>(projSignImpXYSigN2->Clone());
+      hsimjetSignImpXYSigN3[i+1][0] = reinterpret_cast<TH1F*>(projSignImpXYSigN3->Clone());
+
+      for (int binJetPt =1; binJetPt<HfJetTagging::nBinsJetPt+1; binJetPt++) {
+        int leftbinJetPtTrackPt = h3simjetPtTrackPtFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
+        int rightbinJetPtTrackPt = h3simjetPtTrackPtFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
+        TH1F* projJetPtRangeTrackPt = reinterpret_cast<TH1F*> (h3simjetPtTrackPtFlavour->ProjectionY(Form("projJetPtRangeTrackPt_%d_%d", binJetPt, binZ), leftbinJetPtTrackPt, rightbinJetPtTrackPt, binZ, binZ));
+        hsimjetTrackPt[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeTrackPt->Clone()); 
+        hsimjetTrackPt[0][binJetPt]->Add(projJetPtRangeTrackPt);
+        //std::cout << "binJetPt: " << binJetPt << " left x value: " << h3simjetPtTrackPtFlavour->GetXaxis()->GetBinCenter(leftbinJetPtTrackPt) << " right x value: " << h3simjetPtTrackPtFlavour->GetXaxis()->GetBinCenter(rightbinJetPtTrackPt) << std::endl;
+        //histogram->GetXaxis()->GetBinCenter(binNumber)
+
+        int leftbinJetPtTrackEta = h3simjetPtTrackEtaFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
+        int rightbinJetPtTrackEta = h3simjetPtTrackEtaFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
+        TH1F* projJetPtRangeTrackEta = reinterpret_cast<TH1F*> (h3simjetPtTrackEtaFlavour->ProjectionY(Form("projJetPtRagneTrackEta_%d_%d", binJetPt, binZ), leftbinJetPtTrackEta, rightbinJetPtTrackEta, binZ, binZ));
+        hsimjetTrackEta[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeTrackEta->Clone());
+        hsimjetTrackEta[0][binJetPt]->Add(projJetPtRangeTrackEta);
+
+        int leftbinJetPtTrackPhi = h3simjetPtTrackPhiFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
+        int rightbinJetPtTrackPhi = h3simjetPtTrackPhiFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
+        TH1F* projJetPtRangeTrackPhi = reinterpret_cast<TH1F*> (h3simjetPtTrackPhiFlavour->ProjectionY(Form("projJetPtRagneTrackPhi_%d_%d", binJetPt, binZ), leftbinJetPtTrackPhi, rightbinJetPtTrackPhi, binZ, binZ));
+        hsimjetTrackPhi[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeTrackPhi->Clone());
+        hsimjetTrackPhi[0][binJetPt]->Add(projJetPtRangeTrackPhi);
+
+        int leftbinJetPtImpXY = h3simjetPtImpXYFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
+        int rightbinJetPtImpXY = h3simjetPtImpXYFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
+        TH1F* projJetPtRangeImpXY = reinterpret_cast<TH1F*> (h3simjetPtImpXYFlavour->ProjectionY(Form("projJetPtRagneImpXY_%d_%d", binJetPt, binZ), leftbinJetPtImpXY, rightbinJetPtImpXY, binZ, binZ));
+        hsimjetImpXY[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeImpXY->Clone());
+        hsimjetImpXY[0][binJetPt]->Add(projJetPtRangeImpXY);
+
+        int leftbinJetPtSignImpXY = h3simjetPtSignImpXYFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
+        int rightbinJetPtSignImpXY = h3simjetPtSignImpXYFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
+        TH1F* projJetPtRangeSignImpXY = reinterpret_cast<TH1F*>(h3simjetPtSignImpXYFlavour->ProjectionY(Form("projJetPtRagneSignImpXY_%d_%d", binJetPt, binZ), leftbinJetPtSignImpXY, rightbinJetPtSignImpXY, binZ, binZ));
+        hsimjetSignImpXY[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXY->Clone());
+        hsimjetSignImpXY[0][binJetPt]->Add(projJetPtRangeSignImpXY);
+
+        int leftbinJetPtImpXYSig = h3simjetPtImpXYSigFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
+        int rightbinJetPtImpXYSig = h3simjetPtImpXYSigFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
+        TH1F* projJetPtRangeImpXYSig = reinterpret_cast<TH1F*> (h3simjetPtImpXYSigFlavour->ProjectionY(Form("projJetPtRagneImpXYSig_%d_%d", binJetPt, binZ), leftbinJetPtImpXYSig, rightbinJetPtImpXYSig, binZ, binZ));
+        hsimjetImpXYSig[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeImpXYSig->Clone());
+        hsimjetImpXYSig[0][binJetPt]->Add(projJetPtRangeImpXYSig);
+
+        int leftbinJetPtSignImpXYSig = h3simjetPtSignImpXYSigFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
+        int rightbinJetPtSignImpXYSig = h3simjetPtSignImpXYSigFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
+        TH1F* projJetPtRangeSignImpXYSig = reinterpret_cast<TH1F*>(h3simjetPtSignImpXYSigFlavour->ProjectionY(Form("projJetPtRagneSignImpXYSig_%d_%d", binJetPt, binZ), leftbinJetPtSignImpXYSig, rightbinJetPtSignImpXYSig, binZ, binZ));
+        hsimjetSignImpXYSig[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYSig->Clone());
+        hsimjetSignImpXYSig[0][binJetPt]->Add(projJetPtRangeSignImpXYSig);
+
+        int leftbinJetPtImpZ = h3simjetPtImpZFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
+        int rightbinJetPtImpZ = h3simjetPtImpZFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
+        TH1F* projJetPtRangeImpZ = reinterpret_cast<TH1F*>(h3simjetPtImpZFlavour->ProjectionY(Form("projJetPtRagneImpZ_%d_%d", binJetPt, binZ), leftbinJetPtImpZ, rightbinJetPtImpZ, binZ, binZ));
+        hsimjetImpZ[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeImpZ->Clone());
+        hsimjetImpZ[0][binJetPt]->Add(projJetPtRangeImpZ);
+
+        int leftbinJetPtSignImpZ = h3simjetPtSignImpZFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
+        int rightbinJetPtSignImpZ = h3simjetPtSignImpZFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
+        TH1F* projJetPtRangeSignImpZ = reinterpret_cast<TH1F*>(h3simjetPtSignImpZFlavour->ProjectionY(Form("projJetPtRagneSignImpZ_%d_%d", binJetPt, binZ), leftbinJetPtSignImpZ, rightbinJetPtSignImpZ, binZ, binZ));
+        hsimjetSignImpZ[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpZ->Clone());
+        hsimjetSignImpZ[0][binJetPt]->Add(projJetPtRangeSignImpZ);
+        int leftbinJetPtImpZSig = h3simjetPtImpZSigFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
+        int rightbinJetPtImpZSig = h3simjetPtImpZSigFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
+        TH1F* projJetPtRangeImpZSig = reinterpret_cast<TH1F*>(h3simjetPtImpZSigFlavour->ProjectionY(Form("projJetPtRagneImpZSig_%d_%d", binJetPt, binZ), leftbinJetPtImpZSig, rightbinJetPtImpZSig, binZ, binZ));
+        hsimjetImpZSig[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeImpZSig->Clone());
+        hsimjetImpZSig[0][binJetPt]->Add(projJetPtRangeImpZSig);
+
+        int leftbinJetPtSignImpZSig = h3simjetPtSignImpZSigFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
+        int rightbinJetPtSignImpZSig = h3simjetPtSignImpZSigFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
+        TH1F* projJetPtRangeSignImpZSig = reinterpret_cast<TH1F*>(h3simjetPtSignImpZSigFlavour->ProjectionY(Form("projJetPtRagneSignImpZSig_%d_%d", binJetPt, binZ), leftbinJetPtSignImpZSig, rightbinJetPtSignImpZSig, binZ, binZ));
+        hsimjetSignImpZSig[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpZSig->Clone());
+        hsimjetSignImpZSig[0][binJetPt]->Add(projJetPtRangeSignImpZSig);
+int leftbinJetPtImpXYZ = h3simjetPtImpXYZFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
+        int rightbinJetPtImpXYZ = h3simjetPtImpXYZFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
+        TH1F* projJetPtRangeImpXYZ = reinterpret_cast<TH1F*>(h3simjetPtImpXYZFlavour->ProjectionY(Form("projJetPtRagneImpXYZ_%d_%d", binJetPt, binZ), leftbinJetPtImpXYZ, rightbinJetPtImpXYZ, binZ, binZ));
+        hsimjetImpXYZ[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeImpXYZ->Clone());
+        hsimjetImpXYZ[0][binJetPt]->Add(projJetPtRangeImpXYZ);
+
+        int leftbinJetPtSignImpXYZ = h3simjetPtSignImpXYZFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
+        int rightbinJetPtSignImpXYZ = h3simjetPtSignImpXYZFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
+        TH1F* projJetPtRangeSignImpXYZ = reinterpret_cast<TH1F*>(h3simjetPtSignImpXYZFlavour->ProjectionY(Form("projJetPtRagneSignImpXYZ_%d_%d", binJetPt, binZ), leftbinJetPtSignImpXYZ, rightbinJetPtSignImpXYZ, binZ, binZ));
+        hsimjetSignImpXYZ[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYZ->Clone());
+        hsimjetSignImpXYZ[0][binJetPt]->Add(projJetPtRangeSignImpXYZ);
+        int leftbinJetPtImpXYZSig = h3simjetPtImpXYZSigFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
+        int rightbinJetPtImpXYZSig = h3simjetPtImpXYZSigFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
+        TH1F* projJetPtRangeImpXYZSig = reinterpret_cast<TH1F*>(h3simjetPtImpXYZSigFlavour->ProjectionY(Form("projJetPtRagneImpXYZSig_%d_%d", binJetPt, binZ), leftbinJetPtImpXYZSig, rightbinJetPtImpXYZSig, binZ, binZ));
+        hsimjetImpXYZSig[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeImpXYZSig->Clone());
+        hsimjetImpXYZSig[0][binJetPt]->Add(projJetPtRangeImpXYZSig);
+
+        int leftbinJetPtSignImpXYZSig = h3simjetPtSignImpXYZSigFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1]);
+        int rightbinJetPtSignImpXYZSig = h3simjetPtSignImpXYZSigFlavour->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt]);
+        TH1F* projJetPtRangeSignImpXYZSig = reinterpret_cast<TH1F*>(h3simjetPtSignImpXYZSigFlavour->ProjectionY(Form("projJetPtRagneSignImpXYZSig_%d_%d", binJetPt, binZ), leftbinJetPtSignImpXYZSig, rightbinJetPtSignImpXYZSig, binZ, binZ));
+        hsimjetSignImpXYZSig[i+1][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeSignImpXYZSig->Clone());
+        hsimjetSignImpXYZSig[0][binJetPt]->Add(projJetPtRangeSignImpXYZSig);
+
+      }
+    }
+  }
+}
+
+void HfJetTaggingTCAnalysis::CloneNormalizedHistogram(bool doTC, bool doJP) {
+  if (doTC) {
+    for (int flavour = 0; flavour < HfJetTagging::nFlavour+1; flavour++) {
+      for (int jetPt = 0; jetPt < HfJetTagging::nBinsJetPt+1; jetPt++) {
+        hsimjetNormalizedTrackPt[flavour][jetPt] = (TH1F*) hsimjetTrackPt[flavour][jetPt]->Clone(Form("hsimjetNormalizedTrackPt_%d_%d", flavour, jetPt));
+        hsimjetNormalizedTrackEta[flavour][jetPt] = (TH1F*) hsimjetTrackEta[flavour][jetPt]->Clone(Form("hsimjetNormalizedTrackEta_%d_%d", flavour, jetPt));
+        hsimjetNormalizedTrackPhi[flavour][jetPt] = (TH1F*) hsimjetTrackPhi[flavour][jetPt]->Clone(Form("hsimjetNormalizedTrackPhi_%d_%d", flavour, jetPt));
+        hsimjetNormalizedImpXY[flavour][jetPt] = (TH1F*) hsimjetImpXY[flavour][jetPt]->Clone(Form("hsimjetNormalizedImpXY_%d_%d", flavour, jetPt));
+        hsimjetNormalizedSignImpXY[flavour][jetPt] = (TH1F*) hsimjetSignImpXY[flavour][jetPt]->Clone(Form("hsimjetNormalizedSignImpXY_%d_%d", flavour, jetPt));
+        hsimjetNormalizedImpXYSig[flavour][jetPt] = (TH1F*) hsimjetImpXYSig[flavour][jetPt]->Clone(Form("hsimjetNormalizedImpXYSig_%d_%d", flavour, jetPt));
+        hsimjetNormalizedSignImpXYSig[flavour][jetPt] = (TH1F*) hsimjetSignImpXYSig[flavour][jetPt]->Clone(Form("hsimjetNormalizedSignImpXYSig_%d_%d", flavour, jetPt));
+        hsimjetNormalizedImpZ[flavour][jetPt] = (TH1F*) hsimjetImpZ[flavour][jetPt]->Clone(Form("hsimjetNormalizedImpZ_%d_%d", flavour, jetPt));
+        hsimjetNormalizedSignImpZ[flavour][jetPt] = (TH1F*) hsimjetSignImpZ[flavour][jetPt]->Clone(Form("hsimjetNormalizedSignImpZ_%d_%d", flavour, jetPt));
+        hsimjetNormalizedImpZSig[flavour][jetPt] = (TH1F*) hsimjetImpZSig[flavour][jetPt]->Clone(Form("hsimjetNormalizedImpZSig_%d_%d", flavour, jetPt));
+        hsimjetNormalizedSignImpZSig[flavour][jetPt] = (TH1F*) hsimjetSignImpZSig[flavour][jetPt]->Clone(Form("hsimjetNormalizedSignImpZSig_%d_%d", flavour, jetPt));
+        hsimjetNormalizedImpXYZ[flavour][jetPt] = (TH1F*) hsimjetImpXYZ[flavour][jetPt]->Clone(Form("hsimjetNormalizedImpXYZ_%d_%d", flavour, jetPt));
+        hsimjetNormalizedSignImpXYZ[flavour][jetPt] = (TH1F*) hsimjetSignImpXYZ[flavour][jetPt]->Clone(Form("hsimjetNormalizedSignImpXYZ_%d_%d", flavour, jetPt));
+        hsimjetNormalizedImpXYZSig[flavour][jetPt] = (TH1F*) hsimjetImpXYZSig[flavour][jetPt]->Clone(Form("hsimjetNormalizedImpXYZSig_%d_%d", flavour, jetPt));
+        hsimjetNormalizedSignImpXYZSig[flavour][jetPt] = (TH1F*) hsimjetSignImpXYZSig[flavour][jetPt]->Clone(Form("hsimjetNormalizedSignImpXYZSig_%d_%d", flavour, jetPt));
+        hsimjetNormalizedSignImpXYSigN1[flavour][jetPt] = (TH1F*) hsimjetSignImpXYSigN1[flavour][jetPt]->Clone(Form("hsimjetNormalizedSignImpXYSigN1_%d_%d", flavour, jetPt));
+        hsimjetNormalizedSignImpXYSigN2[flavour][jetPt] = (TH1F*) hsimjetSignImpXYSigN2[flavour][jetPt]->Clone(Form("hsimjetNormalizedSignImpXYSigN2_%d_%d", flavour, jetPt));
+        hsimjetNormalizedSignImpXYSigN3[flavour][jetPt] = (TH1F*) hsimjetSignImpXYSigN3[flavour][jetPt]->Clone(Form("hsimjetNormalizedSignImpXYSigN3_%d_%d", flavour, jetPt));
+      }
+    }
+  }
+}
+
+void HfJetTaggingTCAnalysis::NormalizedHistogram(bool doTC, bool doJP) {
+  if (doTC) {
+    for (int flavour = 0; flavour < HfJetTagging::nFlavour+1; flavour++) {
+      for (int jetPt = 0; jetPt < HfJetTagging::nBinsJetPt+1; jetPt++) {
+        hsimjetNormalizedTrackPt[flavour][jetPt]->Scale(1. / hsimjetNormalizedTrackPt[flavour][jetPt]->GetEntries());
+        hsimjetNormalizedTrackEta[flavour][jetPt]->Scale(1. / hsimjetNormalizedTrackEta[flavour][jetPt]->GetEntries());
+        hsimjetNormalizedTrackPhi[flavour][jetPt]->Scale(1. / hsimjetNormalizedTrackPhi[flavour][jetPt]->GetEntries());
+        hsimjetNormalizedImpXY[flavour][jetPt]->Scale(1. / hsimjetNormalizedImpXY[flavour][jetPt]->Integral());
+        hsimjetNormalizedSignImpXY[flavour][jetPt]->Scale(1. / hsimjetNormalizedSignImpXY[flavour][jetPt]->Integral());
+        hsimjetNormalizedImpXYSig[flavour][jetPt]->Scale(1. / hsimjetNormalizedImpXYSig[flavour][jetPt]->Integral());
+
+        hsimjetNormalizedSignImpXYSig[flavour][jetPt]->Scale(1. / hsimjetNormalizedSignImpXYSig[flavour][jetPt]->Integral());
+        //std::cout << "entries: " << hsimjetNormalizedSignImpXYSig[flavour][jetPt]->GetEntries() << " intergral: " << hsimjetNormalizedSignImpXYSig[flavour][jetPt]->Integral(1, hsimjetNormalizedSignImpXYSig[flavour][jetPt]->GetNbinsX()) << std::endl;
+
+        hsimjetNormalizedImpZ[flavour][jetPt]->Scale(1. / hsimjetNormalizedImpZ[flavour][jetPt]->GetEntries());
+        hsimjetNormalizedSignImpZ[flavour][jetPt]->Scale(1. / hsimjetNormalizedSignImpZ[flavour][jetPt]->GetEntries());
+        hsimjetNormalizedImpZSig[flavour][jetPt]->Scale(1. / hsimjetNormalizedImpZSig[flavour][jetPt]->GetEntries());
+        hsimjetNormalizedSignImpZSig[flavour][jetPt]->Scale(1. / hsimjetNormalizedSignImpZSig[flavour][jetPt]->GetEntries());
+        hsimjetNormalizedImpXYZ[flavour][jetPt]->Scale(1. / hsimjetNormalizedImpXYZ[flavour][jetPt]->GetEntries());
+        hsimjetNormalizedSignImpXYZ[flavour][jetPt]->Scale(1. / hsimjetNormalizedSignImpXYZ[flavour][jetPt]->GetEntries());
+        hsimjetNormalizedImpXYZSig[flavour][jetPt]->Scale(1. / hsimjetNormalizedImpXYZSig[flavour][jetPt]->GetEntries());
+        hsimjetNormalizedSignImpXYZSig[flavour][jetPt]->Scale(1. / hsimjetNormalizedSignImpXYZSig[flavour][jetPt]->GetEntries());
+        hsimjetNormalizedSignImpXYSigN1[flavour][jetPt]->Scale(1. / hsimjetNormalizedSignImpXYSigN1[flavour][jetPt]->Integral());
+        hsimjetNormalizedSignImpXYSigN2[flavour][jetPt]->Scale(1. / hsimjetNormalizedSignImpXYSigN2[flavour][jetPt]->Integral());
+        hsimjetNormalizedSignImpXYSigN3[flavour][jetPt]->Scale(1. / hsimjetNormalizedSignImpXYSigN3[flavour][jetPt]->Integral());
+
+      }
+    }
+    hsimlfjetNormalizedTrackPt->Scale(1. / hsimlfjetNormalizedTrackPt->GetEntries());
+    hsimlfjetNormalizedTrackPhi->Scale(1. / hsimlfjetNormalizedTrackPhi->GetEntries());
+    hsimlfjetNormalizedTrackEta->Scale(1. / hsimlfjetNormalizedTrackEta->GetEntries());
+
+    hsimcjetNormalizedTrackPt->Scale(1. / hsimcjetNormalizedTrackPt->GetEntries());
+    hsimcjetNormalizedTrackPhi->Scale(1. / hsimcjetNormalizedTrackPhi->GetEntries());
+    hsimcjetNormalizedTrackEta->Scale(1. / hsimcjetNormalizedTrackEta->GetEntries());
+
+    hsimbjetNormalizedTrackPt->Scale(1. / hsimbjetNormalizedTrackPt->GetEntries());
+    hsimbjetNormalizedTrackPhi->Scale(1. / hsimbjetNormalizedTrackPhi->GetEntries());
+    hsimbjetNormalizedTrackEta->Scale(1. / hsimbjetNormalizedTrackEta->GetEntries());
+
+    hsimlfjetNormalizedImpXY->Scale(1. / hsimlfjetNormalizedImpXY->GetEntries());
+    hsimcjetNormalizedImpXY->Scale(1. / hsimcjetNormalizedImpXY->GetEntries());
+    hsimbjetNormalizedImpXY->Scale(1. / hsimbjetNormalizedImpXY->GetEntries());
+    hsimlfjetNormalizedSignImpXY->Scale(1. / hsimlfjetNormalizedSignImpXY->GetEntries());
+    hsimcjetNormalizedSignImpXY->Scale(1. / hsimcjetNormalizedSignImpXY->GetEntries());
+    hsimbjetNormalizedSignImpXY->Scale(1. / hsimbjetNormalizedSignImpXY->GetEntries());
+
+    hsimlfjetNormalizedImpXYSignificance->Scale(1. / hsimlfjetNormalizedImpXYSignificance->GetEntries());
+    hsimlfjetNormalizedSignImpXYSignificance->Scale(1. / hsimlfjetNormalizedSignImpXYSignificance->GetEntries());
+    //hsimlfjetNormalizedPtSignImpXYSignificance->Scale(1. / hsimlfjetNormalizedPtSignImpXYSignificance->GetEntries());
+
+    hsimcjetNormalizedImpXYSignificance->Scale  (1. / hsimcjetNormalizedImpXYSignificance->GetEntries());
+    hsimcjetNormalizedSignImpXYSignificance->Scale(1. / hsimcjetNormalizedSignImpXYSignificance->GetEntries());
+    //hsimcjetNormalizedPtSignImpXYSignificance->Scale(1. / hsimcjetNormalizedPtSignImpXYSignificance->GetEntries());
+
+    hsimbjetNormalizedImpXYSignificance->Scale(1. / hsimbjetNormalizedImpXYSignificance->GetEntries());
+    hsimbjetNormalizedSignImpXYSignificance->Scale(1. / hsimbjetNormalizedSignImpXYSignificance->GetEntries());
+    //hsimbjetNormalizedPtSignImpXYSignificance->Scale(1. / hsimbjetNormalizedPtSignImpXYSignificance->GetEntries());
+
+    hsimlfjetNormalizedImpXYZ->Scale(1. / hsimlfjetNormalizedImpXYZ->GetEntries());
+    hsimlfjetNormalizedSignImpXYZ->Scale(1. / hsimlfjetNormalizedSignImpXYZ->GetEntries());
+    hsimlfjetNormalizedImpXYZSignificance->Scale(1. / hsimlfjetNormalizedImpXYZSignificance->GetEntries());
+    hsimlfjetNormalizedSignImpXYZSignificance->Scale(1. / hsimlfjetNormalizedSignImpXYZSignificance->GetEntries());
+
+    hsimcjetNormalizedImpXYZ->Scale(1. / hsimcjetNormalizedImpXYZ->GetEntries());
+    hsimcjetNormalizedSignImpXYZ->Scale(1. / hsimcjetNormalizedSignImpXYZ->GetEntries());
+    hsimcjetNormalizedImpXYZSignificance->Scale(1. / hsimcjetNormalizedImpXYZSignificance->GetEntries());
+    hsimcjetNormalizedSignImpXYZSignificance->Scale(1. / hsimcjetNormalizedSignImpXYZSignificance->GetEntries());
+
+    hsimbjetNormalizedImpXYZ->Scale(1. / hsimbjetNormalizedImpXYZ->GetEntries());
+    hsimbjetNormalizedSignImpXYZ->Scale(1. / hsimbjetNormalizedSignImpXYZ->GetEntries());
+    hsimbjetNormalizedImpXYZSignificance->Scale(1. / hsimbjetNormalizedImpXYZSignificance->GetEntries());
+    hsimbjetNormalizedSignImpXYZSignificance->Scale(1. / hsimbjetNormalizedSignImpXYZSignificance->GetEntries());
+
+    hsimlfjetNormalizedImpXYN1->Scale(1. / hsimlfjetNormalizedImpXYN1->GetEntries());
+    hsimlfjetNormalizedImpXYN2->Scale(1. / hsimlfjetNormalizedImpXYN2->GetEntries());
+    hsimlfjetNormalizedImpXYN3->Scale(1. / hsimlfjetNormalizedImpXYN3->GetEntries());
+    hsimlfjetNormalizedSignImpXYN1->Scale(1. / hsimlfjetNormalizedSignImpXYN1->GetEntries());
+    hsimlfjetNormalizedSignImpXYN2->Scale(1. / hsimlfjetNormalizedSignImpXYN2->GetEntries());
+    hsimlfjetNormalizedSignImpXYN3->Scale(1. / hsimlfjetNormalizedSignImpXYN3->GetEntries());
+    hsimlfjetNormalizedImpXYZN1->Scale(1. / hsimlfjetNormalizedImpXYZN1->GetEntries());
+    hsimlfjetNormalizedImpXYZN2->Scale(1. / hsimlfjetNormalizedImpXYZN2->GetEntries());
+    hsimlfjetNormalizedImpXYZN3->Scale(1. / hsimlfjetNormalizedImpXYZN3->GetEntries());
+    hsimlfjetNormalizedImpXYZSignificanceN1->Scale(1. / hsimlfjetNormalizedImpXYZSignificanceN1->GetEntries());
+    hsimlfjetNormalizedImpXYZSignificanceN2->Scale(1. / hsimlfjetNormalizedImpXYZSignificanceN2->GetEntries());
+    hsimlfjetNormalizedImpXYZSignificanceN3->Scale(1. / hsimlfjetNormalizedImpXYZSignificanceN3->GetEntries());
+
+    hsimcjetNormalizedSignImpXYN1->Scale(1. / hsimcjetNormalizedSignImpXYN1->GetEntries());
+    hsimcjetNormalizedSignImpXYN2->Scale(1. / hsimcjetNormalizedSignImpXYN2->GetEntries());
+    hsimcjetNormalizedSignImpXYN3->Scale(1. / hsimcjetNormalizedSignImpXYN3->GetEntries());
+
+    hsimlfjetNormalizedImpXYSignificanceN1->Scale(1. / hsimlfjetNormalizedImpXYSignificanceN1->GetEntries());
+    hsimlfjetNormalizedImpXYSignificanceN2->Scale(1. / hsimlfjetNormalizedImpXYSignificanceN2->GetEntries());
+    hsimlfjetNormalizedImpXYSignificanceN3->Scale(1. / hsimlfjetNormalizedImpXYSignificanceN3->GetEntries());
+    //hsimlfjetNormalizedPtSignImpXYSignificanceN1->Scale(1. / hsimlfjetNormalizedPtSignImpXYSignificanceN1->GetEntries());
+    //hsimlfjetNormalizedPtSignImpXYSignificanceN2->Scale(1. / hsimlfjetNormalizedPtSignImpXYSignificanceN2->GetEntries());
+    //hsimlfjetNormalizedPtSignImpXYSignificanceN3->Scale(1. / hsimlfjetNormalizedPtSignImpXYSignificanceN3->GetEntries());
+    hsimlfjetNormalizedSignImpXYSignificanceN1->Scale(1. / hsimlfjetNormalizedSignImpXYSignificanceN1->GetEntries());
+    hsimlfjetNormalizedSignImpXYSignificanceN2->Scale(1. / hsimlfjetNormalizedSignImpXYSignificanceN2->GetEntries());
+    hsimlfjetNormalizedSignImpXYSignificanceN3->Scale(1. / hsimlfjetNormalizedSignImpXYSignificanceN3->GetEntries());
+
+    hsimcjetNormalizedImpXYN1->Scale(1. / hsimcjetNormalizedImpXYN1->GetEntries());
+    hsimcjetNormalizedImpXYN2->Scale(1. / hsimcjetNormalizedImpXYN2->GetEntries());
+    hsimcjetNormalizedImpXYN3->Scale(1. / hsimcjetNormalizedImpXYN3->GetEntries());
+    hsimcjetNormalizedImpXYSignificanceN1->Scale(1. / hsimcjetNormalizedImpXYSignificanceN1->GetEntries());
+    hsimcjetNormalizedImpXYSignificanceN2->Scale(1. / hsimcjetNormalizedImpXYSignificanceN2->GetEntries());
+    hsimcjetNormalizedImpXYSignificanceN3->Scale(1. / hsimcjetNormalizedImpXYSignificanceN3->GetEntries());
+    hsimcjetNormalizedSignImpXYSignificanceN1->Scale(1. / hsimcjetNormalizedSignImpXYSignificanceN1->GetEntries());
+    hsimcjetNormalizedSignImpXYSignificanceN2->Scale(1. / hsimcjetNormalizedSignImpXYSignificanceN2->GetEntries());
+    hsimcjetNormalizedSignImpXYSignificanceN3->Scale(1. / hsimcjetNormalizedSignImpXYSignificanceN3->GetEntries());
+    //hsimcjetNormalizedPtSignImpXYSignificanceN1->Scale(1. / hsimcjetNormalizedPtSignImpXYSignificanceN1->GetEntries());
+    //hsimcjetNormalizedPtSignImpXYSignificanceN2->Scale(1. / hsimcjetNormalizedPtSignImpXYSignificanceN2->GetEntries());
+    //hsimcjetNormalizedPtSignImpXYSignificanceN3->Scale(1. / hsimcjetNormalizedPtSignImpXYSignificanceN3->GetEntries());
+
+    hsimbjetNormalizedImpXYN1->Scale(1. / hsimbjetNormalizedImpXYN1->GetEntries());
+    hsimbjetNormalizedImpXYN2->Scale(1. / hsimbjetNormalizedImpXYN2->GetEntries());
+    hsimbjetNormalizedImpXYN3->Scale(1. / hsimbjetNormalizedImpXYN3->GetEntries());
+    hsimbjetNormalizedImpXYSignificanceN1->Scale(1. / hsimbjetNormalizedImpXYSignificanceN1->GetEntries());
+    hsimbjetNormalizedImpXYSignificanceN2->Scale(1. / hsimbjetNormalizedImpXYSignificanceN2->GetEntries());
+    hsimbjetNormalizedImpXYSignificanceN3->Scale(1. / hsimbjetNormalizedImpXYSignificanceN3->GetEntries());
+    hsimbjetNormalizedSignImpXYN1->Scale(1. / hsimbjetNormalizedSignImpXYN1->GetEntries());
+    hsimbjetNormalizedSignImpXYN2->Scale(1. / hsimbjetNormalizedSignImpXYN2->GetEntries());
+    hsimbjetNormalizedSignImpXYN3->Scale(1. / hsimbjetNormalizedSignImpXYN3->GetEntries());
+    hsimbjetNormalizedSignImpXYSignificanceN1->Scale(1. / hsimbjetNormalizedSignImpXYSignificanceN1->GetEntries());
+    hsimbjetNormalizedSignImpXYSignificanceN2->Scale(1. / hsimbjetNormalizedSignImpXYSignificanceN2->GetEntries());
+    hsimbjetNormalizedSignImpXYSignificanceN3->Scale(1. / hsimbjetNormalizedSignImpXYSignificanceN3->GetEntries());
+    //hsimbjetNormalizedPtSignImpXYSignificanceN1->Scale(1. / hsimbjetNormalizedPtSignImpXYSignificanceN1->GetEntries());
+    //hsimbjetNormalizedPtSignImpXYSignificanceN2->Scale(1. / hsimbjetNormalizedPtSignImpXYSignificanceN2->GetEntries());
+    //hsimbjetNormalizedPtSignImpXYSignificanceN3->Scale(1. / hsimbjetNormalizedPtSignImpXYSignificanceN3->GetEntries());
+
+    //  // Scaling histograms for NormalizedSignImpXYSignificanceClass1, NormalizedSignImpXYSignificanceClass2, and NormalizedSignImpXYSignificanceClass3
+    //  hsimlfjetNormalizedSignImpXYSignificanceClass1->Scale(1. / hsimlfjetNormalizedSignImpXYSignificanceClass1->GetEntries());
+    //  hsimlfjetNormalizedSignImpXYSignificanceClass2->Scale(1. / hsimlfjetNormalizedSignImpXYSignificanceClass2->GetEntries());
+    //  hsimlfjetNormalizedSignImpXYSignificanceClass3->Scale(1. / hsimlfjetNormalizedSignImpXYSignificanceClass3->GetEntries());
+    //
+    //  hsimcjetNormalizedSignImpXYSignificanceClass1->Scale(1. / hsimcjetNormalizedSignImpXYSignificanceClass1->GetEntries());
+    //  hsimcjetNormalizedSignImpXYSignificanceClass2->Scale(1. / hsimcjetNormalizedSignImpXYSignificanceClass2->GetEntries());
+    //  hsimcjetNormalizedSignImpXYSignificanceClass3->Scale(1. / hsimcjetNormalizedSignImpXYSignificanceClass3->GetEntries());
+    //
+    //  hsimbjetNormalizedSignImpXYSignificanceClass1->Scale(1. / hsimbjetNormalizedSignImpXYSignificanceClass1->GetEntries());
+    //  hsimbjetNormalizedSignImpXYSignificanceClass2->Scale(1. / hsimbjetNormalizedSignImpXYSignificanceClass2->GetEntries());
+    //  hsimbjetNormalizedSignImpXYSignificanceClass3->Scale(1. / hsimbjetNormalizedSignImpXYSignificanceClass3->GetEntries());
+
+    if (doJP) {
+      hsimlfjetNormalizedJP->Scale(1. / hsimlfjetNormalizedJP->GetEntries());
+      hsimlfjetNormalizedJPLog->Scale(1. / hsimlfjetNormalizedJPLog->GetEntries());
+
+      hsimcjetNormalizedJP->Scale(1. / hsimcjetNormalizedJP->GetEntries());
+      hsimcjetNormalizedJPLog->Scale(1. / hsimcjetNormalizedJPLog->GetEntries());
+
+      hsimbjetNormalizedJP->Scale(1. / hsimbjetNormalizedJP->GetEntries());
+      hsimbjetNormalizedJPLog->Scale(1. / hsimbjetNormalizedJPLog->GetEntries());
+    }
+  }
+}
+
+void HfJetTaggingTCAnalysis::SaveHistogram(TString outFile) {
+  TFile *fout = TFile::Open(outFile.Data(),"recreate");
+  if (!fout) return;
+  for (int flavour=0; flavour<HfJetTagging::nFlavour+1; flavour++) {
+    //if (!gSystem->AccessPathName(Form("%s/%s", outFile.Data(), HfJetTagging::FLAVOUR[flavour].Data()))) {
+    fout->mkdir(Form("%sJet", HfJetTagging::FLAVOUR[flavour].Data()));
+    //}
+    for (int binJetPt=0; binJetPt<HfJetTagging::nBinsJetPt+1; binJetPt++) {
+      hsimjetTrackPt[flavour][binJetPt]->Write(Form("%sJet/histTrackPt_binJetPt_%d", HfJetTagging::FLAVOUR[flavour].Data(), binJetPt));
+      hsimjetImpXY[flavour][binJetPt]->Write(Form("%sJet/histImpXY_binJetPt_%d", HfJetTagging::FLAVOUR[flavour].Data(), binJetPt));
+      hsimjetImpXYSig[flavour][binJetPt]->Write(Form("%sJet/histImpXYSig_binJetPt_%d", HfJetTagging::FLAVOUR[flavour].Data(), binJetPt));
+      //hsimjetImpXYSig[flavour][binJetPt]->Write(Form("%s/", HfJetTagging::FLAVOUR[flavour].Data()) + TString(hsimjetImpXYSig[flavour][binJetPt]->GetName()));
+      
+    }
+  }
+  delete fout;
+}
+
+int HfJetTaggingTCAnalysis::LoadSimTCQA(TString rootFile, TString taskName, bool doTC, bool doJP) {
+  if (gSystem->AccessPathName(rootFile.Data())) {
+    std::cout << "Input file (MC) not found!" << std::endl;
+    return 0;
+  }
+
+  taskName = "jet-taggerhf-tc-charged";
+
+  TFile* fin;
+  fin = TFile::Open(rootFile, "READ");
+  if (doTC) {
+    h3simjetPtTrackPtFlavour = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_track_pt_flavour", taskName.Data())));
+    h3simjetPtTrackEtaFlavour = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_track_eta_flavour", taskName.Data())));
+    h3simjetPtTrackPhiFlavour = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_track_phi_flavour", taskName.Data())));
+    h3simjetPtImpXYFlavour = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_impact_parameter_xy_flavour", taskName.Data())));
+    h3simjetPtImpXYSigFlavour = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_impact_parameter_significance_xy_flavour", taskName.Data())));
+    h3simjetPtSignImpXYFlavour = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_sign_impact_parameter_xy_flavour", taskName.Data())));
+    h3simjetPtSignImpXYSigFlavour = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_sign_impact_parameter_significance_xy_flavour", taskName.Data())));
+    h3simjetPtImpZFlavour = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_impact_parameter_z_flavour", taskName.Data())));
+    h3simjetPtImpZSigFlavour = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_impact_parameter_significance_z_flavour", taskName.Data())));
+    h3simjetPtSignImpZFlavour = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_sign_impact_parameter_z_flavour", taskName.Data())));
+    h3simjetPtSignImpZSigFlavour = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_sign_impact_parameter_significance_z_flavour", taskName.Data())));
+    h3simjetPtImpXYZFlavour = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_impact_parameter_xyz_flavour", taskName.Data())));
+    h3simjetPtImpXYZSigFlavour = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_impact_parameter_significance_xyz_flavour", taskName.Data())));
+    h3simjetPtSignImpXYZFlavour = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_sign_impact_parameter_xyz_flavour", taskName.Data())));
+    h3simjetPtSignImpXYZSigFlavour = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_sign_impact_parameter_significance_xyz_flavour", taskName.Data())));
+
+    h3simjetPtSignImpXYSigFlavourN1 = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_sign_impact_parameter_significance_xy_flavour_N1", taskName.Data())));
+    h3simjetPtSignImpXYSigFlavourN2 = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_sign_impact_parameter_significance_xy_flavour_N2", taskName.Data())));
+    h3simjetPtSignImpXYSigFlavourN3 = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_sign_impact_parameter_significance_xy_flavour_N3", taskName.Data())));
+
+
+    hsimbjetTrackPt = (TH1D*)fin->Get(Form("%s/h_bjet_track_pt", taskName.Data()));
+    hsimcjetTrackPt = (TH1D*)fin->Get(Form("%s/h_cjet_track_pt", taskName.Data()));
+    hsimlfjetTrackPt = (TH1D*)fin->Get(Form("%s/h_lfjet_track_pt", taskName.Data()));
+    hsimbjetTrackPhi = (TH1D*)fin->Get(Form("%s/h_bjet_track_phi", taskName.Data()));
+    hsimcjetTrackPhi = (TH1D*)fin->Get(Form("%s/h_cjet_track_phi", taskName.Data()));
+    hsimlfjetTrackPhi = (TH1D*)fin->Get(Form("%s/h_lfjet_track_phi", taskName.Data()));
+    hsimbjetTrackEta = (TH1D*)fin->Get(Form("%s/h_bjet_track_eta", taskName.Data()));
+    hsimcjetTrackEta = (TH1D*)fin->Get(Form("%s/h_cjet_track_eta", taskName.Data()));
+    hsimlfjetTrackEta = (TH1D*)fin->Get(Form("%s/h_lfjet_track_eta", taskName.Data()));
+
+    // inclusive
+    // impact parameter
+    // bjet
+    hsimbjetImpXY = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xy", taskName.Data()));
+    hsimbjetImpXYN1 = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xy_N1", taskName.Data()));
+    hsimbjetImpXYN2 = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xy_N2", taskName.Data()));
+    hsimbjetImpXYN3 = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xy_N3", taskName.Data()));
+    hsimbjetSignImpXY = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy", taskName.Data()));
+    hsimbjetSignImpXYN1 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_N1", taskName.Data()));
+    hsimbjetSignImpXYN2 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_N2", taskName.Data()));
+    hsimbjetSignImpXYN3 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_N3", taskName.Data()));
+
+    hsimbjetImpXYZ = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xyz", taskName.Data()));
+    hsimbjetImpXYZN1 = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xyz_N1", taskName.Data()));
+    hsimbjetImpXYZN2 = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xyz_N2", taskName.Data()));
+    hsimbjetImpXYZN3 = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xyz_N3", taskName.Data()));
+    hsimbjetSignImpXYZ = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xyz", taskName.Data()));
+
+    // cjet
+    hsimcjetImpXY = (TH1D*)fin->Get(Form("%s/h_cjet_impact_parameter_xy", taskName.Data()));
+    hsimcjetImpXYN1 = (TH1D*)fin->Get(Form("%s/h_cjet_impact_parameter_xy_N1", taskName.Data()));
+    hsimcjetImpXYN2 = (TH1D*)fin->Get(Form("%s/h_cjet_impact_parameter_xy_N2", taskName.Data()));
+    hsimcjetImpXYN3 = (TH1D*)fin->Get(Form("%s/h_cjet_impact_parameter_xy_N3", taskName.Data()));
+    hsimcjetSignImpXY = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy", taskName.Data()));
+    hsimcjetSignImpXYN1 = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy_N1", taskName.Data()));
+    hsimcjetSignImpXYN2 = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy_N2", taskName.Data()));
+    hsimcjetSignImpXYN3 = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy_N3", taskName.Data()));
+
+    hsimcjetImpXYZ = (TH1D*)fin->Get(Form("%s/h_cjet_impact_parameter_xyz", taskName.Data()));
+    hsimcjetImpXYZN1 = (TH1D*)fin->Get(Form("%s/h_cjet_impact_parameter_xyz_N1", taskName.Data()));
+    hsimcjetImpXYZN2 = (TH1D*)fin->Get(Form("%s/h_cjet_impact_parameter_xyz_N2", taskName.Data()));
+    hsimcjetImpXYZN3 = (TH1D*)fin->Get(Form("%s/h_cjet_impact_parameter_xyz_N3", taskName.Data()));
+    hsimcjetSignImpXYZ = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xyz", taskName.Data()));
+
+    // lfjet
+
+    hsimlfjetImpXY = (TH1D*)fin->Get(Form("%s/h_lfjet_impact_parameter_xy", taskName.Data()));
+    hsimlfjetImpXYN1 = (TH1D*)fin->Get(Form("%s/h_lfjet_impact_parameter_xy_N1", taskName.Data()));
+    hsimlfjetImpXYN2 = (TH1D*)fin->Get(Form("%s/h_lfjet_impact_parameter_xy_N2", taskName.Data()));
+    hsimlfjetImpXYN3 = (TH1D*)fin->Get(Form("%s/h_lfjet_impact_parameter_xy_N3", taskName.Data()));
+    hsimlfjetSignImpXY = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy", taskName.Data()));
+    hsimlfjetSignImpXYN1 = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy_N1", taskName.Data()));
+    hsimlfjetSignImpXYN2 = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy_N2", taskName.Data()));
+    hsimlfjetSignImpXYN3 = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy_N3", taskName.Data()));
+
+    hsimlfjetImpXYZ = (TH1D*)fin->Get(Form("%s/h_lfjet_impact_parameter_xyz", taskName.Data()));
+    hsimlfjetImpXYZN1 = (TH1D*)fin->Get(Form("%s/h_lfjet_impact_parameter_xyz_N1", taskName.Data()));
+    hsimlfjetImpXYZN2 = (TH1D*)fin->Get(Form("%s/h_lfjet_impact_parameter_xyz_N2", taskName.Data()));
+    hsimlfjetImpXYZN3 = (TH1D*)fin->Get(Form("%s/h_lfjet_impact_parameter_xyz_N3", taskName.Data()));
+    hsimlfjetSignImpXYZ = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xyz", taskName.Data()));
+
+    // impact parameter significance
+    // bjet
+    hsimbjetImpXYSignificance = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xy_significance", taskName.Data()));
+    hsimbjetImpXYSignificanceN1 = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xy_significance_N1", taskName.Data()));
+    hsimbjetImpXYSignificanceN2 = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xy_significance_N2", taskName.Data()));
+    hsimbjetImpXYSignificanceN3 = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xy_significance_N3", taskName.Data()));
+    hsimbjetSignImpXYSignificance = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_significance", taskName.Data()));
+    hsimbjetPtSignImpXYSignificance = (TH1D*)fin->Get(Form("%s/h_bjet_pt_sign_impact_parameter_xy_significance", taskName.Data()));
+    hsimbjetSignImpXYSignificanceN1 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_significance_N1", taskName.Data()));
+    hsimbjetSignImpXYSignificanceN2 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_significance_N2", taskName.Data()));
+    hsimbjetSignImpXYSignificanceN3 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_significance_N3", taskName.Data()));
+
+    hsimbjetImpXYZSignificance = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xyz_significance", taskName.Data()));
+    hsimbjetImpXYZSignificanceN1 = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xyz_significance_N1", taskName.Data()));
+    hsimbjetImpXYZSignificanceN2 = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xyz_significance_N2", taskName.Data()));
+    hsimbjetImpXYZSignificanceN3 = (TH1D*)fin->Get(Form("%s/h_bjet_impact_parameter_xyz_significance_N3", taskName.Data()));
+    hsimbjetSignImpXYZSignificance = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xyz_significance", taskName.Data()));
+
+    // cjet
+    hsimcjetImpXYSignificance = (TH1D*)fin->Get(Form("%s/h_cjet_impact_parameter_xy_significance", taskName.Data()));
+    hsimcjetImpXYSignificanceN1 = (TH1D*)fin->Get(Form("%s/h_cjet_impact_parameter_xy_significance_N1", taskName.Data()));
+    hsimcjetImpXYSignificanceN2 = (TH1D*)fin->Get(Form("%s/h_cjet_impact_parameter_xy_significance_N2", taskName.Data()));
+    hsimcjetImpXYSignificanceN3 = (TH1D*)fin->Get(Form("%s/h_cjet_impact_parameter_xy_significance_N3", taskName.Data()));
+    hsimcjetSignImpXYSignificance = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy_significance", taskName.Data()));
+    hsimcjetPtSignImpXYSignificance = (TH1D*)fin->Get(Form("%s/h_cjet_pt_sign_impact_parameter_xy_significance", taskName.Data()));
+    hsimcjetSignImpXYSignificanceN1 = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy_significance_N1", taskName.Data()));
+    hsimcjetSignImpXYSignificanceN2 = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy_significance_N2", taskName.Data()));
+    hsimcjetSignImpXYSignificanceN3 = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy_significance_N3", taskName.Data()));
+
+    hsimcjetImpXYZSignificance = (TH1D*)fin->Get(Form("%s/h_cjet_impact_parameter_xyz_significance", taskName.Data()));
+    hsimcjetImpXYZSignificanceN1 = (TH1D*)fin->Get(Form("%s/h_cjet_impact_parameter_xyz_significance_N1", taskName.Data()));
+    hsimcjetImpXYZSignificanceN2 = (TH1D*)fin->Get(Form("%s/h_cjet_impact_parameter_xyz_significance_N2", taskName.Data()));
+    hsimcjetImpXYZSignificanceN3 = (TH1D*)fin->Get(Form("%s/h_cjet_impact_parameter_xyz_significance_N3", taskName.Data()));
+    hsimcjetSignImpXYZSignificance = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xyz_significance", taskName.Data()));
+
+    // lfjet
+    hsimlfjetImpXYSignificance = (TH1D*)fin->Get(Form("%s/h_lfjet_impact_parameter_xy_significance", taskName.Data()));
+    hsimlfjetImpXYSignificanceN1 = (TH1D*)fin->Get(Form("%s/h_lfjet_impact_parameter_xy_significance_N1", taskName.Data()));
+    hsimlfjetImpXYSignificanceN2 = (TH1D*)fin->Get(Form("%s/h_lfjet_impact_parameter_xy_significance_N2", taskName.Data()));
+    hsimlfjetImpXYSignificanceN3 = (TH1D*)fin->Get(Form("%s/h_lfjet_impact_parameter_xy_significance_N3", taskName.Data()));
+    hsimlfjetSignImpXYSignificance = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy_significance", taskName.Data()));
+    hsimlfjetPtSignImpXYSignificance = (TH1D*)fin->Get(Form("%s/h_lfjet_pt_sign_impact_parameter_xy_significance", taskName.Data()));
+    hsimlfjetSignImpXYSignificanceN1 = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy_significance_N1", taskName.Data()));
+    hsimlfjetSignImpXYSignificanceN2 = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy_significance_N2", taskName.Data()));
+    hsimlfjetSignImpXYSignificanceN3 = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy_significance_N3", taskName.Data()));
+
+    hsimlfjetImpXYZSignificance = (TH1D*)fin->Get(Form("%s/h_lfjet_impact_parameter_xyz_significance", taskName.Data()));
+    hsimlfjetImpXYZSignificanceN1 = (TH1D*)fin->Get(Form("%s/h_lfjet_impact_parameter_xyz_significance_N1", taskName.Data()));
+    hsimlfjetImpXYZSignificanceN2 = (TH1D*)fin->Get(Form("%s/h_lfjet_impact_parameter_xyz_significance_N2", taskName.Data()));
+    hsimlfjetImpXYZSignificanceN3 = (TH1D*)fin->Get(Form("%s/h_lfjet_impact_parameter_xyz_significance_N3", taskName.Data()));
+    hsimlfjetSignImpXYZSignificance = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xyz_significance", taskName.Data()));
+
+    // Jet Probability
+    if (doJP) {
+      hsimlfjetSignImpXYSignificanceClass1 = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy_significance_class1", taskName.Data()));
+      hsimlfjetSignImpXYSignificanceClass2 = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy_significance_class2", taskName.Data()));
+      hsimlfjetSignImpXYSignificanceClass3 = (TH1D*)fin->Get(Form("%s/h_lfjet_sign_impact_parameter_xy_significance_class3", taskName.Data()));
+      hsimcjetSignImpXYSignificanceClass1 = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy_significance_class1", taskName.Data()));
+      hsimcjetSignImpXYSignificanceClass2 = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy_significance_class2", taskName.Data()));
+      hsimcjetSignImpXYSignificanceClass3 = (TH1D*)fin->Get(Form("%s/h_cjet_sign_impact_parameter_xy_significance_class3", taskName.Data()));
+      hsimbjetSignImpXYSignificanceClass1 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_significance_class1", taskName.Data()));
+      hsimbjetSignImpXYSignificanceClass2 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_significance_class2", taskName.Data()));
+      hsimbjetSignImpXYSignificanceClass3 = (TH1D*)fin->Get(Form("%s/h_bjet_sign_impact_parameter_xy_significance_class3", taskName.Data()));
+
+      hsimbjetJP = (TH1D*)fin->Get(Form("%s/h_bjet_JP", taskName.Data()));
+      hsimbjetJPLog = (TH1D*)fin->Get(Form("%s/h_bjet_JP_Log", taskName.Data()));
+      hsimbjetPtJP = (TH2D*)fin->Get(Form("%s/h_bjet_pt_JP", taskName.Data()));
+      hsimbjetPtJPLog = (TH2D*)fin->Get(Form("%s/h_bjet_pt_JP_Log", taskName.Data()));
+      hsimcjetJP = (TH1D*)fin->Get(Form("%s/h_cjet_JP", taskName.Data()));
+      hsimcjetJPLog = (TH1D*)fin->Get(Form("%s/h_cjet_JP_Log", taskName.Data()));
+      hsimcjetPtJP = (TH2D*)fin->Get(Form("%s/h_cjet_pt_JP", taskName.Data()));
+      hsimcjetPtJPLog = (TH2D*)fin->Get(Form("%s/h_cjet_pt_JP_Log", taskName.Data()));
+      hsimlfjetJP = (TH1D*)fin->Get(Form("%s/h_lfjet_JP", taskName.Data()));
+      hsimlfjetJPLog = (TH1D*)fin->Get(Form("%s/h_lfjet_JP_Log", taskName.Data()));
+      hsimlfjetPtJP = (TH2D*)fin->Get(Form("%s/h_lfjet_pt_JP", taskName.Data()));
+      hsimlfjetPtJPLog = (TH2D*)fin->Get(Form("%s/h_lfjet_pt_JP_Log", taskName.Data()));
+    }
+  } else {
+    std::cout << "don't load TC MC histogram" << std::endl;
+  }
+
+  std::cout << "Load completed MC data" << std::endl;
+  return 1;
+}
+
+int HfJetTaggingTCAnalysis::LoadDataTCQA(TString rootFile, TString taskName) {
+  if (gSystem->AccessPathName(rootFile.Data())) {
+    std::cout << "Input file (DATA) not found!" << std::endl;
+    return 0;
+  }
+  taskName = "jet-taggerhf-tc-charged";
+
+  /*
+  TFile* fin;
+  fin = TFile::Open(rootFile, "READ");
+  if (doTC) {
+    h3datajetPtTrackPtTrackEta = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_track_pt_track_eta", taskName.Data())));
+    h3datajetPtTrackPtTrackPhi = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_track_pt_track_phi", taskName.Data())));
+    h3datajetPtTrackPtImpXY = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_track_pt_impact_parameter_xy", taskName.Data())));
+    h3datajetPtTrackPtSignImpXY = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_track_pt_sign_impact_parameter_xy", taskName.Data())));
+    h3datajetPtTrackPtImpXYSig = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_track_pt_impact_parameter_significance_xy", taskName.Data())));
+    h3datajetPtTrackPtSignImpXYSig = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_track_pt_sign_impact_parameter_significance_xy", taskName.Data())));
+    h3datajetPtTrackPtSignImpXYSigN1 = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_track_pt_sign_impact_parameter_significance_xy_N1", taskName.Data())));
+    h3datajetPtTrackPtSignImpXYSigN2 = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_track_pt_sign_impact_parameter_significance_xy_N2", taskName.Data())));
+    h3datajetPtTrackPtSignImpXYSigN3 = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_track_pt_sign_impact_parameter_significance_xy_N3", taskName.Data())));
+
+  }
+  */
+
+  //if (taskName.CompareTo("hf-tagging-task")>0 || taskName.CompareTo("hf-tagging-task")<0) {
+    //taskName = "hf-tagging-task";
+  //}
+
+  return 1;
+}
+
+void HfJetTaggingTCAnalysis::DrawCombined(int num, const std::vector<HistogramData>& histograms, double xmin, double ymin, double xmax, double ymax){
+  TLegend *leg = new TLegend(xmin, ymin, xmax, ymax);
+  for (int i=0; i<num; i++){
+    TH1F *hist = histograms[i].hist;
+    this->HistColorStyle(hist, i+1, i+20, HfJetTagging::MARKERSIZE, i+1, 1);
+    TString clfi = histograms[i].classification;
+    leg->AddEntry(hist, clfi.Data(), "lep");
+    hist->Draw("same");
+  }
+  leg->Draw();
+}
+
+void HfJetTaggingTCAnalysis::DrawTaggedJetTrackPt(bool withInc = false, bool doLog = true, int binJetPt=0){
+  std::vector<HistogramData> NormHistList;
+  if (withInc) NormHistList.push_back({hsimjetNormalizedTrackPt[0][binJetPt], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimjetNormalizedTrackPt[1][binJetPt], HfJetTagging::CJET});
+  NormHistList.push_back({hsimjetNormalizedTrackPt[2][binJetPt], HfJetTagging::BJET});
+  NormHistList.push_back({hsimjetNormalizedTrackPt[3][binJetPt], HfJetTagging::LFJET});
+
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPT[0], HfJetTagging::REFHIST::TRACKPT[1], HfJetTagging::REFHIST::TRACKPT[2], HfJetTagging::REFHIST::TRACKPT[3], "track p_{T}", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/trackmomentum_%d.pdf\")", canvasNum - 1, static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
+
+}
+
+void HfJetTaggingTCAnalysis::DrawTaggedFlavourJetTrackPt(bool doLog = true, int flavour =2, int startJetPt=0) {
+  std::vector<HistogramData> NormHistList;
+  for (int binJetPt =startJetPt; binJetPt < HfJetTagging::nBinsJetPt; binJetPt++) {
+    NormHistList.push_back({hsimjetNormalizedTrackPt[flavour][binJetPt+1], Form("%d<jet pT<%d",HfJetTagging::binsJetPt[binJetPt], HfJetTagging::binsJetPt[binJetPt+1])});
+  }
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPTASJETPT[0], HfJetTagging::REFHIST::TRACKPTASJETPT[1], HfJetTagging::REFHIST::TRACKPTASJETPT[2], HfJetTagging::REFHIST::TRACKPTASJETPT[3], "track p_{T}", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%sjet/trackmomentum.pdf\")", canvasNum - 1, HfJetTagging::FLAVOUR[flavour].Data()));
+}
+
+void HfJetTaggingTCAnalysis::DrawTaggedJetTrackEta(bool withInc = false, bool doLog = true){
+  std::vector<HistogramData> NormHistList;
+  if (withInc) NormHistList.push_back({hsimjetNormalizedTrackEta[0][0], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimjetNormalizedTrackEta[1][0], HfJetTagging::CJET});
+  NormHistList.push_back({hsimjetNormalizedTrackEta[2][0], HfJetTagging::BJET});
+  NormHistList.push_back({hsimjetNormalizedTrackEta[3][0], HfJetTagging::LFJET});
+
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKETA[0], HfJetTagging::REFHIST::TRACKETA[1], HfJetTagging::REFHIST::TRACKETA[2], HfJetTagging::REFHIST::TRACKETA[3], "track #eta", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/tracketa.pdf\")", canvasNum - 1));
+
+}
+
+void HfJetTaggingTCAnalysis::DrawTaggedFlavourJetTrackEta(bool doLog = true, int flavour =2, int startJetPt=0) {
+  std::vector<HistogramData> NormHistList;
+  for (int binJetPt =startJetPt; binJetPt < HfJetTagging::nBinsJetPt; binJetPt++) {
+    NormHistList.push_back({hsimjetNormalizedTrackEta[flavour][binJetPt+1], Form("%d<jet #eta<%d",HfJetTagging::binsJetPt[binJetPt], HfJetTagging::binsJetPt[binJetPt+1])});
+  }
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKETAASJETPT[0], HfJetTagging::REFHIST::TRACKETAASJETPT[1], HfJetTagging::REFHIST::TRACKETAASJETPT[2], HfJetTagging::REFHIST::TRACKETAASJETPT[3], "track #eta", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%sjet/tracketa.pdf\")", canvasNum - 1, HfJetTagging::FLAVOUR[flavour].Data()));
+}
+
+void HfJetTaggingTCAnalysis::DrawTaggedJetTrackPhi(bool withInc = false, bool doLog = true){
+  std::vector<HistogramData> NormHistList;
+  if (withInc) NormHistList.push_back({hsimjetNormalizedTrackPhi[0][0], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimjetNormalizedTrackPhi[1][0], HfJetTagging::CJET});
+  NormHistList.push_back({hsimjetNormalizedTrackPhi[2][0], HfJetTagging::BJET});
+  NormHistList.push_back({hsimjetNormalizedTrackPhi[3][0], HfJetTagging::LFJET});
+
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPHI[0], HfJetTagging::REFHIST::TRACKPHI[1], HfJetTagging::REFHIST::TRACKPHI[2], HfJetTagging::REFHIST::TRACKPHI[3], "track #phi", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/trackphi.pdf\")", canvasNum - 1));
+
+}
+
+void HfJetTaggingTCAnalysis::DrawTaggedFlavourJetTrackPhi(bool doLog = true, int flavour =2, int startJetPt=0) {
+  std::vector<HistogramData> NormHistList;
+  for (int binJetPt =startJetPt; binJetPt < HfJetTagging::nBinsJetPt; binJetPt++) {
+    NormHistList.push_back({hsimjetNormalizedTrackPhi[flavour][binJetPt+1], Form("%d<jet #phi<%d",HfJetTagging::binsJetPt[binJetPt], HfJetTagging::binsJetPt[binJetPt+1])});
+  }
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::TRACKPHIASJETPT[0], HfJetTagging::REFHIST::TRACKPHIASJETPT[1], HfJetTagging::REFHIST::TRACKPHIASJETPT[2], HfJetTagging::REFHIST::TRACKPHIASJETPT[3], "track #phi", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/%sjet/trackphi.pdf\")", canvasNum - 1, HfJetTagging::FLAVOUR[flavour].Data()));
+}
+
+void HfJetTaggingTCAnalysis::DrawTaggedJetImpXY(bool withInc = false, bool doLog = true) {
+  std::vector<HistogramData> NormHistList;
+  if (withInc) NormHistList.push_back({hsimjetNormalizedImpXY[0][0], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimjetNormalizedImpXY[1][0], HfJetTagging::CJET});
+  NormHistList.push_back({hsimjetNormalizedImpXY[2][0], HfJetTagging::BJET});
+  NormHistList.push_back({hsimjetNormalizedImpXY[3][0], HfJetTagging::LFJET});
+
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "IP_{XY} [#mum]", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXY.pdf\")", canvasNum - 1));
+}
+
+void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXY(bool withInc = false, bool doLog = true){
+  std::vector<HistogramData> NormHistList;
+  if (withInc) NormHistList.push_back({hsimjetNormalizedSignImpXY[0][0], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXY[1][0], HfJetTagging::CJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXY[2][0], HfJetTagging::BJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXY[3][0], HfJetTagging::LFJET});
+
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "Signed IP_{XY} [#mum]", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXY.pdf\")", canvasNum - 1));
+
+}
+void HfJetTaggingTCAnalysis::DrawTaggedJetImpXYSignificance(bool withInc = false, bool doLog = true){
+  std::vector<HistogramData> NormHistList;
+  if (withInc) NormHistList.push_back({hsimjetNormalizedImpXYSig[0][0], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimjetNormalizedImpXYSig[1][0], HfJetTagging::CJET});
+  NormHistList.push_back({hsimjetNormalizedImpXYSig[2][0], HfJetTagging::BJET});
+  NormHistList.push_back({hsimjetNormalizedImpXYSig[3][0], HfJetTagging::LFJET});
+
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "IPs_{XY}", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYSignificance.pdf\")", canvasNum - 1));
+
+}
+void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYSignificance(bool withInc = false, bool doLog = true){
+  std::vector<HistogramData> NormHistList;
+  if (withInc) NormHistList.push_back({hsimjetNormalizedSignImpXYSig[0][0], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYSig[1][0], HfJetTagging::CJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYSig[2][0], HfJetTagging::BJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYSig[3][0], HfJetTagging::LFJET});
+
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYSignificance.pdf\")", canvasNum - 1));
+
+}
+void HfJetTaggingTCAnalysis::DrawTaggedJetImpXYZ(bool withInc = false, bool doLog = true){
+  std::vector<HistogramData> NormHistList;
+  if (withInc) NormHistList.push_back({hsimjetNormalizedImpXYZ[0][0], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimjetNormalizedImpXYZ[1][0], HfJetTagging::CJET});
+  NormHistList.push_back({hsimjetNormalizedImpXYZ[2][0], HfJetTagging::BJET});
+  NormHistList.push_back({hsimjetNormalizedImpXYZ[3][0], HfJetTagging::LFJET});
+
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYZ[0], HfJetTagging::REFHIST::IPXYZ[1], HfJetTagging::REFHIST::IPXYZ[2], HfJetTagging::REFHIST::IPXYZ[3], "IP_{XYZ} [#mum]", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYZ.pdf\")", canvasNum - 1));
+
+}
+
+void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYZ(bool withInc = false, bool doLog = true) {
+  std::vector<HistogramData> NormHistList;
+  if (withInc) NormHistList.push_back({hsimjetNormalizedSignImpXYZ[0][0], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYZ[1][0], HfJetTagging::CJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYZ[2][0], HfJetTagging::BJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYZ[3][0], HfJetTagging::LFJET});
+
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYZ[0], HfJetTagging::REFHIST::IPXYZ[1], HfJetTagging::REFHIST::IPXYZ[2], HfJetTagging::REFHIST::IPXYZ[3], "Signed IP_{XYZ} [#mum]", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYZ.pdf\")", canvasNum - 1));
+
+}
+void HfJetTaggingTCAnalysis::DrawTaggedJetImpXYZSignificance(bool withInc = false, bool doLog = true) {
+  std::vector<HistogramData> NormHistList;
+  if (withInc) NormHistList.push_back({hsimjetNormalizedImpXYZSig[0][0], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimjetNormalizedImpXYZSig[1][0], HfJetTagging::CJET});
+  NormHistList.push_back({hsimjetNormalizedImpXYZSig[2][0], HfJetTagging::BJET});
+  NormHistList.push_back({hsimjetNormalizedImpXYZSig[3][0], HfJetTagging::LFJET});
+
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYZSIG[0], HfJetTagging::REFHIST::IPXYZSIG[1], HfJetTagging::REFHIST::IPXYZSIG[2], HfJetTagging::REFHIST::IPXYZSIG[3], "IPs_{XYZ}", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYZSignificance.pdf\")", canvasNum - 1));
+
+}
+void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYZSignificance(bool withInc = false, bool doLog = true){
+  std::vector<HistogramData> NormHistList;
+  if (withInc) NormHistList.push_back({hsimjetNormalizedSignImpXYZSig[0][0], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYZSig[1][0], HfJetTagging::CJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYZSig[2][0], HfJetTagging::BJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYZSig[3][0], HfJetTagging::LFJET});
+
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYZSIG[0], HfJetTagging::REFHIST::IPXYZSIG[1], HfJetTagging::REFHIST::IPXYZSIG[2], HfJetTagging::REFHIST::IPXYZSIG[3], "Signed IPs_{XYZ}", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYZSignificance.pdf\")", canvasNum - 1));
+
+}
+
+//void HfJetTaggingTCAnalysis::DrawTaggedJetImpXYN1(bool doLog = true){
+//  std::vector<HistogramData> NormHistList;
+//  //NormHistList.push_back({hsimincjetNormalizedImpXYN1, HfJetTagging::INCJET});
+//  NormHistList.push_back({hsimlfjetNormalizedImpXYN1, HfJetTagging::LFJET});
+//  NormHistList.push_back({hsimcjetNormalizedImpXYN1, HfJetTagging::CJET});
+//  NormHistList.push_back({hsimbjetNormalizedImpXYN1, HfJetTagging::BJET});
+//
+//  canvasHandler = new CanvasHandler(canvasNum++);
+//  if (doLog) gPad->SetLogy();
+//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "IP_{XY}^{N_{1}} [cm]", "Probability distribution");
+//  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYN1.pdf\")", canvasNum - 1));
+//
+//}
+//void HfJetTaggingTCAnalysis::DrawTaggedJetImpXYN2(bool doLog = true){
+//  std::vector<HistogramData> NormHistList;
+//  //NormHistList.push_back({hsimincjetNormalizedImpXYN2, HfJetTagging::INCJET});
+//  NormHistList.push_back({hsimlfjetNormalizedImpXYN2, HfJetTagging::LFJET});
+//  NormHistList.push_back({hsimcjetNormalizedImpXYN2, HfJetTagging::CJET});
+//  NormHistList.push_back({hsimbjetNormalizedImpXYN2, HfJetTagging::BJET});
+//
+//  canvasHandler = new CanvasHandler(canvasNum++);
+//  if (doLog) gPad->SetLogy();
+//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "IP_{XY}^{N_{2}} [cm]", "Probability distribution");
+//  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYN2.pdf\")", canvasNum - 1));
+//
+//}
+//void HfJetTaggingTCAnalysis::DrawTaggedJetImpXYN3(bool doLog = true){
+//  std::vector<HistogramData> NormHistList;
+//  //NormHistList.push_back({hsimincjetNormalizedImpXYN3, HfJetTagging::INCJET});
+//  NormHistList.push_back({hsimlfjetNormalizedImpXYN3, HfJetTagging::LFJET});
+//  NormHistList.push_back({hsimcjetNormalizedImpXYN3, HfJetTagging::CJET});
+//  NormHistList.push_back({hsimbjetNormalizedImpXYN3, HfJetTagging::BJET});
+//
+//  canvasHandler = new CanvasHandler(canvasNum++);
+//  if (doLog) gPad->SetLogy();
+//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "IP_{XY}^{N_{3}} [cm]", "Probability distribution");
+//  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYN3.pdf\")", canvasNum - 1));
+//
+//}
+//void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYN1(bool doLog = true){
+//  std::vector<HistogramData> NormHistList;
+//  //NormHistList.push_back({hsimincjetNormalizedSignImpXYN1, HfJetTagging::INCJET});
+//  NormHistList.push_back({hsimlfjetNormalizedSignImpXYN1, HfJetTagging::LFJET});
+//  NormHistList.push_back({hsimcjetNormalizedSignImpXYN1, HfJetTagging::CJET});
+//  NormHistList.push_back({hsimbjetNormalizedSignImpXYN1, HfJetTagging::BJET});
+//
+//  canvasHandler = new CanvasHandler(canvasNum++);
+//  if (doLog) gPad->SetLogy();
+//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "Signed IP_{XY}^{N_{1}} [cm]", "Probability distribution");
+//  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYN1.pdf\")", canvasNum - 1));
+//
+//}
+//void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYN2(bool doLog = true){
+//  std::vector<HistogramData> NormHistList;
+//  //NormHistList.push_back({hsimincjetNormalizedSignImpXYN2, HfJetTagging::INCJET});
+//  NormHistList.push_back({hsimlfjetNormalizedSignImpXYN2, HfJetTagging::LFJET});
+//  NormHistList.push_back({hsimcjetNormalizedSignImpXYN2, HfJetTagging::CJET});
+//  NormHistList.push_back({hsimbjetNormalizedSignImpXYN2, HfJetTagging::BJET});
+//
+//  canvasHandler = new CanvasHandler(canvasNum++);
+//  if (doLog) gPad->SetLogy();
+//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "Signed IP_{XY}^{N_{2}} [cm]", "Probability distribution");
+//  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYN2.pdf\")", canvasNum - 1));
+//
+//}
+//void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYN3(bool doLog = true){
+//  std::vector<HistogramData> NormHistList;
+//  //NormHistList.push_back({hsimincjetNormalizedImpXYN3, HfJetTagging::INCJET});
+//  NormHistList.push_back({hsimlfjetNormalizedImpXYN3, HfJetTagging::LFJET});
+//  NormHistList.push_back({hsimcjetNormalizedImpXYN3, HfJetTagging::CJET});
+//  NormHistList.push_back({hsimbjetNormalizedImpXYN3, HfJetTagging::BJET});
+//
+//  canvasHandler = new CanvasHandler(canvasNum++);
+//  if (doLog) gPad->SetLogy();
+//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXY[0], HfJetTagging::REFHIST::IPXY[1], HfJetTagging::REFHIST::IPXY[2], HfJetTagging::REFHIST::IPXY[3], "Signed IP_{XY}^{N_{3}} [cm]", "Probability distribution");
+//  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYN3.pdf\")", canvasNum - 1));
+//}
+//
+//void HfJetTaggingTCAnalysis::DrawTaggedJetImpXYSignificanceN1(bool doLog = true){
+//  std::vector<HistogramData> NormHistList;
+//  //NormHistList.push_back({hsimincjetNormalizedImpXYSignificanceN1, HfJetTagging::INCJET});
+//  NormHistList.push_back({hsimlfjetNormalizedImpXYSignificanceN1, HfJetTagging::LFJET});
+//  NormHistList.push_back({hsimcjetNormalizedImpXYSignificanceN1, HfJetTagging::CJET});
+//  NormHistList.push_back({hsimbjetNormalizedImpXYSignificanceN1, HfJetTagging::BJET});
+//
+//  canvasHandler = new CanvasHandler(canvasNum++);
+//  if (doLog) gPad->SetLogy();
+//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "IPs_{XY}^{N_{1}}", "Probability distribution");
+//  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYSignificanceN1.pdf\")", canvasNum - 1));
+//
+//}
+//void HfJetTaggingTCAnalysis::DrawTaggedJetImpXYSignificanceN2(bool doLog = true){
+//  std::vector<HistogramData> NormHistList;
+//  //NormHistList.push_back({hsimincjetNormalizedImpXYSignificanceN2, HfJetTagging::INCJET});
+//  NormHistList.push_back({hsimlfjetNormalizedImpXYSignificanceN2, HfJetTagging::LFJET});
+//  NormHistList.push_back({hsimcjetNormalizedImpXYSignificanceN2, HfJetTagging::CJET});
+//  NormHistList.push_back({hsimbjetNormalizedImpXYSignificanceN2, HfJetTagging::BJET});
+//
+//  canvasHandler = new CanvasHandler(canvasNum++);
+//  if (doLog) gPad->SetLogy();
+//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "IPs_{XY}^{N_{2}}", "Probability distribution");
+//  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYSignificanceN2.pdf\")", canvasNum - 1));
+//
+//}
+//void HfJetTaggingTCAnalysis::DrawTaggedJetImpXYSignificanceN3(bool doLog = true){
+//  std::vector<HistogramData> NormHistList;
+//  //NormHistList.push_back({hsimincjetNormalizedImpXYSignificanceN3, HfJetTagging::INCJET});
+//  NormHistList.push_back({hsimlfjetNormalizedImpXYSignificanceN3, HfJetTagging::LFJET});
+//  NormHistList.push_back({hsimcjetNormalizedImpXYSignificanceN3, HfJetTagging::CJET});
+//  NormHistList.push_back({hsimbjetNormalizedImpXYSignificanceN3, HfJetTagging::BJET});
+//
+//  canvasHandler = new CanvasHandler(canvasNum++);
+//  if (doLog) gPad->SetLogy();
+//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "IPs_{XY}^{N_{3}}", "Probability distribution");
+//  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/ImpXYSignificanceN3.pdf\")", canvasNum - 1));
+//}
+
+void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYSignificanceN1(bool withInc = false, bool doLog = true){
+  std::vector<HistogramData> NormHistList;
+  if (withInc) NormHistList.push_back({hsimjetNormalizedSignImpXYSigN1[0][0], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYSigN1[1][0], HfJetTagging::CJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYSigN1[2][0], HfJetTagging::BJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYSigN1[3][0], HfJetTagging::LFJET});
+
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}^{N_{1}}", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYSignificanceN1.pdf\")", canvasNum - 1));
+
+}
+void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYSignificanceN2(bool withInc = false, bool doLog = true){
+  std::vector<HistogramData> NormHistList;
+  if (withInc) NormHistList.push_back({hsimjetNormalizedSignImpXYSigN2[0][0], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYSigN2[1][0], HfJetTagging::CJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYSigN2[2][0], HfJetTagging::BJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYSigN2[3][0], HfJetTagging::LFJET});
+
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}^{N_{2}}", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYSignificanceN2.pdf\")", canvasNum - 1));
+
+}
+void HfJetTaggingTCAnalysis::DrawTaggedJetSignImpXYSignificanceN3(bool withInc = false, bool doLog = true){
+  std::vector<HistogramData> NormHistList;
+  NormHistList.push_back({hsimjetNormalizedSignImpXYSigN3[0][0], HfJetTagging::INCJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYSigN3[1][0], HfJetTagging::CJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYSigN3[2][0], HfJetTagging::BJET});
+  NormHistList.push_back({hsimjetNormalizedSignImpXYSigN3[3][0], HfJetTagging::LFJET});
+
+  canvasHandler = new CanvasHandler(canvasNum++);
+  if (doLog) gPad->SetLogy();
+  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::IPXYSIG[0], HfJetTagging::REFHIST::IPXYSIG[1], HfJetTagging::REFHIST::IPXYSIG[2], HfJetTagging::REFHIST::IPXYSIG[3], "Signed IPs_{XY}^{N_{3}}", "Probability distribution");
+  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/SignImpXYSignificanceN3.pdf\")", canvasNum - 1));
+}
+//
+//void HfJetTaggingTCAnalysis::DrawTaggedJetProbability(){
+//  std::vector<HistogramData> NormHistList;
+//  //NormHistList.push_back({hsimincjetNormalizedJP, HfJetTagging::INCJET});
+//  NormHistList.push_back({hsimlfjetNormalizedJP, HfJetTagging::LFJET});
+//  NormHistList.push_back({hsimcjetNormalizedJP, HfJetTagging::CJET});
+//  NormHistList.push_back({hsimbjetNormalizedJP, HfJetTagging::BJET});
+//
+//  canvasHandler = new CanvasHandler(canvasNum++);
+//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::JP[0], HfJetTagging::REFHIST::JP[1], HfJetTagging::REFHIST::JP[2], HfJetTagging::REFHIST::JP[3], "JP", "Probability distribution");
+//  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/JetProbability.pdf\")", canvasNum - 1));
+//}
+//void HfJetTaggingTCAnalysis::DrawTaggedJetProbabilityLog(){
+//  std::vector<HistogramData> NormHistList;
+//  //NormHistList.push_back({hsimincjetNormalizedJPLog, HfJetTagging::INCJET});
+//  NormHistList.push_back({hsimlfjetNormalizedJPLog, HfJetTagging::LFJET});
+//  NormHistList.push_back({hsimcjetNormalizedJPLog, HfJetTagging::CJET});
+//  NormHistList.push_back({hsimbjetNormalizedJPLog, HfJetTagging::BJET});
+//
+//  canvasHandler = new CanvasHandler(canvasNum++);
+//  canvasHandler->DrawRefHistogram(canvasNum, HfJetTagging::REFHIST::LOGJP[0], HfJetTagging::REFHIST::LOGJP[1], HfJetTagging::REFHIST::LOGJP[2], HfJetTagging::REFHIST::LOGJP[3], "-Log(JP)", "Probability distribution");
+//  this->DrawCombined(NormHistList.size(), NormHistList, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"fig/sim/JetProbabilityLog.pdf\")", canvasNum - 1));
+//}
+
+#endif // HFJETTAGGINGTCANALYSIS_H 
+

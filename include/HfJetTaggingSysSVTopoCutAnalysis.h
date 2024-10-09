@@ -6,19 +6,19 @@
 #include <TString.h>
 #include "HfJetTaggingSysAnalysis.h"
 
-class HfJetTaggingSysTaggerAnalysis : public HfJetTaggingSysAnalysis{
+class HfJetTaggingSysSVTopoCutAnalysis : public HfJetTaggingSysAnalysis{
   public:
-    HfJetTaggingSysTaggerAnalysis() : HfJetTaggingSysAnalysis() {
+    HfJetTaggingSysSVTopoCutAnalysis() : HfJetTaggingSysAnalysis() {
       initConfig();
     }
-    ~HfJetTaggingSysTaggerAnalysis();
+    ~HfJetTaggingSysSVTopoCutAnalysis();
 
     //// FUNCTION ////
     void initConfig();
-    int loadSimTagger(const std::vector<TString> &rootFiles);
-    void initHistogramTagger();
-    void projectionHistTagger();
-    void normalizedHistogramTagger();
+    int loadSimSVTopoCut(const std::vector<TString> &rootFiles);
+    void initHistogramSVTopoCut();
+    void projectionHistSVTopoCut();
+    void normalizedHistogramSVTopoCut();
     void saveHistogram(TString rootFile, bool doData, bool doMCD, bool doMCP);
 
     // Set
@@ -34,36 +34,32 @@ class HfJetTaggingSysTaggerAnalysis : public HfJetTaggingSysAnalysis{
     void drawPurityN2(bool doLog, int binJetPt);
     void drawPurityN3(bool doLog, int binJetPt);
     void drawPurityNx(bool doLog, int binJetPt);
-    void drawEffiAndPurityNx(bool doLog, int binJetPt);
     void drawGraphEffiAndPurity(bool doLog, int binJetPt);
     
   protected:
-    TH3F* h3simTagjetPtJPFlavour[HfJetTagging::numTagger];
-    TH3F* h3simTagjetPtNegLogJPFlavour[HfJetTagging::numTagger];
-    TH3F* h3simTagjetPtJPN1Flavour[HfJetTagging::numTagger];
-    TH3F* h3simTagjetPtNegLogJPN1Flavour[HfJetTagging::numTagger];
-    TH3F* h3simTagjetPtJPN2Flavour[HfJetTagging::numTagger];
-    TH3F* h3simTagjetPtNegLogJPN2Flavour[HfJetTagging::numTagger];
-    TH3F* h3simTagjetPtJPN3Flavour[HfJetTagging::numTagger];
-    TH3F* h3simTagjetPtNegLogJPN3Flavour[HfJetTagging::numTagger];
+    TH3F* h3simTagjetPtJPFlavour[HfJetTagging::numSVTopoCut];
+    TH3F* h3simTagjetPtNegLogJPFlavour[HfJetTagging::numSVTopoCut];
+    TH3F* h3simTagjetPtJPN1Flavour[HfJetTagging::numSVTopoCut];
+    TH3F* h3simTagjetPtNegLogJPN1Flavour[HfJetTagging::numSVTopoCut];
+    TH3F* h3simTagjetPtJPN2Flavour[HfJetTagging::numSVTopoCut];
+    TH3F* h3simTagjetPtNegLogJPN2Flavour[HfJetTagging::numSVTopoCut];
+    TH3F* h3simTagjetPtJPN3Flavour[HfJetTagging::numSVTopoCut];
+    TH3F* h3simTagjetPtNegLogJPN3Flavour[HfJetTagging::numSVTopoCut];
 
-    TH1F* hsimTagjetJP[HfJetTagging::numTagger][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTagjetNegLogJP[HfJetTagging::numTagger][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTagjetJPN1[HfJetTagging::numTagger][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTagjetNegLogJPN1[HfJetTagging::numTagger][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTagjetJPN2[HfJetTagging::numTagger][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTagjetNegLogJPN2[HfJetTagging::numTagger][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTagjetJPN3[HfJetTagging::numTagger][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTagjetNegLogJPN3[HfJetTagging::numTagger][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTagjetJP[HfJetTagging::numSVTopoCut][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTagjetNegLogJP[HfJetTagging::numSVTopoCut][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTagjetJPN1[HfJetTagging::numSVTopoCut][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTagjetNegLogJPN1[HfJetTagging::numSVTopoCut][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTagjetJPN2[HfJetTagging::numSVTopoCut][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTagjetNegLogJPN2[HfJetTagging::numSVTopoCut][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTagjetJPN3[HfJetTagging::numSVTopoCut][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimTagjetNegLogJPN3[HfJetTagging::numSVTopoCut][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
     TH1F* hsimJPEffiN1[HfJetTagging::nFlavour+1];
     TH1F* hsimJPEffiN2[HfJetTagging::nFlavour+1];
     TH1F* hsimJPEffiN3[HfJetTagging::nFlavour+1];
     TH1F* hsimJPPurityN1[HfJetTagging::nFlavour+1];
     TH1F* hsimJPPurityN2[HfJetTagging::nFlavour+1];
     TH1F* hsimJPPurityN3[HfJetTagging::nFlavour+1];
-    TH1F* hsimJPEffiAndPurityN1[HfJetTagging::nFlavour+1];
-    TH1F* hsimJPEffiAndPurityN2[HfJetTagging::nFlavour+1];
-    TH1F* hsimJPEffiAndPurityN3[HfJetTagging::nFlavour+1];
 
   private:
     TLatex latexNoNDC;
@@ -72,21 +68,21 @@ class HfJetTaggingSysTaggerAnalysis : public HfJetTaggingSysAnalysis{
     TString dirSim;
 };
 
-HfJetTaggingSysTaggerAnalysis::~HfJetTaggingSysTaggerAnalysis() {
+HfJetTaggingSysSVTopoCutAnalysis::~HfJetTaggingSysSVTopoCutAnalysis() {
   std::cout<< " " << std::endl;
 }
 
-//int HfJetTaggingSysTaggerAnalysis::LoadData(TString rootFile) { // TODO
+//int HfJetTaggingSysSVTopoCutAnalysis::LoadData(TString rootFile) { // TODO
 //  return 0;
 //}
 
-void HfJetTaggingSysTaggerAnalysis::initConfig() {
+void HfJetTaggingSysSVTopoCutAnalysis::initConfig() {
   //latex.SetNDC(); // Use normalized coordinates
   latex.SetNDC(); // Use normalized coordinates
   latex.SetTextSize(0.03); // Set text size
   latex.SetTextFont(42);
-  dirData = Form("%s/%s/data/%s/sys/tagger", dirFig.Data(), SOURCESET.Data(), DATASET.Data());
-  dirSim = Form("%s/%s/sim/%s/sys/tagger", dirFig.Data(), SOURCESET.Data(), SIMSET.Data());
+  dirData = Form("fig/%s/data/%s/sys/tagger", SOURCESET.Data(), DATASET.Data());
+  dirSim = Form("fig/%s/sim/%s/sys/tagger", SOURCESET.Data(), SIMSET.Data());
   gSystem->mkdir(dirData, kTRUE); // kTRUE: create parent directories if they don't exist
   gSystem->mkdir(dirSim, kTRUE); // kTRUE: create parent directories if they don't exist
   gSystem->mkdir(Form("%s/incjet", dirSim.Data()), kTRUE); // kTRUE: create parent directories if they don't exist
@@ -95,9 +91,9 @@ void HfJetTaggingSysTaggerAnalysis::initConfig() {
   gSystem->mkdir(Form("%s/lfjet", dirSim.Data()), kTRUE); // kTRUE: create parent directories if they don't exist
 }
 
-int HfJetTaggingSysTaggerAnalysis::loadSimTagger(const std::vector<TString> &rootFiles) {
+int HfJetTaggingSysSVTopoCutAnalysis::loadSimSVTopoCut(const std::vector<TString> &rootFiles) {
   const TString &taskName = "jet-taggerhf-qa-charged";
-  int maxTagger = 0;
+  int maxSVTopoCut = 0;
   for (const auto& rootFile : rootFiles) {
     if (gSystem->AccessPathName(rootFile.Data())) {
       std::cout << "Input file (MC) not found!" << std::endl;
@@ -107,30 +103,27 @@ int HfJetTaggingSysTaggerAnalysis::loadSimTagger(const std::vector<TString> &roo
     TFile* fin;
     fin = TFile::Open(rootFile, "READ");
     
-    h3simTagjetPtNegLogJPFlavour[maxTagger] = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_neg_log_JP_flavour", taskName.Data())));
-    h3simTagjetPtNegLogJPN1Flavour[maxTagger] = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_neg_log_JP_N1_flavour", taskName.Data())));
-    h3simTagjetPtNegLogJPN2Flavour[maxTagger] = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_neg_log_JP_N2_flavour", taskName.Data())));
-    h3simTagjetPtNegLogJPN3Flavour[maxTagger] = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_neg_log_JP_N3_flavour", taskName.Data())));
-    maxTagger++;
+    h3simTagjetPtNegLogJPFlavour[maxSVTopoCut] = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_neg_log_JP_flavour", taskName.Data())));
+    h3simTagjetPtNegLogJPN1Flavour[maxSVTopoCut] = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_neg_log_JP_N1_flavour", taskName.Data())));
+    h3simTagjetPtNegLogJPN2Flavour[maxSVTopoCut] = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_neg_log_JP_N2_flavour", taskName.Data())));
+    h3simTagjetPtNegLogJPN3Flavour[maxSVTopoCut] = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_neg_log_JP_N3_flavour", taskName.Data())));
+    maxSVTopoCut++;
   }
   std::cout<<"MC loaded"<<std::endl;
 
   return 1;
 }
 
-void HfJetTaggingSysTaggerAnalysis::initHistogramTagger() {
-  for (int tagger =0; tagger < HfJetTagging::numTagger; tagger++) {
+void HfJetTaggingSysSVTopoCutAnalysis::initHistogramSVTopoCut() {
+  for (int tagger =0; tagger < HfJetTagging::numSVTopoCut; tagger++) {
     for (int flavour = 0; flavour < HfJetTagging::nFlavour+1; flavour++) {
       if (tagger<1) {
-        hsimJPEffiN1[flavour] = new TH1F(Form("hsimJPEffiN1_%d", flavour), "", HfJetTagging::numTagger, -0.25, 9.75);
-        hsimJPEffiN2[flavour] = new TH1F(Form("hsimJPEffiN2_%d", flavour), "", HfJetTagging::numTagger, -0.25, 9.75);
-        hsimJPEffiN3[flavour] = new TH1F(Form("hsimJPEffiN3_%d", flavour), "", HfJetTagging::numTagger, -0.25, 9.75);
-        hsimJPPurityN1[flavour] = new TH1F(Form("hsimJPPurityN1_%d", flavour), "", HfJetTagging::numTagger, -0.25, 9.75);
-        hsimJPPurityN2[flavour] = new TH1F(Form("hsimJPPurityN2_%d", flavour), "", HfJetTagging::numTagger, -0.25, 9.75);
-        hsimJPPurityN3[flavour] = new TH1F(Form("hsimJPPurityN3_%d", flavour), "", HfJetTagging::numTagger, -0.25, 9.75);
-        hsimJPEffiAndPurityN1[flavour] = new TH1F(Form("hsimJPEffiAndPurityN1_%d", flavour), "", HfJetTagging::numTagger, -0.25, 9.75);
-        hsimJPEffiAndPurityN2[flavour] = new TH1F(Form("hsimJPEffiAndPurityN2_%d", flavour), "", HfJetTagging::numTagger, -0.25, 9.75);
-        hsimJPEffiAndPurityN3[flavour] = new TH1F(Form("hsimJPEffiAndPurityN3_%d", flavour), "", HfJetTagging::numTagger, -0.25, 9.75);
+        hsimJPEffiN1[flavour] = new TH1F(Form("hsimJPEffiN1_%d", flavour), "", 10, -0.25, 4.75);
+        hsimJPEffiN2[flavour] = new TH1F(Form("hsimJPEffiN2_%d", flavour), "", 10, -0.25, 4.75);
+        hsimJPEffiN3[flavour] = new TH1F(Form("hsimJPEffiN3_%d", flavour), "", 10, -0.25, 4.75);
+        hsimJPPurityN1[flavour] = new TH1F(Form("hsimJPPurityN1_%d", flavour), "", 10, -0.25, 4.75);
+        hsimJPPurityN2[flavour] = new TH1F(Form("hsimJPPurityN2_%d", flavour), "", 10, -0.25, 4.75);
+        hsimJPPurityN3[flavour] = new TH1F(Form("hsimJPPurityN3_%d", flavour), "", 10, -0.25, 4.75);
       }
       for (int binJetPt=0; binJetPt < HfJetTagging::nBinsJetPt+1; binJetPt++) {
         hsimTagjetNegLogJP[tagger][flavour][binJetPt] = new TH1F(Form("hsimTagjetNegLogJP_%d_%d_%d", tagger, flavour, binJetPt), "", h3simTagjetPtNegLogJPFlavour[tagger]->GetNbinsY(), h3simTagjetPtNegLogJPFlavour[tagger]->GetYaxis()->GetBinLowEdge(1), h3simTagjetPtNegLogJPFlavour[tagger]->GetYaxis()->GetBinUpEdge(h3simTagjetPtNegLogJPFlavour[tagger]->GetNbinsY()));
@@ -142,9 +135,9 @@ void HfJetTaggingSysTaggerAnalysis::initHistogramTagger() {
   }
 }
 
-void HfJetTaggingSysTaggerAnalysis::projectionHistTagger() {
+void HfJetTaggingSysSVTopoCutAnalysis::projectionHistSVTopoCut() {
   HfJetTagging::JetFlavour jetFlavours[] = {HfJetTagging::None, HfJetTagging::Charm, HfJetTagging::Beauty, HfJetTagging::LightFlavour};
-  for (int tagger=0; tagger<HfJetTagging::numTagger; tagger++) {
+  for (int tagger=0; tagger<HfJetTagging::numSVTopoCut; tagger++) {
     for (int binFlavour = 2; binFlavour < HfJetTagging::nFlavour+2; binFlavour++) {
       HfJetTagging::JetFlavour flavour = jetFlavours[binFlavour - 1];
 		  TH1F* projNegLogJP = reinterpret_cast<TH1F*> (h3simTagjetPtNegLogJPFlavour[tagger]->ProjectionY(Form("projNegLogJP_%d_%d", tagger, flavour), 1, h3simTagjetPtNegLogJPFlavour[tagger]->GetNbinsX(), binFlavour, binFlavour));
@@ -198,10 +191,10 @@ void HfJetTaggingSysTaggerAnalysis::projectionHistTagger() {
   }
 }
 
-void HfJetTaggingSysTaggerAnalysis::normalizedHistogramTagger() {
+void HfJetTaggingSysSVTopoCutAnalysis::normalizedHistogramSVTopoCut() {
 }
 
-void HfJetTaggingSysTaggerAnalysis::saveHistogram(TString rootFile, bool doData, bool doMC, bool dopartLevel) {
+void HfJetTaggingSysSVTopoCutAnalysis::saveHistogram(TString rootFile, bool doData, bool doMC, bool dopartLevel) {
   TFile* fout = new TFile(rootFile.Data(), "RECREATE");
 
   // Check if the file is open successfully
@@ -221,28 +214,28 @@ void HfJetTaggingSysTaggerAnalysis::saveHistogram(TString rootFile, bool doData,
   }
 }
 
-void HfJetTaggingSysTaggerAnalysis::drawEffiN1(bool doLog, int binJetPt) {
-  std::vector<HistogramData> histList;
+void HfJetTaggingSysSVTopoCutAnalysis::drawEffiN1(bool doLog, int binJetPt) {
+  std::vector<HistogramData> normHist;
   for (int flavour = 1; flavour < HfJetTagging::nFlavour+1; flavour++) {
-    for (int tagger=0; tagger<HfJetTagging::numTagger; tagger++) {
+    for (int tagger=0; tagger<HfJetTagging::numSVTopoCut; tagger++) {
       float effiN1 = taggingutilities::getEfficiency(hsimTagjetNegLogJPN1[tagger][flavour][binJetPt],hsimTagjetNegLogJP[tagger][flavour][binJetPt]);
       if (effiN1 < 0) continue;
       hsimJPEffiN1[flavour]->SetBinContent(tagger+1, effiN1);
     }
-    histList.push_back({hsimJPEffiN1[flavour], HfJetTagging::FLAVOURJET[flavour]});
+    normHist.push_back({hsimJPEffiN1[flavour], HfJetTagging::FLAVOURJET[flavour]});
   }
   canHan = new CanvasHandler();
   canHan->createCanvas(nc);
-  canHan->drawRefHistogram(nc, -0.25, 9.75, HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "tagger point (#it{S}_{xy})", "#epsilon");
-  canHan->drawCombined(histList.size(), histList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  canHan->drawRefHistogram(nc, -0.25, 4.75, HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "tagger point (#it{S}_{xy})", "#epsilon");
+  canHan->drawCombined(normHist.size(), normHist, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   latex.DrawLatex(0.7, 0.9-0.00, "N=1");
-  gROOT->ProcessLine(Form("cc%d->Print(\"%s/EffiJPN1_%d.pdf\")", nc++, dirSim.Data(), binJetPt));
+  gROOT->ProcessLine(Form("cc%d->Print(\"%s/bjet/EffiJPN1.pdf\")", nc++, dirSim.Data()));
 }
 
-void HfJetTaggingSysTaggerAnalysis::drawEffiN2(bool doLog, int binJetPt) {
+void HfJetTaggingSysSVTopoCutAnalysis::drawEffiN2(bool doLog, int binJetPt) {
   std::vector<HistogramData> normHist;
   for (int flavour = 1; flavour < HfJetTagging::nFlavour+1; flavour++) {
-    for (int tagger=0; tagger<HfJetTagging::numTagger; tagger++) {
+    for (int tagger=0; tagger<HfJetTagging::numSVTopoCut; tagger++) {
       float effiN2 = taggingutilities::getEfficiency(hsimTagjetNegLogJPN2[tagger][flavour][binJetPt],hsimTagjetNegLogJP[tagger][flavour][binJetPt]);
       if (effiN2 < 0) continue;
       hsimJPEffiN2[flavour]->SetBinContent(tagger+1, effiN2);
@@ -251,16 +244,15 @@ void HfJetTaggingSysTaggerAnalysis::drawEffiN2(bool doLog, int binJetPt) {
   }
   canHan = new CanvasHandler();
   canHan->createCanvas(nc);
-  canHan->drawRefHistogram(nc, -0.25, 9.75, HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "tagger point (#it{S}_{xy})", "#epsilon");
+  canHan->drawRefHistogram(nc, -0.25, 4.75, HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "tagger point (#it{S}_{xy})", "#epsilon");
   canHan->drawCombined(normHist.size(), normHist, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   latex.DrawLatex(0.7, 0.9-0.00, "N=2");
-  gROOT->ProcessLine(Form("cc%d->Print(\"%s/EffiJPN2_%d.pdf\")", nc++, dirSim.Data(), binJetPt));
+  gROOT->ProcessLine(Form("cc%d->Print(\"%s/bjet/EffiJPN2.pdf\")", nc++, dirSim.Data()));
 }
-
-void HfJetTaggingSysTaggerAnalysis::drawEffiN3(bool doLog, int binJetPt) {
+void HfJetTaggingSysSVTopoCutAnalysis::drawEffiN3(bool doLog, int binJetPt) {
   std::vector<HistogramData> normHist;
   for (int flavour = 1; flavour < HfJetTagging::nFlavour+1; flavour++) {
-    for (int tagger=0; tagger<HfJetTagging::numTagger; tagger++) {
+    for (int tagger=0; tagger<HfJetTagging::numSVTopoCut; tagger++) {
       float effiN3 = taggingutilities::getEfficiency(hsimTagjetNegLogJPN3[tagger][flavour][binJetPt],hsimTagjetNegLogJP[tagger][flavour][binJetPt]);
       if (effiN3 < 0) continue;
       hsimJPEffiN3[flavour]->SetBinContent(tagger+1, effiN3);
@@ -269,51 +261,28 @@ void HfJetTaggingSysTaggerAnalysis::drawEffiN3(bool doLog, int binJetPt) {
   }
   canHan = new CanvasHandler();
   canHan->createCanvas(nc);
-  canHan->drawRefHistogram(nc, -0.25, 9.75, HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "tagger point (#it{S}_{xy})", "#epsilon");
+  canHan->drawRefHistogram(nc, -0.25, 4.75, HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "tagger point (#it{S}_{xy})", "#epsilon");
   canHan->drawCombined(normHist.size(), normHist, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
   latex.DrawLatex(0.7, 0.9-0.00, "N=3");
-  gROOT->ProcessLine(Form("cc%d->Print(\"%s/EffiJPN3_%d.pdf\")", nc++, dirSim.Data(), binJetPt));
+  gROOT->ProcessLine(Form("cc%d->Print(\"%s/bjet/EffiJPN3.pdf\")", nc++, dirSim.Data()));
 }
 
-void HfJetTaggingSysTaggerAnalysis::drawEffiNx(bool doLog, int binJetPt) {
-  std::vector<HistogramData> cjetHist;
-  cjetHist.push_back({hsimJPEffiN1[1], "N=1"});
-  cjetHist.push_back({hsimJPEffiN2[1], "N=2"});
-  cjetHist.push_back({hsimJPEffiN3[1], "N=3"});
+void HfJetTaggingSysSVTopoCutAnalysis::drawEffiNx(bool doLog, int binJetPt) {
+  std::vector<HistogramData> normHist;
+  normHist.push_back({hsimJPEffiN1[2], "N=1"});
+  normHist.push_back({hsimJPEffiN3[2], "N=3"});
+  normHist.push_back({hsimJPEffiN2[2], "N=2"});
   canHan = new CanvasHandler();
   canHan->createCanvas(nc);
-  canHan->drawRefHistogram(nc, -0.25, 9.75, HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "tagger point (#it{S}_{xy})", "#epsilon_{c}");
-  canHan->drawCombined(cjetHist.size(), cjetHist, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  latexSimJetInfo(0.2, 0.9, binJetPt, TRIGGERNAME.Data());
-  gROOT->ProcessLine(Form("cc%d->Print(\"%s/cjet/EffiJPNx_%d.pdf\")", nc++, dirSim.Data(), binJetPt));
-
-  std::vector<HistogramData> bjetHist;
-  bjetHist.push_back({hsimJPEffiN1[2], "N=1"});
-  bjetHist.push_back({hsimJPEffiN2[2], "N=2"});
-  bjetHist.push_back({hsimJPEffiN3[2], "N=3"});
-  canHan = new CanvasHandler();
-  canHan->createCanvas(nc);
-  canHan->drawRefHistogram(nc, -0.25, 9.75, HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "tagger point (#it{S}_{xy})", "#epsilon_{b}");
-  canHan->drawCombined(bjetHist.size(), bjetHist, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  latexSimJetInfo(0.2, 0.9, binJetPt, TRIGGERNAME.Data());
-  gROOT->ProcessLine(Form("cc%d->Print(\"%s/bjet/EffiJPNx_%d.pdf\")", nc++, dirSim.Data(), binJetPt));
-
-  std::vector<HistogramData> lfjetHist;
-  lfjetHist.push_back({hsimJPEffiN1[3], "N=1"});
-  lfjetHist.push_back({hsimJPEffiN2[3], "N=2"});
-  lfjetHist.push_back({hsimJPEffiN3[3], "N=3"});
-  canHan = new CanvasHandler();
-  canHan->createCanvas(nc);
-  canHan->drawRefHistogram(nc, -0.25, 9.75, HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "tagger point (#it{S}_{xy})", "#epsilon_{lf}");
-  canHan->drawCombined(lfjetHist.size(), lfjetHist, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  latexSimJetInfo(0.2, 0.9, binJetPt, TRIGGERNAME.Data());
-  gROOT->ProcessLine(Form("cc%d->Print(\"%s/lfjet/EffiJPNx_%d.pdf\")", nc++, dirSim.Data(), binJetPt));
+  canHan->drawRefHistogram(nc, -0.25, 4.75, HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "tagger point (#it{S}_{xy})", "#epsilon");
+  canHan->drawCombined(normHist.size(), normHist, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"%s/bjet/EffiJPNx.pdf\")", nc++, dirSim.Data()));
 }
 
-void HfJetTaggingSysTaggerAnalysis::drawPurityN1(bool doLog, int binJetPt) {
+void HfJetTaggingSysSVTopoCutAnalysis::drawPurityN1(bool doLog, int binJetPt) {
   std::vector<HistogramData> normHist;
   for (int flavour = 1; flavour < HfJetTagging::nFlavour+1; flavour++) {
-    for (int tagger=0; tagger<HfJetTagging::numTagger; tagger++) {
+    for (int tagger=0; tagger<HfJetTagging::numSVTopoCut; tagger++) {
       float purityN1 = taggingutilities::getPurity(hsimTagjetNegLogJPN1[tagger][flavour][binJetPt],hsimTagjetNegLogJPN1[tagger][0][binJetPt]);
       hsimJPPurityN1[flavour]->SetBinContent(tagger+1, purityN1);
     }
@@ -321,17 +290,16 @@ void HfJetTaggingSysTaggerAnalysis::drawPurityN1(bool doLog, int binJetPt) {
   }
   canHan = new CanvasHandler();
   canHan->createCanvas(nc);
-  canHan->drawRefHistogram(nc, -0.25, 9.75, HfJetTagging::REFHIST::PURITY[2], HfJetTagging::REFHIST::PURITY[3], "tagger point (#it{S}_{xy})", "Purity");
+  canHan->drawRefHistogram(nc, -0.25, 4.75, HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "tagger point (#it{S}_{xy})", "Purity");
   canHan->drawCombined(normHist.size(), normHist, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  latexSimJetInfo(0.2, 0.9, binJetPt, TRIGGERNAME.Data());
-  latex.DrawLatex(0.67, 0.9-0.02, "#scale[1.5]{N=1}");
-  gROOT->ProcessLine(Form("cc%d->Print(\"%s/purityN1_%d.pdf\")", nc++, dirSim.Data(), binJetPt));
+  latex.DrawLatex(0.7, 0.9-0.00, "N=3");
+  gROOT->ProcessLine(Form("cc%d->Print(\"%s/bjet/purityN1.pdf\")", nc++, dirSim.Data()));
 }
 
-void HfJetTaggingSysTaggerAnalysis::drawPurityN2(bool doLog, int binJetPt) {
+void HfJetTaggingSysSVTopoCutAnalysis::drawPurityN2(bool doLog, int binJetPt) {
   std::vector<HistogramData> normHist;
   for (int flavour = 1; flavour < HfJetTagging::nFlavour+1; flavour++) {
-    for (int tagger=0; tagger<HfJetTagging::numTagger; tagger++) {
+    for (int tagger=0; tagger<HfJetTagging::numSVTopoCut; tagger++) {
       float purityN2 = taggingutilities::getPurity(hsimTagjetNegLogJPN2[tagger][flavour][binJetPt],hsimTagjetNegLogJPN2[tagger][0][binJetPt]);
       hsimJPPurityN2[flavour]->SetBinContent(tagger+1, purityN2);
     }
@@ -339,17 +307,16 @@ void HfJetTaggingSysTaggerAnalysis::drawPurityN2(bool doLog, int binJetPt) {
   }
   canHan = new CanvasHandler();
   canHan->createCanvas(nc);
-  canHan->drawRefHistogram(nc, -0.25, 9.75, HfJetTagging::REFHIST::PURITY[2], HfJetTagging::REFHIST::PURITY[3], "tagger point (#it{S}_{xy})", "Purity");
+  canHan->drawRefHistogram(nc, -0.25, 4.75, HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "tagger point (#it{S}_{xy})", "Purity");
   canHan->drawCombined(normHist.size(), normHist, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  latex.DrawLatex(0.67, 0.9-0.02, "#scale[1.5]{N=2}");
-  latexSimJetInfo(0.2, 0.9, binJetPt, TRIGGERNAME.Data());
-  gROOT->ProcessLine(Form("cc%d->Print(\"%s/purityN2_%d.pdf\")", nc++, dirSim.Data(), binJetPt));
+  latex.DrawLatex(0.7, 0.9-0.00, "N=3");
+  gROOT->ProcessLine(Form("cc%d->Print(\"%s/bjet/purityN2.pdf\")", nc++, dirSim.Data()));
 }
 
-void HfJetTaggingSysTaggerAnalysis::drawPurityN3(bool doLog, int binJetPt) {
+void HfJetTaggingSysSVTopoCutAnalysis::drawPurityN3(bool doLog, int binJetPt) {
   std::vector<HistogramData> normHist;
   for (int flavour = 1; flavour < HfJetTagging::nFlavour+1; flavour++) {
-    for (int tagger=0; tagger<HfJetTagging::numTagger; tagger++) {
+    for (int tagger=0; tagger<HfJetTagging::numSVTopoCut; tagger++) {
       float purityN3 = taggingutilities::getPurity(hsimTagjetNegLogJPN3[tagger][flavour][binJetPt],hsimTagjetNegLogJPN3[tagger][0][binJetPt]);
       hsimJPPurityN3[flavour]->SetBinContent(tagger+1, purityN3);
     }
@@ -357,78 +324,29 @@ void HfJetTaggingSysTaggerAnalysis::drawPurityN3(bool doLog, int binJetPt) {
   }
   canHan = new CanvasHandler();
   canHan->createCanvas(nc);
-  canHan->drawRefHistogram(nc, -0.25, 9.75, HfJetTagging::REFHIST::PURITY[2], HfJetTagging::REFHIST::PURITY[3], "tagger point (#it{S}_{xy})", "Purity");
+  canHan->drawRefHistogram(nc, -0.25, 4.75, HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "tagger point (#it{S}_{xy})", "Purity");
   canHan->drawCombined(normHist.size(), normHist, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  latex.DrawLatex(0.67, 0.9-0.02, "#scale[1.5]{N=3}");
-  latexSimJetInfo(0.2, 0.9, binJetPt, TRIGGERNAME.Data());
-  gROOT->ProcessLine(Form("cc%d->Print(\"%s/purityN3_%d.pdf\")", nc++, dirSim.Data(), binJetPt));
+  latex.DrawLatex(0.7, 0.9-0.00, "N=3");
+  gROOT->ProcessLine(Form("cc%d->Print(\"%s/bjet/purityN3.pdf\")", nc++, dirSim.Data()));
 }
 
-void HfJetTaggingSysTaggerAnalysis::drawPurityNx(bool doLog, int binJetPt) {
-  std::vector<HistogramData> cjetHist;
-  cjetHist.push_back({hsimJPPurityN1[1], "N=1"});
-  cjetHist.push_back({hsimJPPurityN2[1], "N=2"});
-  cjetHist.push_back({hsimJPPurityN3[1], "N=3"});
+void HfJetTaggingSysSVTopoCutAnalysis::drawPurityNx(bool doLog, int binJetPt) {
+  std::vector<HistogramData> normHist;
+  normHist.push_back({hsimJPPurityN1[2], "N=1"});
+  normHist.push_back({hsimJPPurityN3[2], "N=3"});
+  normHist.push_back({hsimJPPurityN2[2], "N=2"});
   canHan = new CanvasHandler();
   canHan->createCanvas(nc);
-  canHan->drawRefHistogram(nc, -0.25, 9.75, HfJetTagging::REFHIST::PURITY[2], HfJetTagging::REFHIST::PURITY[3], "tagger point (#it{S}_{xy})", "purity");
-  canHan->drawCombined(cjetHist.size(), cjetHist, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  latexSimJetInfo(0.2, 0.9, binJetPt, TRIGGERNAME.Data());
-  gROOT->ProcessLine(Form("cc%d->Print(\"%s/cjet/purityNx_%d.pdf\")", nc++, dirSim.Data(), binJetPt));
-
-  std::vector<HistogramData> bjetHist;
-  bjetHist.push_back({hsimJPPurityN1[2], "N=1"});
-  bjetHist.push_back({hsimJPPurityN2[2], "N=2"});
-  bjetHist.push_back({hsimJPPurityN3[2], "N=3"});
-  canHan = new CanvasHandler();
-  canHan->createCanvas(nc);
-  canHan->drawRefHistogram(nc, -0.25, 9.75, HfJetTagging::REFHIST::PURITY[2], HfJetTagging::REFHIST::PURITY[3], "tagger point (#it{S}_{xy})", "purity");
-  canHan->drawCombined(bjetHist.size(), bjetHist, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  latexSimJetInfo(0.2, 0.9, binJetPt, TRIGGERNAME.Data());
-  gROOT->ProcessLine(Form("cc%d->Print(\"%s/bjet/purityNx_%d.pdf\")", nc++, dirSim.Data(), binJetPt));
-
-  std::vector<HistogramData> lfjetHist;
-  lfjetHist.push_back({hsimJPPurityN1[3], "N=1"});
-  lfjetHist.push_back({hsimJPPurityN2[3], "N=2"});
-  lfjetHist.push_back({hsimJPPurityN3[3], "N=3"});
-  canHan = new CanvasHandler();
-  canHan->createCanvas(nc);
-  canHan->drawRefHistogram(nc, -0.25, 9.75, HfJetTagging::REFHIST::PURITY[2], HfJetTagging::REFHIST::PURITY[3], "tagger point (#it{S}_{xy})", "purity");
-  canHan->drawCombined(lfjetHist.size(), lfjetHist, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  latexSimJetInfo(0.2, 0.9, binJetPt, TRIGGERNAME.Data());
-  gROOT->ProcessLine(Form("cc%d->Print(\"%s/lfjet/purityNx_%d.pdf\")", nc++, dirSim.Data(), binJetPt));
+  canHan->drawRefHistogram(nc, -0.25, 4.75, HfJetTagging::REFHIST::EFFI[2], HfJetTagging::REFHIST::EFFI[3], "tagger point (#it{S}_{xy})", "#epsilon");
+  canHan->drawCombined(normHist.size(), normHist, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
+  gROOT->ProcessLine(Form("cc%d->Print(\"%s/bjet/purityNx.pdf\")", nc++, dirSim.Data()));
 }
 
-void HfJetTaggingSysTaggerAnalysis::drawEffiAndPurityNx(bool doLog, int binJetPt) {
-  std::vector<HistogramData> histList;
-  for (int flavour = 1; flavour < HfJetTagging::nFlavour+1; flavour++) {
-    for (int tagger =0; tagger < HfJetTagging::numTagger; tagger++) {
-      float effiN1 = hsimJPEffiN1[flavour]->GetBinContent(tagger+1);
-      float effiN2 = hsimJPEffiN2[flavour]->GetBinContent(tagger+1);
-      float effiN3 = hsimJPEffiN3[flavour]->GetBinContent(tagger+1);
-      float purityN1 = hsimJPPurityN1[flavour]->GetBinContent(tagger+1);
-      float purityN2 = hsimJPPurityN2[flavour]->GetBinContent(tagger+1);
-      float purityN3 = hsimJPPurityN3[flavour]->GetBinContent(tagger+1);
-      hsimJPEffiAndPurityN1[flavour]->SetBinContent(tagger+1, purityN1 / effiN1);
-      hsimJPEffiAndPurityN2[flavour]->SetBinContent(tagger+1, purityN2 / effiN2);
-      hsimJPEffiAndPurityN3[flavour]->SetBinContent(tagger+1, purityN3 / effiN3);
-    }
-  }
-  histList.push_back({hsimJPEffiAndPurityN1[2], "N=1"});
-  histList.push_back({hsimJPEffiAndPurityN2[2], "N=2"});
-  histList.push_back({hsimJPEffiAndPurityN3[2], "N=3"});
-  canHan = new CanvasHandler();
-  canHan->createCanvas(nc);
-  canHan->drawRefHistogram(nc, -0.25, 9.75, HfJetTagging::REFHIST::EFFI[2], 10*HfJetTagging::REFHIST::EFFI[3], "tagger point (#it{S}_{xy})", "#frac{P_{b}}{#epsilon_{b}}");
-  canHan->drawCombined(histList.size(), histList, true, true, HfJetTagging::LEG[0], HfJetTagging::LEG[1], HfJetTagging::LEG[2], HfJetTagging::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"%s/bjet/effiAndpurityNx.pdf\")", nc++, dirSim.Data()));
-}
-
-void HfJetTaggingSysTaggerAnalysis::drawGraphEffiAndPurity(bool doLog, int binJetPt) {
-  float xN1[HfJetTagging::numTagger], yN1[HfJetTagging::numTagger];
-  float xN2[HfJetTagging::numTagger], yN2[HfJetTagging::numTagger];
-  float xN3[HfJetTagging::numTagger], yN3[HfJetTagging::numTagger];
-  for (int tagger=0; tagger<HfJetTagging::numTagger; tagger++) {
+void HfJetTaggingSysSVTopoCutAnalysis::drawGraphEffiAndPurity(bool doLog, int binJetPt) {
+  float xN1[HfJetTagging::numSVTopoCut], yN1[HfJetTagging::numSVTopoCut];
+  float xN2[HfJetTagging::numSVTopoCut], yN2[HfJetTagging::numSVTopoCut];
+  float xN3[HfJetTagging::numSVTopoCut], yN3[HfJetTagging::numSVTopoCut];
+  for (int tagger=0; tagger<HfJetTagging::numSVTopoCut; tagger++) {
     for (int flavour=1; flavour<HfJetTagging::nFlavour+1; flavour++) {
       if (flavour!=2) continue; // only b-jet
       float effiN1= taggingutilities::getEfficiency(hsimTagjetNegLogJPN1[tagger][flavour][binJetPt], hsimTagjetNegLogJP[tagger][flavour][binJetPt]);
@@ -443,16 +361,16 @@ void HfJetTaggingSysTaggerAnalysis::drawGraphEffiAndPurity(bool doLog, int binJe
       yN2[tagger] = purityN2;
       xN3[tagger] = effiN3;
       yN3[tagger] = purityN3;
-      std::cout << "N1 tagger point: " << HfJetTagging::SYS::binsTagger[tagger] << " effi: " << effiN1 << " purity: " << purityN1 << std::endl;
-      std::cout << "N2 tagger point: " << HfJetTagging::SYS::binsTagger[tagger] << " effi: " << effiN2 << " purity: " << purityN2 << std::endl;
-      std::cout << "N3 tagger point: " << HfJetTagging::SYS::binsTagger[tagger] << " effi: " << effiN3 << " purity: " << purityN3 << std::endl;
+      std::cout << "N1 tagger point: " << HfJetTagging::SYS::binsSVTopoCut[tagger] << " effi: " << effiN1 << " purity: " << purityN1 << std::endl;
+      std::cout << "N2 tagger point: " << HfJetTagging::SYS::binsSVTopoCut[tagger] << " effi: " << effiN2 << " purity: " << purityN2 << std::endl;
+      std::cout << "N3 tagger point: " << HfJetTagging::SYS::binsSVTopoCut[tagger] << " effi: " << effiN3 << " purity: " << purityN3 << std::endl;
     }
   }
   canHan = new CanvasHandler();
   canHan->createCanvas(nc);
-  auto gN1 = new TGraph(HfJetTagging::numTagger, xN1, yN1);
-  auto gN2 = new TGraph(HfJetTagging::numTagger, xN2, yN2);
-  auto gN3 = new TGraph(HfJetTagging::numTagger, xN3, yN3);
+  auto gN1 = new TGraph(HfJetTagging::numSVTopoCut, xN1, yN1);
+  auto gN2 = new TGraph(HfJetTagging::numSVTopoCut, xN2, yN2);
+  auto gN3 = new TGraph(HfJetTagging::numSVTopoCut, xN3, yN3);
 
   gN1->SetName("gN1");
   gN1->SetTitle("N1 tagger");
@@ -504,8 +422,8 @@ void HfJetTaggingSysTaggerAnalysis::drawGraphEffiAndPurity(bool doLog, int binJe
   gN2->Draw("same LP");
   gN3->Draw("same LP");
 
-  for (int i=0; i<HfJetTagging::numTagger; i++) {
-    latexNoNDC.DrawLatex(xN1[i]+0.005, yN1[i]+0.005, Form("%0.1f", HfJetTagging::SYS::binsTagger[i]));
+  for (int i=0; i<HfJetTagging::numSVTopoCut; i++) {
+    latexNoNDC.DrawLatex(xN1[i]+0.005, yN1[i]+0.005, Form("%0.1f", HfJetTagging::SYS::binsSVTopoCut[i]));
   }
   TLegend *leg = new TLegend(0.7, 0.7, 0.9, 0.9);
   leg->AddEntry(gN1, "N=1", "lp");
