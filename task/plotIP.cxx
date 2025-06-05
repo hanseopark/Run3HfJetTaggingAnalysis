@@ -2,23 +2,24 @@
 #include "../include/HfJetTaggingAnalysis.h"
 #include <TString.h>
 
-void plotIPQA(TString rootdata="", TString rootsim="", bool withInc=false, bool doLog=true, bool doData=true, bool doMCD=false, bool doMCP=true, bool fillRun2Def, bool fillIPxy=true, bool fillIPz=false, bool fillIPxyz=false, bool fitForJP=false, bool fillEffiAndPurity=false, bool doUnfolding=false) {
+void plotIPQA(TString rootdata="", TString rootsim="", bool withInc=false, bool doLog=true, bool doData=true, bool doMCD=false, bool doMCP=true, bool fillMatched=false, bool fillTest = false, bool fillIPxy=true, bool fillIPz=false, bool fillIPxyz=false, bool fitForJP=false, bool fillEffiAndPurity=false, bool fillValidation=false, bool fillUnfolding=false) {
 
   HfJetTaggingAnalysis *ipObj = new HfJetTaggingAnalysis();
   ipObj->setFillData(doData);
   ipObj->setFillMCD(doMCD);
   ipObj->setFillMCP(doMCP);
-  ipObj->setFillRun2Def(fillRun2Def);
+  ipObj->setFillMatched(fillMatched);
+  ipObj->setFillTest(fillTest);
   ipObj->setFillIPxy(fillIPxy);
   ipObj->setFillIPz(fillIPz);
   ipObj->setFillIPxyz(fillIPxyz);
 
   if (doData) {
-    ipObj->loadDataIPQA(rootdata.Data());
-    ipObj->initHistogramForNormalizationIPQAData();
-    ipObj->projectionHistIPQAData();
-    ipObj->normalizedHistogramIPQAData();
+    ipObj->initCommonHistData(rootdata.Data());
+    ipObj->initIPData(rootdata.Data());
     ipObj->drawDataJetPt(doLog);
+    ipObj->drawDataJetEta(doLog);
+    ipObj->drawDataJetPhi(doLog);
     for (int binJetPt=HfJetTagging::startJetPt; binJetPt<HfJetTagging::nBinsJetPt+1; binJetPt++) {
       ipObj->drawDataTrackPt(doLog, binJetPt);
       ipObj->drawDataTrackEta(doLog, binJetPt);
@@ -59,16 +60,12 @@ void plotIPQA(TString rootdata="", TString rootsim="", bool withInc=false, bool 
   }
 
   if (doMCD || doMCP) {
-    ipObj->loadSimIPQA(rootsim.Data());
-    ipObj->initHistogramForNormalizationIPQAMC();
-    ipObj->projectionHistIPQAMC();
-    ipObj->normalizedHistogramIPQAMC();
+    ipObj->initCommonHistMC(rootsim.Data());
+    ipObj->initIPMC(rootsim.Data());
     if (doMCD) {
       ipObj->drawSimJetPt(withInc, doLog);
-      if (fillRun2Def) {
-        ipObj->drawSimJetEta(withInc, doLog);
-        ipObj->drawSimJetPhi(withInc, doLog);
-      }
+      ipObj->drawSimJetEta(withInc, doLog);
+      ipObj->drawSimJetPhi(withInc, doLog);
       for (int binJetPt=HfJetTagging::startJetPt; binJetPt<HfJetTagging::nBinsJetPt+1; binJetPt++) {
         ipObj->drawSimJetTrackPt(false, doLog, binJetPt);
         ipObj->drawSimJetTrackEta(withInc, doLog, binJetPt);
@@ -94,8 +91,12 @@ void plotIPQA(TString rootdata="", TString rootsim="", bool withInc=false, bool 
           ipObj->drawSimJetSignImpXYZSignificance(withInc, doLog, binJetPt);
           ipObj->drawSimJetImpXYZ2x2(withInc, doLog, binJetPt);
         }
-        //for (int binTrackPt=HfJetTagging::startTrackPt; binTrackPt < HfJetTagging::nBinsTrackPt; binTrackPt++) {
-        //}
+      }
+      for (int binTrackPt=HfJetTagging::startTrackPt; binTrackPt<HfJetTagging::nBinsTrackPt+1; binTrackPt++) {
+        ipObj->drawSimTrackImpXY(withInc, doLog, binTrackPt);
+        ipObj->drawSimTrackSignImpXY(withInc, doLog, binTrackPt);
+        ipObj->drawSimTrackImpXYSig(withInc, doLog, binTrackPt);
+        ipObj->drawSimTrackSignImpXYSig(withInc, doLog, binTrackPt);
       }
       for (int flavour =0; flavour < HfJetTagging::nFlavour+1; flavour++) {
         ipObj->drawSimFlavourJetTrackPt(doLog, flavour, HfJetTagging::startJetPt);
@@ -107,9 +108,16 @@ void plotIPQA(TString rootdata="", TString rootsim="", bool withInc=false, bool 
           ipObj->drawSimFlavourTrackImpXYSig(doLog, flavour, HfJetTagging::startTrackPt);
           ipObj->drawSimFlavourTrackSignImpXYSig(doLog, flavour, HfJetTagging::startTrackPt);
         }
-        if (doMCP) {
-          ipObj->drawSimFlavourJetpartJetPt(doLog, flavour);
-          ipObj->drawSimFlavourRawJetpartJetPt(doLog, flavour);
+        if (fillMatched) {
+          ipObj->drawJetEfficiency(doLog, flavour);
+          ipObj->drawJetPurity(doLog, flavour);
+          ipObj->drawSimRawJetPtMatched(doLog, flavour);
+          ipObj->drawSimResMat(flavour);
+          if (fillUnfolding) {
+            ipObj->unfoldingJet(doLog, flavour);
+            ipObj->initExternalUnfold("ExternalResMat.root");
+            ipObj->unfoldingJet(doLog, flavour, 4, 16, true);
+          }
         }
       }
       if (fitForJP && fillIPxy) {
@@ -124,33 +132,41 @@ void plotIPQA(TString rootdata="", TString rootsim="", bool withInc=false, bool 
       ipObj->drawSimpartJetPt(withInc, doLog);
       ipObj->drawSimpartJetEta(withInc, doLog);
       ipObj->drawSimpartJetPhi(withInc, doLog);
-    }
-    if (fillEffiAndPurity) {
-      for (int binJetPt=HfJetTagging::startJetPt; binJetPt<HfJetTagging::nBinsJetPt+1; binJetPt++) {
-        if (fillIPxy) {
-          ipObj->drawSimJetImpXYRun2Def(false, doLog, binJetPt);
-          //ipObj->drawSimJetSignImpXYRun2Def(false, doLog, binJetPt);
-          //ipObj->drawSimJetImpXYSignificanceRun2Def(false, doLog, binJetPt);
-          //ipObj->drawSimJetSignImpXYSignificanceRun2Def(false, doLog, binJetPt);
-          //ipObj->drawSimJetImpXY2x2Run2Def(false, doLog, binJetPt);
-        }
+      if (fillTest) {
+        ipObj->drawSimpartFlavourMatchingEffi();
       }
     }
-    if (doUnfolding) {
-      ipObj->unfoldingJet(0);
+    if (doMCD && doMCP) {
+      for (int flavour =0; flavour < HfJetTagging::nFlavour+1; flavour++) {
+        ipObj->drawSimFlavourJetpartJetPt(doLog, flavour);
+      }
+    }
+    if (fillTest) {
+      ipObj->drawSimFlavourMatchingEffi();
+      ipObj->drawSimMatchedFlavourMatchingEffi();
+    }
+    if (fillValidation) {
+
     }
   }
 
   if (doData && doMCD) {
     for (int binJetPt=HfJetTagging::startJetPt; binJetPt < HfJetTagging::nBinsJetPt+1; binJetPt++) {
       if (fillIPxy) {
-        ipObj->drawDataVsMCTagJetImpXY(doLog, binJetPt);
-        ipObj->drawDataVsMCTagJetSignImpXY(doLog, binJetPt);
-        ipObj->drawDataVsMCTagJetImpXYSig(doLog, binJetPt);
-        ipObj->drawDataVsMCTagJetSignImpXYSig(doLog, binJetPt, 0);
+        ipObj->drawDataVsSimJetImpXY(doLog, binJetPt);
+        ipObj->drawDataVsSimJetSignImpXY(doLog, binJetPt);
+        ipObj->drawDataVsSimJetImpXYSig(doLog, binJetPt);
+        ipObj->drawDataVsSimJetSignImpXYSig(doLog, binJetPt, 0);
+      }
+      if (fillUnfolding && fillMatched) {
+        for (int flavour =0; flavour < HfJetTagging::nFlavour+1; flavour++) {
+          ipObj->unfoldingJetWithData(doLog, flavour);
+        }
       }
     }
   }
+  ipObj->saveHistogramIPQA("IPQA.root", doData, doMCD, doMCP);
+  //ipObj->saveHistogramUnfold("ExternalResMat.root", doData, doMCD, doMCP);
 }
 
 void plotIP(
@@ -160,26 +176,30 @@ void plotIP(
     TString dataSet="",
     TString simSet="",
     TString triggerName="", 
+    TString figureName="", 
     TString suffix="",
     bool withInc=false, 
     bool doLog=false,
     bool doData=false, 
     bool doMCD=false, 
     bool doMCP=false,
-    bool doRun2Def=false,
+    bool doMatched=false,
+    bool doTest=false,
     bool doIPxy=true,
     bool doIPz =false,
     bool doIPxyz=false,
     bool doFitForJP=false,
     bool doEffiAndPurity=false,
+    bool doValidation=false,
     bool doUnfolding=false
     )
 {
   globalStyle();
   TRIGGERNAME = triggerName.Data();
+  FIGURESET = figureName.Data();
   SOURCESET = sourceSet.Data();
   DATASET = dataSet.Data();
   SIMSET = simSet.Data();
   SUFFIXSET = suffix.Data();
-  plotIPQA(rootdata.Data(), rootsim.Data(), withInc, doLog, doData, doMCD, doMCP, doRun2Def, doIPxy, doIPz, doIPxyz, doFitForJP, doEffiAndPurity, doUnfolding);
+  plotIPQA(rootdata.Data(), rootsim.Data(), withInc, doLog, doData, doMCD, doMCP, doMatched, doTest, doIPxy, doIPz, doIPxyz, doFitForJP, doEffiAndPurity, doValidation, doUnfolding);
 }

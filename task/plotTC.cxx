@@ -1,34 +1,28 @@
 #include "../include/DataPoint.h"
+#include "../include/HfJetTaggingAnalysis.h"
 #include "../include/HfJetTaggingTCAnalysis.h"
 #include <TString.h>
 
-void plotTCQA(TString rootdata="", TString rootsim="", bool withInc=false, bool doLog=true, bool doData=true, bool doMCD=false, bool doMCP=true, bool fillRun2Def, bool fillIPxy=true, bool fillIPz=false, bool fillIPxyz=false, bool fillEffi=false) {
+void plotTCQA(TString rootdata="", TString rootsim="", bool withInc=false, bool doLog=true, bool doData=true, bool doMCD=false, bool doMCP=true, bool fillIPxy=true, bool fillIPz=false, bool fillIPxyz=false, bool fillEffi=false) {
 
   HfJetTaggingTCAnalysis *tcObj = new HfJetTaggingTCAnalysis();
   //tcObj->setFillData(doData);
   tcObj->setFillMCD(doMCD);
-  tcObj->setFillMCP(doMCP);
-  tcobj->setFillRun2Def(fillRun2Def);
+  tcObj->setFillMCP(false);
   tcObj->setFillIPxy(fillIPxy);
   tcObj->setFillIPz(fillIPz);
   tcObj->setFillIPxyz(fillIPxyz);
   tcObj->setFillEffi(fillEffi);
   if (fillEffi) {
-    tcObj->setFillRun2Def(true);
-    tcObj->loadSimIPQA(rootsim.Data());
-    tcObj->initHistogramForNormalizationIPQAMC();
-    tcObj->projectionHistIPQAMC();
-    tcObj->normalizedHistogramIPQAMC();
+    tcObj->initCommonHistMC(rootsim.Data());
+    tcObj->initIPMC(rootsim.Data());
   }
 
   if (!doMCD) {
     std::cout<<" it has to incluede MC sample" << std::endl;
     return;
   }
-  tcObj->loadSimTCQA(rootsim.Data());
-  tcObj->initHistogramForNormalizationTCQAMC();
-  tcObj->projectionHistTCQAMC();
-  tcObj->normalizedHistogramTCQAMC();
+  tcObj->initTCMC(rootsim.Data());
 
   for (int binJetPt=HfJetTagging::startJetPt; binJetPt<HfJetTagging::nBinsJetPt+1; binJetPt++) {
     if (fillIPxy) {
@@ -36,7 +30,7 @@ void plotTCQA(TString rootdata="", TString rootsim="", bool withInc=false, bool 
       tcObj->drawSimJetSignImpXYSignificanceN2(withInc, doLog, binJetPt);
       tcObj->drawSimJetSignImpXYSignificanceN3(withInc, doLog, binJetPt);
       tcObj->drawSimJetSignImpXYSignificanceN3x1(false, doLog, binJetPt);
-      tcObj->drawSimJetSignImpXYSignificanceN4x1(false, doLog, binJetPt);
+      //tcObj->drawSimJetSignImpXYSignificanceN4x1(false, doLog, binJetPt);
     }
     if (fillIPz) {
       tcObj->drawSimJetSignImpZSignificanceN1(withInc, doLog, binJetPt);
@@ -52,8 +46,8 @@ void plotTCQA(TString rootdata="", TString rootsim="", bool withInc=false, bool 
     //}
   }
   if (fillEffi) {
-    double cutImpForEffi = 1.5;
-    double cutImpForPurity = 1.5;
+    double cutImpForEffi = 2.5;
+    double cutImpForPurity = 2.5;
     if (fillIPxy) {
       tcObj->drawSimJetEffiSignImpXYSigN1(cutImpForEffi);
       tcObj->drawSimJetEffiSignImpXYSigN2(cutImpForEffi);
@@ -81,13 +75,13 @@ void plotTC(
     TString dataSet="",
     TString simSet="",
     TString triggerName="", 
+    TString figureName="", 
     TString suffix="",
     bool withInc=false, 
     bool doLog=false,
     bool doData=false, 
     bool doMCD=false, 
     bool doMCP=false,
-    bool doRun2Def=false,
     bool doIPxy=true,
     bool doIPz =false,
     bool doIPxyz=false,
@@ -96,9 +90,10 @@ void plotTC(
 {
   globalStyle();
   TRIGGERNAME = triggerName.Data();
+  FIGURESET = figureName.Data();
   SOURCESET = sourceSet.Data();
   DATASET = dataSet.Data();
   SIMSET = simSet.Data();
   SUFFIXSET = suffix.Data();
-  plotTCQA(rootdata.Data(), rootsim.Data(), withInc, doLog, doData, doMCD, doMCP, doRun2Def, doIPxy, doIPz, doIPxyz, doEffi);
+  plotTCQA(rootdata.Data(), rootsim.Data(), withInc, doLog, doData, doMCD, doMCP, doIPxy, doIPz, doIPxyz, doEffi);
 }
