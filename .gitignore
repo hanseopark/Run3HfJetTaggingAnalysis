@@ -18,7 +18,7 @@
 fig/
 fig_backup/
 fig*/
-RooUnfold/
+RooUnfold*/
 
 # Ignore log files and database files
 *.log
