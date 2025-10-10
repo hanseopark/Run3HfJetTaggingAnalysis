@@ -28,15 +28,15 @@ class HfJetTaggingSysQuarkHadronLevel : public HfJetTaggingSysAnalysis {
     void drawEffiN1(bool doLog, int binJetPt);
     
   protected:
-    TH3F* h2simTagjetPtFlavour[HfJetTagging::numQuarkHadronLevel];
-    TH3F* h3simTagjetPtSignImpXYSigFlavourN1[HfJetTagging::numQuarkHadronLevel];
-    TH3F* h3simTagjetPtSignImpXYSigFlavourN2[HfJetTagging::numQuarkHadronLevel];
-    TH3F* h3simTagjetPtSignImpXYSigFlavourN3[HfJetTagging::numQuarkHadronLevel];
+    TH3F* h2simjetPtFlavour[HfJetTagging::numQuarkHadronLevel];
+    TH3F* h3simjetPtSignImpXYSigFlavourN1[HfJetTagging::numQuarkHadronLevel];
+    TH3F* h3simjetPtSignImpXYSigFlavourN2[HfJetTagging::numQuarkHadronLevel];
+    TH3F* h3simjetPtSignImpXYSigFlavourN3[HfJetTagging::numQuarkHadronLevel];
 
-    TH1F* hsimTagjetPt[HfJetTagging::numQuarkHadronLevel][HfJetTagging::nFlavour+1];
-    TH1F* hsimTagjetSignImpXYSigN1[HfJetTagging::numQuarkHadronLevel][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTagjetSignImpXYSigN2[HfJetTagging::numQuarkHadronLevel][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
-    TH1F* hsimTagjetSignImpXYSigN3[HfJetTagging::numQuarkHadronLevel][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetPt[HfJetTagging::numQuarkHadronLevel][HfJetTagging::nFlavour+1];
+    TH1F* hsimjetSignImpXYSigN1[HfJetTagging::numQuarkHadronLevel][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetSignImpXYSigN2[HfJetTagging::numQuarkHadronLevel][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
+    TH1F* hsimjetSignImpXYSigN3[HfJetTagging::numQuarkHadronLevel][HfJetTagging::nFlavour+1][HfJetTagging::nBinsJetPt+1];
 
   private:
     TLatex latexNoNDC;
@@ -81,7 +81,7 @@ int HfJetTaggingSysQuarkHadronLevelAnalysis::loadSimQuarkHadronLevel(const std::
     TFile* fin;
     fin = TFile::Open(rootFile, "READ");
     
-    h3simTagjetPtNegLogJPFlavour[maxQuarkHadronLevel] = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_neg_log_JP_flavour", taskName.Data())));
+    h3simjetPtNegLogJPFlavour[maxQuarkHadronLevel] = reinterpret_cast<TH3F*>(fin->Get(Form("%s/h3_jet_pt_neg_log_JP_flavour", taskName.Data())));
     maxQuarkHadronLevel++;
   }
   std::cout<<"MC loaded"<<std::endl;
@@ -101,10 +101,10 @@ void HfJetTaggingSysQuarkHadronLevelAnalysis::initHistogramQuarkHadronLevel() {
         hsimJPPurityN3[flavour] = new TH1F(Form("hsimJPPurityN3_%d", flavour), "", 10, -0.25, 4.75);
       }
       for (int binJetPt=0; binJetPt < HfJetTagging::nBinsJetPt+1; binJetPt++) {
-        hsimTagjetNegLogJP[tagger][flavour][binJetPt] = new TH1F(Form("hsimTagjetNegLogJP_%d_%d_%d", tagger, flavour, binJetPt), "", h3simTagjetPtNegLogJPFlavour[tagger]->GetNbinsY(), h3simTagjetPtNegLogJPFlavour[tagger]->GetYaxis()->GetBinLowEdge(1), h3simTagjetPtNegLogJPFlavour[tagger]->GetYaxis()->GetBinUpEdge(h3simTagjetPtNegLogJPFlavour[tagger]->GetNbinsY()));
-        hsimTagjetNegLogJPN1[tagger][flavour][binJetPt] = new TH1F(Form("hsimTagjetNegLogJPN1_%d_%d_%d", tagger, flavour, binJetPt), "", h3simTagjetPtNegLogJPN1Flavour[tagger]->GetNbinsY(), h3simTagjetPtNegLogJPN1Flavour[tagger]->GetYaxis()->GetBinLowEdge(1), h3simTagjetPtNegLogJPN1Flavour[tagger]->GetYaxis()->GetBinUpEdge(h3simTagjetPtNegLogJPN1Flavour[tagger]->GetNbinsY()));
-        hsimTagjetNegLogJPN2[tagger][flavour][binJetPt] = new TH1F(Form("hsimTagjetNegLogJPN2_%d_%d_%d", tagger, flavour, binJetPt), "", h3simTagjetPtNegLogJPN2Flavour[tagger]->GetNbinsY(), h3simTagjetPtNegLogJPN2Flavour[tagger]->GetYaxis()->GetBinLowEdge(1), h3simTagjetPtNegLogJPN2Flavour[tagger]->GetYaxis()->GetBinUpEdge(h3simTagjetPtNegLogJPN2Flavour[tagger]->GetNbinsY()));
-        hsimTagjetNegLogJPN3[tagger][flavour][binJetPt] = new TH1F(Form("hsimTagjetNegLogJPN3_%d_%d_%d", tagger, flavour, binJetPt), "", h3simTagjetPtNegLogJPN3Flavour[tagger]->GetNbinsY(), h3simTagjetPtNegLogJPN3Flavour[tagger]->GetYaxis()->GetBinLowEdge(1), h3simTagjetPtNegLogJPN3Flavour[tagger]->GetYaxis()->GetBinUpEdge(h3simTagjetPtNegLogJPN3Flavour[tagger]->GetNbinsY()));
+        hsimjetNegLogJP[tagger][flavour][binJetPt] = new TH1F(Form("hsimjetNegLogJP_%d_%d_%d", tagger, flavour, binJetPt), "", h3simjetPtNegLogJPFlavour[tagger]->GetNbinsY(), h3simjetPtNegLogJPFlavour[tagger]->GetYaxis()->GetBinLowEdge(1), h3simjetPtNegLogJPFlavour[tagger]->GetYaxis()->GetBinUpEdge(h3simjetPtNegLogJPFlavour[tagger]->GetNbinsY()));
+        hsimjetNegLogJPN1[tagger][flavour][binJetPt] = new TH1F(Form("hsimjetNegLogJPN1_%d_%d_%d", tagger, flavour, binJetPt), "", h3simjetPtNegLogJPN1Flavour[tagger]->GetNbinsY(), h3simjetPtNegLogJPN1Flavour[tagger]->GetYaxis()->GetBinLowEdge(1), h3simjetPtNegLogJPN1Flavour[tagger]->GetYaxis()->GetBinUpEdge(h3simjetPtNegLogJPN1Flavour[tagger]->GetNbinsY()));
+        hsimjetNegLogJPN2[tagger][flavour][binJetPt] = new TH1F(Form("hsimjetNegLogJPN2_%d_%d_%d", tagger, flavour, binJetPt), "", h3simjetPtNegLogJPN2Flavour[tagger]->GetNbinsY(), h3simjetPtNegLogJPN2Flavour[tagger]->GetYaxis()->GetBinLowEdge(1), h3simjetPtNegLogJPN2Flavour[tagger]->GetYaxis()->GetBinUpEdge(h3simjetPtNegLogJPN2Flavour[tagger]->GetNbinsY()));
+        hsimjetNegLogJPN3[tagger][flavour][binJetPt] = new TH1F(Form("hsimjetNegLogJPN3_%d_%d_%d", tagger, flavour, binJetPt), "", h3simjetPtNegLogJPN3Flavour[tagger]->GetNbinsY(), h3simjetPtNegLogJPN3Flavour[tagger]->GetYaxis()->GetBinLowEdge(1), h3simjetPtNegLogJPN3Flavour[tagger]->GetYaxis()->GetBinUpEdge(h3simjetPtNegLogJPN3Flavour[tagger]->GetNbinsY()));
       }
     }
   }
@@ -115,47 +115,47 @@ void HfJetTaggingSysQuarkHadronLevelAnalysis::projectionHistQuarkHadronLevel() {
   for (int tagger=0; tagger<HfJetTagging::numQuarkHadronLevel; tagger++) {
     for (int binFlavour = 2; binFlavour < HfJetTagging::nFlavour+2; binFlavour++) {
       HfJetTagging::JetFlavour flavour = jetFlavours[binFlavour - 1];
-		  TH1F* projNegLogJP = reinterpret_cast<TH1F*> (h3simTagjetPtNegLogJPFlavour[tagger]->ProjectionY(Form("projNegLogJP_%d_%d", tagger, flavour), 1, h3simTagjetPtNegLogJPFlavour[tagger]->GetNbinsX(), binFlavour, binFlavour));
-		  TH1F* projNegLogJPN1 = reinterpret_cast<TH1F*> (h3simTagjetPtNegLogJPN1Flavour[tagger]->ProjectionY(Form("projNegLogJPN1_%d_%d", tagger, flavour), 1, h3simTagjetPtNegLogJPN1Flavour[tagger]->GetNbinsX(), binFlavour, binFlavour));
-		  TH1F* projNegLogJPN2 = reinterpret_cast<TH1F*> (h3simTagjetPtNegLogJPN2Flavour[tagger]->ProjectionY(Form("projNegLogJPN2_%d_%d", tagger, flavour), 1, h3simTagjetPtNegLogJPN2Flavour[tagger]->GetNbinsX(), binFlavour, binFlavour));
-		  TH1F* projNegLogJPN3 = reinterpret_cast<TH1F*> (h3simTagjetPtNegLogJPN3Flavour[tagger]->ProjectionY(Form("projNegLogJPN3_%d_%d", tagger, flavour), 1, h3simTagjetPtNegLogJPN3Flavour[tagger]->GetNbinsX(), binFlavour, binFlavour));
+		  TH1F* projNegLogJP = reinterpret_cast<TH1F*> (h3simjetPtNegLogJPFlavour[tagger]->ProjectionY(Form("projNegLogJP_%d_%d", tagger, flavour), 1, h3simjetPtNegLogJPFlavour[tagger]->GetNbinsX(), binFlavour, binFlavour));
+		  TH1F* projNegLogJPN1 = reinterpret_cast<TH1F*> (h3simjetPtNegLogJPN1Flavour[tagger]->ProjectionY(Form("projNegLogJPN1_%d_%d", tagger, flavour), 1, h3simjetPtNegLogJPN1Flavour[tagger]->GetNbinsX(), binFlavour, binFlavour));
+		  TH1F* projNegLogJPN2 = reinterpret_cast<TH1F*> (h3simjetPtNegLogJPN2Flavour[tagger]->ProjectionY(Form("projNegLogJPN2_%d_%d", tagger, flavour), 1, h3simjetPtNegLogJPN2Flavour[tagger]->GetNbinsX(), binFlavour, binFlavour));
+		  TH1F* projNegLogJPN3 = reinterpret_cast<TH1F*> (h3simjetPtNegLogJPN3Flavour[tagger]->ProjectionY(Form("projNegLogJPN3_%d_%d", tagger, flavour), 1, h3simjetPtNegLogJPN3Flavour[tagger]->GetNbinsX(), binFlavour, binFlavour));
 
-		  hsimTagjetNegLogJP[tagger][0][0]->Add(projNegLogJP);
-		  hsimTagjetNegLogJP[tagger][flavour][0] = reinterpret_cast<TH1F*>(projNegLogJP->Clone(Form("hsimTagjetNegLogJP_%d_%d_0", tagger, flavour)));
-		  hsimTagjetNegLogJPN1[tagger][0][0]->Add(projNegLogJPN1);
-		  hsimTagjetNegLogJPN1[tagger][flavour][0] = reinterpret_cast<TH1F*>(projNegLogJPN1->Clone(Form("hsimTagjetNegLogJPN1_%d_%d_0", tagger, flavour)));
-		  hsimTagjetNegLogJPN2[tagger][0][0]->Add(projNegLogJPN2);
-		  hsimTagjetNegLogJPN2[tagger][flavour][0] = reinterpret_cast<TH1F*>(projNegLogJPN2->Clone(Form("hsimTagjetNegLogJPN2_%d_%d_0", tagger, flavour)));
-		  hsimTagjetNegLogJPN3[tagger][0][0]->Add(projNegLogJPN3);
-		  hsimTagjetNegLogJPN3[tagger][flavour][0] = reinterpret_cast<TH1F*>(projNegLogJPN3->Clone(Form("hsimTagjetNegLogJPN3_%d_%d_0", tagger, flavour)));
+		  hsimjetNegLogJP[tagger][0][0]->Add(projNegLogJP);
+		  hsimjetNegLogJP[tagger][flavour][0] = reinterpret_cast<TH1F*>(projNegLogJP->Clone(Form("hsimjetNegLogJP_%d_%d_0", tagger, flavour)));
+		  hsimjetNegLogJPN1[tagger][0][0]->Add(projNegLogJPN1);
+		  hsimjetNegLogJPN1[tagger][flavour][0] = reinterpret_cast<TH1F*>(projNegLogJPN1->Clone(Form("hsimjetNegLogJPN1_%d_%d_0", tagger, flavour)));
+		  hsimjetNegLogJPN2[tagger][0][0]->Add(projNegLogJPN2);
+		  hsimjetNegLogJPN2[tagger][flavour][0] = reinterpret_cast<TH1F*>(projNegLogJPN2->Clone(Form("hsimjetNegLogJPN2_%d_%d_0", tagger, flavour)));
+		  hsimjetNegLogJPN3[tagger][0][0]->Add(projNegLogJPN3);
+		  hsimjetNegLogJPN3[tagger][flavour][0] = reinterpret_cast<TH1F*>(projNegLogJPN3->Clone(Form("hsimjetNegLogJPN3_%d_%d_0", tagger, flavour)));
       delete projNegLogJP;
       delete projNegLogJPN1;
       delete projNegLogJPN2;
       delete projNegLogJPN3;
       for (int binJetPt=0; binJetPt<HfJetTagging::nBinsJetPt+1; binJetPt++) {
-        int leftbinJetPtNegLogJP = h3simTagjetPtNegLogJPFlavour[tagger]->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
-        int rightbinJetPtNegLogJP = h3simTagjetPtNegLogJPFlavour[tagger]->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
-        TH1F* projJetPtRangeNegLogJP = reinterpret_cast<TH1F*> (h3simTagjetPtNegLogJPFlavour[tagger]->ProjectionY(Form("projJetPtRangeNegLogJP_%d_%d_%d", tagger, flavour, binJetPt), leftbinJetPtNegLogJP, rightbinJetPtNegLogJP, binFlavour, binFlavour));
-        hsimTagjetNegLogJP[tagger][flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeNegLogJP->Clone(Form("hsimTagjetNegLogJP_%d_%d_%d", tagger, flavour, binJetPt))); 
-        hsimTagjetNegLogJP[tagger][0][binJetPt]->Add(projJetPtRangeNegLogJP);
+        int leftbinJetPtNegLogJP = h3simjetPtNegLogJPFlavour[tagger]->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
+        int rightbinJetPtNegLogJP = h3simjetPtNegLogJPFlavour[tagger]->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
+        TH1F* projJetPtRangeNegLogJP = reinterpret_cast<TH1F*> (h3simjetPtNegLogJPFlavour[tagger]->ProjectionY(Form("projJetPtRangeNegLogJP_%d_%d_%d", tagger, flavour, binJetPt), leftbinJetPtNegLogJP, rightbinJetPtNegLogJP, binFlavour, binFlavour));
+        hsimjetNegLogJP[tagger][flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeNegLogJP->Clone(Form("hsimjetNegLogJP_%d_%d_%d", tagger, flavour, binJetPt))); 
+        hsimjetNegLogJP[tagger][0][binJetPt]->Add(projJetPtRangeNegLogJP);
 
-        int leftbinJetPtNegLogJPN1 = h3simTagjetPtNegLogJPN1Flavour[tagger]->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
-        int rightbinJetPtNegLogJPN1 = h3simTagjetPtNegLogJPN1Flavour[tagger]->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
-        TH1F* projJetPtRangeNegLogJPN1 = reinterpret_cast<TH1F*> (h3simTagjetPtNegLogJPN1Flavour[tagger]->ProjectionY(Form("projJetPtRangeNegLogJPN1_%d_%d_%d", tagger, flavour, binJetPt), leftbinJetPtNegLogJPN1, rightbinJetPtNegLogJPN1, binFlavour, binFlavour));
-        hsimTagjetNegLogJPN1[tagger][flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeNegLogJPN1->Clone(Form("hsimTagjetNegLogJPN1_%d_%d_%d", tagger, flavour, binJetPt))); 
-        hsimTagjetNegLogJPN1[tagger][0][binJetPt]->Add(projJetPtRangeNegLogJPN1);
+        int leftbinJetPtNegLogJPN1 = h3simjetPtNegLogJPN1Flavour[tagger]->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
+        int rightbinJetPtNegLogJPN1 = h3simjetPtNegLogJPN1Flavour[tagger]->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
+        TH1F* projJetPtRangeNegLogJPN1 = reinterpret_cast<TH1F*> (h3simjetPtNegLogJPN1Flavour[tagger]->ProjectionY(Form("projJetPtRangeNegLogJPN1_%d_%d_%d", tagger, flavour, binJetPt), leftbinJetPtNegLogJPN1, rightbinJetPtNegLogJPN1, binFlavour, binFlavour));
+        hsimjetNegLogJPN1[tagger][flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeNegLogJPN1->Clone(Form("hsimjetNegLogJPN1_%d_%d_%d", tagger, flavour, binJetPt))); 
+        hsimjetNegLogJPN1[tagger][0][binJetPt]->Add(projJetPtRangeNegLogJPN1);
 
-        int leftbinJetPtNegLogJPN2 = h3simTagjetPtNegLogJPN2Flavour[tagger]->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
-        int rightbinJetPtNegLogJPN2 = h3simTagjetPtNegLogJPN2Flavour[tagger]->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
-        TH1F* projJetPtRangeNegLogJPN2 = reinterpret_cast<TH1F*> (h3simTagjetPtNegLogJPN2Flavour[tagger]->ProjectionY(Form("projJetPtRangeNegLogJPN2_%d_%d_%d", tagger, flavour, binJetPt), leftbinJetPtNegLogJPN2, rightbinJetPtNegLogJPN2, binFlavour, binFlavour));
-        hsimTagjetNegLogJPN2[tagger][flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeNegLogJPN2->Clone(Form("hsimTagjetNegLogJPN2_%d_%d_%d", tagger, flavour, binJetPt))); 
-        hsimTagjetNegLogJPN2[tagger][0][binJetPt]->Add(projJetPtRangeNegLogJPN2);
+        int leftbinJetPtNegLogJPN2 = h3simjetPtNegLogJPN2Flavour[tagger]->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
+        int rightbinJetPtNegLogJPN2 = h3simjetPtNegLogJPN2Flavour[tagger]->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
+        TH1F* projJetPtRangeNegLogJPN2 = reinterpret_cast<TH1F*> (h3simjetPtNegLogJPN2Flavour[tagger]->ProjectionY(Form("projJetPtRangeNegLogJPN2_%d_%d_%d", tagger, flavour, binJetPt), leftbinJetPtNegLogJPN2, rightbinJetPtNegLogJPN2, binFlavour, binFlavour));
+        hsimjetNegLogJPN2[tagger][flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeNegLogJPN2->Clone(Form("hsimjetNegLogJPN2_%d_%d_%d", tagger, flavour, binJetPt))); 
+        hsimjetNegLogJPN2[tagger][0][binJetPt]->Add(projJetPtRangeNegLogJPN2);
 
-        int leftbinJetPtNegLogJPN3 = h3simTagjetPtNegLogJPN3Flavour[tagger]->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
-        int rightbinJetPtNegLogJPN3 = h3simTagjetPtNegLogJPN3Flavour[tagger]->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
-        TH1F* projJetPtRangeNegLogJPN3 = reinterpret_cast<TH1F*> (h3simTagjetPtNegLogJPN3Flavour[tagger]->ProjectionY(Form("projJetPtRangeNegLogJPN3_%d_%d_%d", tagger, flavour, binJetPt), leftbinJetPtNegLogJPN3, rightbinJetPtNegLogJPN3, binFlavour, binFlavour));
-        hsimTagjetNegLogJPN3[tagger][flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeNegLogJPN3->Clone(Form("hsimTagjetNegLogJPN3_%d_%d_%d", tagger, flavour, binJetPt))); 
-        hsimTagjetNegLogJPN3[tagger][0][binJetPt]->Add(projJetPtRangeNegLogJPN3);
+        int leftbinJetPtNegLogJPN3 = h3simjetPtNegLogJPN3Flavour[tagger]->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt-1])-1;
+        int rightbinJetPtNegLogJPN3 = h3simjetPtNegLogJPN3Flavour[tagger]->GetXaxis()->FindBin(HfJetTagging::binsJetPt[binJetPt])-1;
+        TH1F* projJetPtRangeNegLogJPN3 = reinterpret_cast<TH1F*> (h3simjetPtNegLogJPN3Flavour[tagger]->ProjectionY(Form("projJetPtRangeNegLogJPN3_%d_%d_%d", tagger, flavour, binJetPt), leftbinJetPtNegLogJPN3, rightbinJetPtNegLogJPN3, binFlavour, binFlavour));
+        hsimjetNegLogJPN3[tagger][flavour][binJetPt] = reinterpret_cast<TH1F*>(projJetPtRangeNegLogJPN3->Clone(Form("hsimjetNegLogJPN3_%d_%d_%d", tagger, flavour, binJetPt))); 
+        hsimjetNegLogJPN3[tagger][0][binJetPt]->Add(projJetPtRangeNegLogJPN3);
 
         delete projJetPtRangeNegLogJP;
         delete projJetPtRangeNegLogJPN1;
@@ -193,7 +193,7 @@ void HfJetTaggingSysQuarkHadronLevelAnalysis::drawEffiN1(bool doLog, int binJetP
   std::vector<HistogramData> normHist;
   for (int flavour = 1; flavour < HfJetTagging::nFlavour+1; flavour++) {
     for (int tagger=0; tagger<HfJetTagging::numQuarkHadronLevel; tagger++) {
-      float effiN1 = taggingutilities::getEfficiency(hsimTagjetNegLogJPN1[tagger][flavour][binJetPt],hsimTagjetNegLogJP[tagger][flavour][binJetPt]);
+      float effiN1 = taggingutilities::getEfficiency(hsimjetNegLogJPN1[tagger][flavour][binJetPt],hsimjetNegLogJP[tagger][flavour][binJetPt]);
       if (effiN1 < 0) continue;
       hsimJPEffiN1[flavour]->SetBinContent(tagger+1, effiN1);
     }

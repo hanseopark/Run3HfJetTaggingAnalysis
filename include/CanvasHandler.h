@@ -18,6 +18,7 @@ class CanvasHandler {
     ~CanvasHandler();
 
     void histColorStyle(TH1F* h1, int mc, int ms, double mS, int lc, int ls);
+    void histColorStyle2D(TH2* h2, int mc, int ms, double mS, int lc, int ls);
     void createCanvas(int number, int xp, int yp, int x, int y, double pleft, double pright, double ptop, double pbot, int optstat);
     void createCanvasMxN(int number, int Nx, int Ny, int xp, int yp, int x, int y, double pleft, double pright, double ptop, double pbot);
     void createCanvas2x2(int number, int xp, int yp, int x, int y, double pleft, double pright, double ptop, double pbot);
@@ -26,16 +27,20 @@ class CanvasHandler {
     void createCanvas3x2(int number, int xp, int yp, int x, int y, double pleft, double pright, double ptop, double pbot);
     std::vector<HistogramData> histList;
     void thistColorStyle(TH1F* h1, int mc, int ms, double mS, int lc, int ls);
-    void drawCombined(int histSize, const std::vector<HistogramData>& histList, bool withInc, bool withLeg, double legendxmin, double ymin, double xmax, double ymax, double ratio);
+    void setHistogram2D(TH2 *h2, double xmin, double xmax, double ymin, double ymax,
+        TString xtitle, TString ytitle, float xoffset, float yoffset, int optstat);
+    void drawCombined(int histSize, const std::vector<HistogramData>& histList, bool withInc, bool withLeg, double legendxmin, double ymin, double xmax, double ymax, double ratio, TString option);
+    void drawCombined2D(int histSize, const std::vector<Histogram2DData>& histList, bool withInc, bool withLeg, double legendxmin, double ymin, double xmax, double ymax, double ratio);
+    void drawCombinedForXSection(int histSize, const std::vector<HistogramData>& histList, bool withLeg, double legendxmin, double ymin, double xmax, double ymax, double ratio);
     void drawRefHistogram(int number, double xmin, double xmax, double ymin, double ymax,
-        TString xtitle, TString ytitle, float xoffset, float yoffset);
+        TString xtitle, TString ytitle, float xoffset, float yoffset, int optstat, float titleszie, float labelsize);
     void drawRefRatioHistogram(int number, double xmin, double xmax, double ymin, double ymax,
         TString xtitle, TString ytitle);
     void drawRefHistogramWithPad(int number, int numPad, double xmin, double xmax, double ymin, double ymax,
         TString xtitle, TString ytitle);
     void drawRefHistogramWithPadMxN(int number, int numPad_x, int numpad_y, double xmin, double xmax, double ymin, double ymax,
         TString xtitle, TString ytitle);
-    void createRatioCanvas(int number, int xp, int yp, int x, int y, double pleft, double pright, double ptop, double pbot);
+    void createRatioCanvas(int number, int xp, int yp, int x, int y, double pleft, double pright, double ptop, double pbot, int optstat);
     void drawPad(std::vector<HistogramData>& histograms, bool doLog, int numcan, int numpad, double xmin, double xmax, double ymin, double ymax, TString xtitle, TString ytitle);
     void drawPadCombined(std::vector<HistogramData>& histograms, bool withInc, bool withLeg, bool doLog, int numcan, int numpad, double xmin, double xmax, double ymin, double ymax, TString xtitle, TString ytitle);
     void drawPadMxNCombined(int numcan, int numpad_x, int numpad_y, std::vector<HistogramData>& histograms, bool withInc, bool doLog, bool withLeg, double xmin, double xmax, double ymin, double ymax, TString xtitle, TString ytitle);
@@ -71,6 +76,16 @@ void CanvasHandler::histColorStyle(TH1F* h1, int markercolor = 1, int markerstyl
   h1->SetLineColor(linecolor);
 }
 
+void CanvasHandler::histColorStyle2D(TH2* h2, int markercolor = 1, int markerstyle = 20, double markersize = 1, 
+    int linecolor = 1, int linestyle = 1)
+{
+  h2->SetMarkerStyle(markerstyle);
+  h2->SetMarkerColor(markercolor);
+  h2->SetMarkerSize(markersize);
+  h2->SetLineStyle(linestyle);
+  h2->SetLineColor(linecolor);
+}
+
 void CanvasHandler::createCanvas(int number=0, int xp=0, int yp=0, int x=800, int y=600,
                                 double pleft=0.12, double pright=0.04, double ptop=0.05, double pbot=0.12, int optstat=0) {
   char name[100];
@@ -90,7 +105,7 @@ void CanvasHandler::createCanvas(int number=0, int xp=0, int yp=0, int x=800, in
     mpad[0]->SetLeftMargin(pleft);
     mpad[0]->SetRightMargin(pright);
     mpad[0]->Range(0, 0, 1, 1);
-    mpad[0]->SetLogz(1);
+    //mpad[0]->SetLogz(1);
     mpad[0]->Draw();
     mpad[0]->cd();
     canvas->Modified();
@@ -380,7 +395,7 @@ void CanvasHandler::thistColorStyle(TH1F* h1, int markercolor = 1, int markersty
   h1->SetLineColor(linecolor);
 }
 
-void CanvasHandler::drawCombined(int histSize, const std::vector<HistogramData>& histograms, bool withInc, bool withLeg, double xmin=0.6, double ymin=0.6, double xmax=0.9, double ymax=0.9, double ratio=0.060) {
+void CanvasHandler::drawCombined(int histSize, const std::vector<HistogramData>& histograms, bool withInc, bool withLeg, double xmin=0.6, double ymin=0.6, double xmax=0.9, double ymax=0.9, double ratio=0.060, TString option="e") {
   TLegend *leg = new TLegend(xmin, ymin, xmax, ymax);
   if (histSize <=4) {
     //std::vector<int> histogramOrder = {0, 2, 1, 3}; // Customize this order as needed
@@ -393,7 +408,7 @@ void CanvasHandler::drawCombined(int histSize, const std::vector<HistogramData>&
       TString clfi = histograms[i].classification;
       //leg->AddEntry(hist, clfi.Data(), "l");
       leg->AddEntry(hist, clfi.Data(), "lep");
-      hist->Draw("same e");
+      hist->Draw(Form("same %s", option.Data()));
     }
   } else {
     for (int i=0; i<histSize; i++) {
@@ -402,7 +417,7 @@ void CanvasHandler::drawCombined(int histSize, const std::vector<HistogramData>&
       this->histColorStyle(hist, HfJetTagging::colorFlavour[i], i+20, HfJetTagging::MARKERSIZE, HfJetTagging::colorFlavour[i], 1);
       TString clfi = histograms[i].classification;
       leg->AddEntry(hist, clfi.Data(), "lep");
-      hist->Draw("same");
+      hist->Draw(Form("same %s", option.Data()));
     }
   }
   // for legend
@@ -410,22 +425,87 @@ void CanvasHandler::drawCombined(int histSize, const std::vector<HistogramData>&
   if (withLeg) leg->Draw();
 }
 
+void CanvasHandler::drawCombinedForXSection(int histSize, const std::vector<HistogramData>& histograms, bool withLeg, double xmin=0.6, double ymin=0.6, double xmax=0.9, double ymax=0.9, double ratio=0.060) {
+  TLegend *leg = new TLegend(xmin, ymin, xmax, ymax);
+  // first order data
+  TH1F *hist = histograms[0].hist;
+  this->histColorStyle(hist, HfJetTagging::colorFlavour[0], HfJetTagging::markerStyleFlavour[0], HfJetTagging::markerSizeFlavour[0], HfJetTagging::colorFlavour[0], 1);
+  TString clfi = histograms[0].classification;
+  //leg->AddEntry(hist, clfi.Data(), "l");
+  leg->AddEntry(hist, clfi.Data(), "lep");
+  hist->Draw("same e");
+  // second order model 
+  TH1F* histModel = histograms[1].hist;
+  clfi = histograms[1].classification;
+  TGraph* gr = new TGraph(histModel);
+  gr->SetLineColor(kRed);
+  gr->SetLineWidth(2);
+  leg->AddEntry(gr, clfi.Data(), "l");
+  gr->Draw("SAME L");
+
+  // for legend
+  SetLegendBoxSize(leg, histSize, xmin, ymin, ratio, 3 * ratio / 4);
+  if (withLeg) leg->Draw();
+}
+
+void CanvasHandler::drawCombined2D(int histSize, const std::vector<Histogram2DData>& histograms, bool withInc, bool withLeg, double xmin=0.6, double ymin=0.6, double xmax=0.9, double ymax=0.9, double ratio=0.060) {
+  TLegend *leg = new TLegend(xmin, ymin, xmax, ymax);
+  if (histSize <=4) {
+    //std::vector<int> histogramOrder = {0, 2, 1, 3}; // Customize this order as needed
+    std::vector<int> histogramOrder = {0, 1, 2, 3}; // Customize this order as needed
+    for (int i : histogramOrder) {
+      if (i < 0 || i >= histSize) continue;
+      if (i==0 && !(withInc)) continue;
+      TH2 *hist = histograms[i].hist;
+      this->histColorStyle2D(hist, HfJetTagging::colorFlavour[i], HfJetTagging::markerStyleFlavour[i], HfJetTagging::markerSizeFlavour[i], HfJetTagging::colorFlavour[i], 1);
+      TString clfi = histograms[i].classification;
+      //leg->AddEntry(hist, clfi.Data(), "l");
+      leg->AddEntry(hist, clfi.Data(), "lep");
+      hist->Draw("same e");
+    }
+  } else {
+    for (int i=0; i<histSize; i++) {
+      if(i==0 && !(withInc)) continue;
+      TH2 *hist = histograms[i].hist;
+      this->histColorStyle2D(hist, HfJetTagging::colorFlavour[i], i+20, HfJetTagging::MARKERSIZE, HfJetTagging::colorFlavour[i], 1);
+      TString clfi = histograms[i].classification;
+      leg->AddEntry(hist, clfi.Data(), "lep");
+      hist->Draw("same e");
+    }
+  }
+  // for legend
+  SetLegendBoxSize(leg, histSize, xmin, ymin, ratio, 3 * ratio / 4);
+  if (withLeg) leg->Draw();
+}
+
+void CanvasHandler::setHistogram2D(TH2* h2, double xmin, double xmas, double ymin, double ymax, TString xtitle, TString ytitle, float xoffset=1.10, float yoffset=1.20, int optstat=0) {
+  h2->SetStats(optstat);
+  h2->GetXaxis()->SetTitle(xtitle.Data());
+  h2->GetXaxis()->SetLabelSize(0.045);
+  h2->GetXaxis()->SetTitleOffset(xoffset);
+  h2->GetXaxis()->SetTitleSize(0.05);
+  h2->GetYaxis()->SetTitle(ytitle.Data());
+  h2->GetYaxis()->SetLabelSize(0.045);
+  h2->GetYaxis()->SetTitleOffset(yoffset);
+  h2->GetYaxis()->SetTitleSize(0.05);
+}
+
 void CanvasHandler::drawRefHistogram(int number, double xmin, double xmax, double ymin, double ymax,
-    TString xtitle, TString ytitle, float xoffset=1.10, float yoffset=1.20) {
+    TString xtitle, TString ytitle, float xoffset=1.10, float yoffset=1.20, int optstat=0, float titlesize=0.05, float labelsize=0.045) {
   char name[100];
   std::snprintf(name, sizeof(name), "href%d", number);
   int xbin = 100;
   int ybin = 100;
   TH2D* href = new TH2D(name, name, xbin, xmin, xmax, ybin, ymin, ymax);
-  href->SetStats(0);
+  href->SetStats(optstat);
   href->GetXaxis()->SetTitle(xtitle.Data());
-  href->GetXaxis()->SetLabelSize(0.045);
+  href->GetXaxis()->SetLabelSize(labelsize);
   href->GetXaxis()->SetTitleOffset(xoffset);
-  href->GetXaxis()->SetTitleSize(0.05);
+  href->GetXaxis()->SetTitleSize(titlesize);
   href->GetYaxis()->SetTitle(ytitle.Data());
-  href->GetYaxis()->SetLabelSize(0.045);
+  href->GetYaxis()->SetLabelSize(labelsize);
   href->GetYaxis()->SetTitleOffset(yoffset);
-  href->GetYaxis()->SetTitleSize(0.05);
+  href->GetYaxis()->SetTitleSize(titlesize);
   href->Draw();
 }
 
@@ -491,11 +571,11 @@ void CanvasHandler::drawRefHistogramWithPadMxN(int number, int numpad_x, int num
   href->Draw();
 }
 
-void CanvasHandler::createRatioCanvas(int number=0, int xp=0, int yp=0, int x=1600, int y=900,
-    double pleft=0.17, double pright=0.1, double ptop=0.1, double pbot=0.13) {
+void CanvasHandler::createRatioCanvas(int number=0, int xp=0, int yp=0, int x=800, int y=1000,
+    double pleft=0.15, double pright=0.05, double ptop=0.0, double pbot=0.30, int optstat=0) {
     char name[100];
     snprintf(name,sizeof(name),"cc%d",number);
-    TCanvas *c = new TCanvas(name,name,0,0,800,1000);
+    TCanvas *c = new TCanvas(name,name,xp,yp,x,y);
     gStyle->SetOptStat(0); gStyle->SetOptTitle(0);
     c->cd();
     mtoppad = new TPad("mtoppad","mtoppad",0.01,0.01,0.99,0.99,0,0,0);
@@ -510,19 +590,19 @@ void CanvasHandler::createRatioCanvas(int number=0, int xp=0, int yp=0, int x=16
     mtoppad->cd();
 	snprintf(name,sizeof(name),"padu%d",number);	
     muppad = new TPad(name,name,0.01,0.35,0.99,0.99,0,0,0);
-    muppad->SetTopMargin(0.0);
+    muppad->SetTopMargin(ptop);
     muppad->SetBottomMargin(0.0);
-    muppad->SetLeftMargin(0.15);
-    muppad->SetRightMargin(0.05);
+    muppad->SetLeftMargin(pleft);
+    muppad->SetRightMargin(pright);
     muppad->Draw();
     muppad->cd();
     mtoppad->cd();
 	snprintf(name,sizeof(name),"padd%d",number);	
     mlowpad = new TPad(name,name,0.01,0.01,0.99,0.35,0,0,0);
     mlowpad->SetTopMargin(0.0);
-    mlowpad->SetBottomMargin(0.3);
-    mlowpad->SetLeftMargin(0.15);
-    mlowpad->SetRightMargin(0.05);
+    mlowpad->SetBottomMargin(pbot);
+    mlowpad->SetLeftMargin(pleft);
+    mlowpad->SetRightMargin(pright);
     mlowpad->Draw();
     c->Modified();
     c->Update();
@@ -607,23 +687,8 @@ void CanvasHandler::drawLowerPad(TH1F* h1, int number, double xmin, double xmax,
   gROOT->ProcessLine(Form("padd%d->Update()", number));
 }
 
-void latexDataJetInfo(double x=0.2, double y=0.9, int binJetPt=0, TString jetAlgo = "Anti-#it{k}_{T}", TString jetType="Charged", float jetRadi=0.4, TString aliceFig="this analysis") {
-  TLatex latex;
-  latex.SetNDC(); // Use normalized coordinates
-  latex.SetTextSize(0.03); // Set text size
-  latex.SetTextFont(42);
-
-  latex.DrawLatex(x, y, Form("%s", aliceFig.Data()));
-  latex.DrawLatex(x, y-0.04, "pp #it{#sqrt{s}} = 13.6 TeV");
-  latex.DrawLatex(x, y-0.08, Form("%s %s jets, R=%0.1f", jetAlgo.Data(), jetType.Data(), jetRadi));
-  if (binJetPt == 0) {
-    latex.DrawLatex(x, y-0.12, Form("#it{p}_{T,jet}^{ch} > %d GeV/#it{c}", static_cast<int>(HfJetTagging::cutJetPt)));
-  }
-  if (binJetPt > 0) latex.DrawLatex(x, y-0.12, Form("%d < #it{p}_{T}^{jet} < %d", static_cast<int>(HfJetTagging::binsJetPt[binJetPt-1]), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
-  latex.DrawLatex(x, y-0.16, "constituents in jets");
-}
-
-void latexSimJetInfo(double x=0.2, double y=0.9, int binJetPt=0, TString triggerName="", TString jetAlgo = "Anti-#it{k}_{T}", TString jetType="Charged", float jetRadi=0.4, TString aliceFig="this analysis") {
+//void latexDataJetInfo(double x=0.2, double y=0.9, int binJetPt=0, TString jetAlgo = "Anti-#it{k}_{T}", TString jetType="Charged", float jetRadi=0.4, TString aliceFig="this analysis") {
+void latexDataJetInfo(double x=0.2, double y=0.9, int binJetPt=0, TString jetAlgo = "Anti-#it{k}_{T}", TString jetType="Charged", float jetRadi=0.4, TString aliceFig="this analysis", double textSize=0.036) {
   TLatex latex;
   latex.SetNDC(); // Use normalized coordinates
   latex.SetTextSize(0.036); // Set text size
@@ -631,9 +696,32 @@ void latexSimJetInfo(double x=0.2, double y=0.9, int binJetPt=0, TString trigger
 
   float textStep = 0.055;
   latex.DrawLatex(x, y, Form("%s", aliceFig.Data()));
+  latex.DrawLatex(x, y-textStep, "pp, #font[42]{#it{#sqrt{s}} = 13.6 TeV}");
+  latex.DrawLatex(x, y-2*textStep, Form("%s,#it{ R} = %0.1f, %s-particle jets", jetAlgo.Data(), jetRadi, jetType.Data()));
+  if (binJetPt < 0)  {
+    latex.DrawLatex(x, y-3*textStep, "|#it{#eta}^{ch jet}| < 0.5");
+  }
+  if (binJetPt == 0) {
+    latex.DrawLatex(x, y-3*textStep, Form("#it{p}_{T}^{ch jet} > %d GeV/#it{c}, |#it{#eta}^{ch jet}| < 0.5", static_cast<int>(HfJetTagging::cutJetPt)));
+  }
+  if (binJetPt > 0) 
+    latex.DrawLatex(x, y-3*textStep, Form("%d < #it{p}_{T}^{ch jet} < %d GeV/#it{c}, |#it{#eta}^{ch jet}| < 0.5", static_cast<int>(HfJetTagging::binsJetPt[binJetPt-1]), static_cast<int>(HfJetTagging::binsJetPt[binJetPt])));
+}
+
+void latexSimJetInfo(double x=0.2, double y=0.9, int binJetPt=0, TString triggerName="", TString jetAlgo = "Anti-#it{k}_{T}", TString jetType="Charged", float jetRadi=0.4, TString aliceFig="this analysis", double textSize=0.036) {
+  TLatex latex;
+  latex.SetNDC(); // Use normalized coordinates
+  latex.SetTextSize(textSize); // Set text size
+  latex.SetTextFont(42);
+
+  float textStep = 0.055/0.036 * textSize;
+  latex.DrawLatex(x, y, Form("%s", aliceFig.Data()));
   latex.DrawLatex(x, y-textStep, triggerName.Data());
   latex.DrawLatex(x, y-2*textStep, "pp, #font[42]{#it{#sqrt{s}} = 13.6 TeV}");
   latex.DrawLatex(x, y-3*textStep, Form("%s,#it{ R} = %0.1f, %s-particle jets", jetAlgo.Data(), jetRadi, jetType.Data()));
+  if (binJetPt < 0)  {
+    latex.DrawLatex(x, y-4*textStep, "|#it{#eta}^{ch jet}| < 0.5");
+  }
   if (binJetPt == 0) {
     latex.DrawLatex(x, y-4*textStep, Form("#it{p}_{T}^{ch jet} > %d GeV/#it{c}, |#it{#eta}^{ch jet}| < 0.5", static_cast<int>(HfJetTagging::cutJetPt)));
   }
@@ -653,6 +741,9 @@ void latexSimJetInfoForEffi(double x=0.2, double y=0.9, TString triggerName="", 
   latex.DrawLatex(x, y-textStep, triggerName.Data());
   latex.DrawLatex(x, y-2*textStep, "pp, #font[42]{#it{#sqrt{s}} = 13.6 TeV}");
   latex.DrawLatex(x, y-3*textStep, Form("%s,#it{ R} = %0.1f, %s-particle jets", jetAlgo.Data(), jetRadi, jetType.Data()));
+  latex.DrawLatex(x, y-4*textStep, "|#it{#eta}_{jet}| < 0.5");
+  //latex.DrawLatex(x, y-4*textStep, "#left| #it{#eta}_{jet} #right| < 0.5");
+  //latex.DrawLatex(x, y-4*textStep, "#left| #it{#eta}_{jet} #right| #LT 0.5");
 }
 
 //void latexSimTrackInfo(double x=0.2, double y=0.9, int binTrackPt=0, TString triggerName="", TString jetAlgo = "Anti-#it{k}_{T}", TString jetType="Charged", float jetRadi=0.4, TString aliceFig="this analysis") {

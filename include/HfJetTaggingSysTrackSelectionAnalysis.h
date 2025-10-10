@@ -324,24 +324,24 @@ void HfJetTaggingSysTrackSelectionAnalysis::drawLfJetSignImpXYSigTrackSelection(
   gROOT->ProcessLine(Form("cc%d->Print(\"%s/lfjet/signImpXYSig.pdf\")", nc++, dirSim.Data()));
 }
 
-void HfJetTaggingSysTrackSelectionAnalysis::drawTrackEffi(int Num = HfJetTagging::numTrackSelection) {
-  TH1F* heffi[Num];
-  int rebinNum = 4;
-	std::vector<HistogramData> histList;
-  for (int ts =0; ts<HfJetTagging::numTrackSelection; ts++) {
-    hPartPt[ts]->Rebin(rebinNum);
-    hPartPtAssoPrimary[ts]->Rebin(rebinNum);
-    //heffi[ts] = (TH1F*) hPartPtAssoPrimary[ts]->Clone();
-    //heffi[ts]->Divide(hPartPt[ts]);
-    heffi[ts] = (TH1F*) hPartPt[ts]->Clone();
-    heffi[ts]->Divide(hPartPtAssoPrimary[ts]);
-    histList.push_back({heffi[ts], HfJetTagging::SYS::TRACKSELECTION[ts]});
-  }
-  canHan = new CanvasHandler();
-  canHan->createCanvas(nc);
-  canHan->drawRefHistogram(nc, GeneralJet::REFHIST::TRACKEFFI[0], GeneralJet::REFHIST::TRACKEFFI[1], GeneralJet::REFHIST::TRACKEFFI[2], GeneralJet::REFHIST::TRACKEFFI[3], "#it{p}_{T}", "#epsilon");
-  canHan->drawCombined(histList.size(), histList, true, true, 0.6, 0.7, GeneralJet::LEG[2], GeneralJet::LEG[3]);
-  gROOT->ProcessLine(Form("cc%d->Print(\"%s/trackEffiAssoPrimary.pdf\")", nc++, dirSim.Data()));
-}
+//void HfJetTaggingSysTrackSelectionAnalysis::drawTrackEffi(int Num = HfJetTagging::numTrackSelection) {
+//  TH1F* heffi[Num];
+//  int rebinNum = 4;
+//	std::vector<HistogramData> histList;
+//  for (int ts =0; ts<HfJetTagging::numTrackSelection; ts++) {
+//    hPartPt[ts]->Rebin(rebinNum);
+//    hPartPtAssoPrimary[ts]->Rebin(rebinNum);
+//    //heffi[ts] = (TH1F*) hPartPtAssoPrimary[ts]->Clone();
+//    //heffi[ts]->Divide(hPartPt[ts]);
+//    heffi[ts] = (TH1F*) hPartPt[ts]->Clone();
+//    heffi[ts]->Divide(hPartPtAssoPrimary[ts]);
+//    histList.push_back({heffi[ts], HfJetTagging::SYS::TRACKSELECTION[ts]});
+//  }
+//  canHan = new CanvasHandler();
+//  canHan->createCanvas(nc);
+//  canHan->drawRefHistogram(nc, GeneralJet::REFHIST::TRACKEFFI[0], GeneralJet::REFHIST::TRACKEFFI[1], GeneralJet::REFHIST::TRACKEFFI[2], GeneralJet::REFHIST::TRACKEFFI[3], "#it{p}_{T}", "#epsilon");
+//  canHan->drawCombined(histList.size(), histList, true, true, 0.6, 0.7, GeneralJet::LEG[2], GeneralJet::LEG[3]);
+//  gROOT->ProcessLine(Form("cc%d->Print(\"%s/trackEffiAssoPrimary.pdf\")", nc++, dirSim.Data()));
+//}
 
 #endif // HFJETTAGGINGSYSTRACKSELECTIONANALYSIS_H
