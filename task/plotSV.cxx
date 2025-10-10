@@ -5,11 +5,15 @@
 #include "../include/HfJetTaggingSVAnalysis.h"
 #include <TString.h>
 
-void plotSVQA(TString rootdata="", TString rootsim="", bool withInc=false, bool doLog=true, bool doData=true, bool doMCD=false, bool doMCP=true, bool fillTest=false, bool do2Prong=false, bool do3Prong=false, bool fillN1=false, bool fillEffi=false, bool fillEffiWithIP=false, bool withPOWHEG=false) {
+void plotSVQA(TString rootdata="", TString rootsim="", bool withInc=false, bool doLog=true, bool doData=true, bool doMCD=false, bool doMCP=true, bool fillTest=false, bool do2Prong=false, bool do3Prong=false, bool fillN1=false, bool loadResMat=false, bool fillEffi=false, bool fillEffiWithIP=false, bool withPOWHEG=false, bool fillSys = false, bool loadExtSys = false) {
 
   HfJetTaggingSVAnalysis *svObj = new HfJetTaggingSVAnalysis();
   if (withPOWHEG) {
-    svObj->initModel(Form("%s/%s", MODELSET.Data(), PWHG_CT18NLODIJET.Data()));
+    svObj->initModel(Form("%s/%s.root", MODELSET.Data(), PWHG_CT18NLODIJET.Data()));
+    //svObj->initModel(Form("%s/%s", MODELSET.Data(), PWHG_TEMP.Data()));
+    //svObj->initModel(Form("%s/%s", MODELSET.Data(), "Pythia8JetSpectra_temp.root"));
+    //svObj->initModel(Form("%s/%s", MODELSET.Data(), "Pythia8JetSpectra_hadron.root"));
+    //svObj->initModel(Form("%s/%s", MODELSET.Data(), "Pythia8JetSpectra_hard_hadron.root"));
   }
 
   svObj->setFillData(doData);
@@ -21,11 +25,15 @@ void plotSVQA(TString rootdata="", TString rootsim="", bool withInc=false, bool 
   svObj->setFillN1(fillN1);
   svObj->setFillEffi(fillEffi);
   svObj->setFillEffiWithIP(fillEffiWithIP);
+  svObj->inputResultRun2();
+  if (loadResMat) {
+    //svObj->initExternalUnfold("resMat_LHC25a2b_hadron_dist.root");
+    //svObj->initExternalUnfold(Form("resMat_%s_%s.root", SIMSET.Data(), SUFFIXSET.Data()));
+    svObj->initExternalUnfold(Form("resMat_LHC25a2b_%s.root", SUFFIXSET.Data()));
+  }
 
   if (doData) {
-    svObj->loadDataSVQA(rootdata.Data());
-    svObj->initHistogramForNormalizationSVQAData();
-    svObj->projectionHistSVQAData();
+    svObj->initSVData(rootdata.Data());
     svObj->initCommonHistData(rootdata.Data());
     svObj->drawDataJetPt(doLog);
     svObj->drawDataJetEta(doLog);
@@ -52,20 +60,16 @@ void plotSVQA(TString rootdata="", TString rootsim="", bool withInc=false, bool 
           svObj->drawData3ProngSxyN1(doLog, binJetPt);
           svObj->drawData3ProngSxyzN1(doLog, binJetPt);
           svObj->drawData3ProngMassN1(doLog, binJetPt);
+          svObj->drawDatataggedjet3ProngMassN1(doLog, binJetPt);
         }
       }
     }
   }
   if (doMCD) {
-    svObj->loadSimSVQA(rootsim.Data());
-    svObj->initHistogramForNormalizationSVQAMC();
-    svObj->projectionHistSVQAMC();
+    svObj->initSVMC(rootsim.Data());
     svObj->initCommonHistMC(rootsim.Data());
     if (fillEffiWithIP) {
-      svObj->loadSimIPQA(rootsim.Data());
-      svObj->initHistogramForNormalizationIPQAMC();
-      svObj->projectionHistIPQAMC();
-      svObj->normalizedHistogramIPQAMC();
+      svObj->initIPMC(rootsim.Data());
     }
     //svObj->drawSimJetPt(withInc, doLog);
     if (do2Prong) {
@@ -88,6 +92,7 @@ void plotSVQA(TString rootdata="", TString rootsim="", bool withInc=false, bool 
       }
     } // do2Prong
     if (do3Prong) {
+    std::cout << __LINE__ << std::endl;
       svObj->drawSimJetPt(withInc, doLog);
       svObj->drawSimJetEta(withInc, doLog);
       svObj->drawSimJetPhi(withInc, doLog);
@@ -102,6 +107,7 @@ void plotSVQA(TString rootdata="", TString rootsim="", bool withInc=false, bool 
           svObj->drawSim3ProngSxyN1(false, doLog, binJetPt);
           svObj->drawSim3ProngSxyzN1(withInc, doLog, binJetPt);
           svObj->drawSim3ProngMassN1(false, doLog, binJetPt);
+          svObj->drawSimtaggedjet3ProngMassN1(false, doLog, binJetPt);
 //          svObj->drawSimtaggedjet3ProngSxyN1(false, doLog, binJetPt);
           if (fillEffi) {
             svObj->drawSim3ProngEffiSxyN1(HfJetTagging::CUT::Sxy);
@@ -154,29 +160,36 @@ void plotSVQA(TString rootdata="", TString rootsim="", bool withInc=false, bool 
         svObj->drawDataVsSim3ProngSxyN1(doLog, binJetPt);
         svObj->drawDataVsSim3ProngSxyzN1(doLog, binJetPt);
         svObj->drawDataVsSim3ProngMassN1(doLog, binJetPt);
+        svObj->drawDataVsSimtaggedjet3ProngMassN1(doLog, binJetPt);
       }
     }
     if (fillN1) {
       svObj->drawTemplateFitDataWithMCtaggedjetN1();
       svObj->drawTemplateFitDataWithMCtaggedjetN1Dep();
+      //svObj->drawDataSV3ProngFlavourFraction();
+      //svObj->drawDataVsSimSV3ProngFlavourFraction();
     }
-    svObj->closureTestSV(doLog);
-    svObj->drawDataSV3ProngCrossSection(doLog);
+    //svObj->closureTestSV(doLog);
+    svObj->drawDataSV3ProngCrossSection(doLog, 4, 6);
     svObj->drawDataVsSimSV3ProngCrossSection(doLog);
+    if (fillSys) svObj->drawDataSV3ProngSys(loadExtSys);
+    svObj->drawDataSV3ProngCrossSectionWithSys(loadExtSys, fillSys);
+    svObj->saveHistogramSVQA(Form("%s_%s_%s.root", DATASET.Data(), SIMSET.Data(), SUFFIXSET.Data()), fillSys);
+    svObj->saveSVXSectionWithSys(Form("%s_%s_%s.root", DATASET.Data(), SIMSET.Data(), PWHG_CT18NLODIJET.Data()), fillSys);
   }
 }
 
 void plotSV (
-    TString rootdata="", 
-    TString rootsim="", 
-    TString sourceSet="",
-    TString dataSet="",
-    TString simSet="",
-    TString triggerName="", 
-    TString figureName="", 
-    TString suffix="",
-    bool withInc=false, 
-    bool doLog=false,
+    TString rootdata="",  // 1
+    TString rootsim="",  // 2
+    TString sourceSet="", // 3
+    TString dataSet="", // 4
+    TString simSet="", // 5
+    TString triggerName="",  // 6
+    TString figureName="",  // 7 
+    TString suffix="", // 8
+    bool withInc=false,  // 9
+    bool doLog=false, // 10
     bool doData=false, 
     bool doMCD=false, 
     bool doMCP=false,
@@ -184,9 +197,12 @@ void plotSV (
     bool do2Prong=false,
     bool do3Prong=false,
     bool doN1=false,
+    bool loadResMat=false,
     bool doEffiAndPurity=false,
     bool doEffiAndPurityWithIP=false,
-    bool withPOWHEG=false
+    bool withPOWHEG=false,
+    bool fillSys=false,
+    bool loadExtSys=false
     ) 
 {
   globalStyle();
@@ -196,5 +212,5 @@ void plotSV (
   DATASET = dataSet.Data();
   SIMSET = simSet.Data();
   SUFFIXSET = suffix.Data();
-  plotSVQA(rootdata.Data(), rootsim.Data(), withInc, doLog, doData, doMCD, doMCP, doTest, do2Prong, do3Prong, doN1, doEffiAndPurity, doEffiAndPurityWithIP, withPOWHEG);
+  plotSVQA(rootdata.Data(), rootsim.Data(), withInc, doLog, doData, doMCD, doMCP, doTest, do2Prong, do3Prong, doN1, loadResMat, doEffiAndPurity, doEffiAndPurityWithIP, withPOWHEG, fillSys, loadExtSys);
 }

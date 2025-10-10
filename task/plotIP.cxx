@@ -116,7 +116,7 @@ void plotIPQA(TString rootdata="", TString rootsim="", bool withInc=false, bool 
           if (fillUnfolding) {
             ipObj->unfoldingJet(doLog, flavour);
             ipObj->initExternalUnfold("ExternalResMat.root");
-            ipObj->unfoldingJet(doLog, flavour, 4, 16, true);
+            ipObj->unfoldingJet(doLog, flavour, 4, 2, true);
           }
         }
       }
@@ -145,9 +145,8 @@ void plotIPQA(TString rootdata="", TString rootsim="", bool withInc=false, bool 
       ipObj->drawSimFlavourMatchingEffi();
       ipObj->drawSimMatchedFlavourMatchingEffi();
     }
-    if (fillValidation) {
-
-    }
+//    if (fillValidation) {
+//    }
   }
 
   if (doData && doMCD) {
@@ -166,7 +165,6 @@ void plotIPQA(TString rootdata="", TString rootsim="", bool withInc=false, bool 
     }
   }
   ipObj->saveHistogramIPQA("IPQA.root", doData, doMCD, doMCP);
-  //ipObj->saveHistogramUnfold("ExternalResMat.root", doData, doMCD, doMCP);
 }
 
 void plotIP(
